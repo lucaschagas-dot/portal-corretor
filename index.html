@@ -3631,8 +3631,50 @@ function authLogout(){
                 <!-- Linha 4: Seguro novo / Transferência -->
                 <div class="vcalc-f vcalc-radio-f" style="border:none;min-height:auto;padding:6px 0;background:transparent;box-shadow:none">
                   <div class="vcalc-radios">
-                    <label><input type="radio" name="vcpj-tipo" value="novo" checked> Seguro novo</label>
-                    <label><input type="radio" name="vcpj-tipo" value="transf"> Transferência</label>
+                    <label><input type="radio" name="vcpj-tipo" value="novo" checked onchange="vcToggleTransf()"> Seguro novo</label>
+                    <label><input type="radio" name="vcpj-tipo" value="transf" onchange="vcToggleTransf()"> Transferência</label>
+                  </div>
+                </div>
+
+                <!-- Linha 5: Campos de Transferência (aparecem quando "Transferência" está marcado) -->
+                <div class="vcalc-row" id="vcpj-transf-fields" style="display:none;grid-template-columns:1.7fr 1fr 1fr">
+                  <div class="vcalc-f">
+                    <span class="vcalc-f-lbl">Seguradora Congênere</span>
+                    <select id="vc-seg-congenere">
+                      <option value=""></option>
+                      <option>Bradesco Vida e Previdência</option>
+                      <option>Porto Seguro</option>
+                      <option>SulAmérica Seguros</option>
+                      <option>Itaú Vida e Previdência</option>
+                      <option>MAPFRE Seguros</option>
+                      <option>Allianz Seguros</option>
+                      <option>Zurich Seguros</option>
+                      <option>Tokio Marine Seguradora</option>
+                      <option>Icatu Seguros</option>
+                      <option>MetLife</option>
+                      <option>Prudential do Brasil</option>
+                      <option>HDI Seguros</option>
+                      <option>Liberty Seguros</option>
+                      <option>Sompo Seguros</option>
+                      <option>Chubb Seguros</option>
+                      <option>Caixa Seguradora</option>
+                      <option>Mongeral Aegon</option>
+                      <option>Capemisa Seguradora</option>
+                      <option>Generali</option>
+                      <option>Omint Seguros</option>
+                    </select>
+                  </div>
+                  <div class="vcalc-f">
+                    <span class="vcalc-f-lbl">Você (corretor) é o atual detentor da conta? <span class="vcalc-req">*</span></span>
+                    <select id="vc-detentor-conta">
+                      <option value=""></option>
+                      <option>Sim</option>
+                      <option>Não</option>
+                    </select>
+                  </div>
+                  <div class="vcalc-f">
+                    <span class="vcalc-f-lbl">Data de aniversário da apólice (mm/aaaa)</span>
+                    <input type="text" id="vc-aniv-apolice" placeholder="mm/aaaa" maxlength="7" inputmode="numeric" autocomplete="off" oninput="maskMonthYear(this)">
                   </div>
                 </div>
 
@@ -4857,6 +4899,19 @@ function maskDate(el) {
   v = v.replace(/(\d{2})(\d)/, '$1/$2');
   v = v.replace(/(\d{2})(\d)/, '$1/$2');
   el.value = v;
+}
+
+function maskMonthYear(el) {
+  var v = el.value.replace(/\D/g, '').slice(0, 6);
+  if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+  el.value = v;
+}
+
+function vcToggleTransf() {
+  var checked = document.querySelector('input[name="vcpj-tipo"]:checked');
+  var show = !!(checked && checked.value === 'transf');
+  var box = document.getElementById('vcpj-transf-fields');
+  if (box) box.style.display = show ? 'grid' : 'none';
 }
 
 function maskCEP(el) {
