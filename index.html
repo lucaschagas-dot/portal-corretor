@@ -1079,6 +1079,105 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 </head>
 <body>
 
+<!-- ===================================================================
+     TELA DE LOGIN — Acesso restrito (gate de e-mail, client-side)
+     Para liberar uma nova pessoa, adicione o e-mail na lista AUTH_ALLOWED
+     no script logo abaixo. E-mails devem estar em minúsculas.
+==================================================================== -->
+<style>
+.auth-gate{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2a51 0%,#009ddb 100%);padding:20px;font-family:'Merriweather',-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+.auth-card{background:#fff;border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.28);width:100%;max-width:410px;padding:40px 36px;text-align:center;animation:authIn .3s ease}
+@keyframes authIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.auth-logo{font-family:'UnimedSlab',serif;font-size:14px;letter-spacing:.6px;color:#008C50;font-weight:700;text-transform:uppercase}
+.auth-title{font-family:'UnimedSlab',serif;font-size:27px;color:#0f2a51;font-weight:700;margin-top:3px}
+.auth-subtitle{font-size:13px;color:#586880;margin:4px 0 26px}
+.auth-lbl{display:block;text-align:left;font-size:12px;color:#a2aaad;margin-bottom:6px}
+.auth-input{width:100%;border:1px solid #d0d5dd;border-radius:6px;padding:12px 14px;font-size:15px;color:#44546c;outline:none;font-family:inherit}
+.auth-input:focus{border-color:#009ddb;box-shadow:0 0 0 3px rgba(0,157,219,.15)}
+.auth-error{min-height:16px;text-align:left;font-size:12.5px;color:#e53935;margin:8px 2px 0;display:none;line-height:1.4}
+.auth-btn{width:100%;margin-top:18px;background:#008C50;color:#fff;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;font-family:inherit}
+.auth-btn:hover{background:#00713f}
+.auth-foot{font-size:12px;color:#a2aaad;margin:22px 0 0;line-height:1.5}
+.auth-logout{position:fixed;bottom:14px;left:14px;z-index:99999;background:rgba(15,42,81,.88);color:#fff;border:none;border-radius:20px;padding:7px 15px 7px 12px;font-size:12px;cursor:pointer;display:none;align-items:center;gap:6px;box-shadow:0 3px 12px rgba(0,0,0,.25);font-family:'Merriweather',-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+.auth-logout:hover{background:#0f2a51}
+</style>
+
+<div id="auth-gate" class="auth-gate">
+  <div class="auth-card">
+    <div class="auth-logo">Seguros Unimed</div>
+    <div class="auth-title">Portal do Corretor</div>
+    <div class="auth-subtitle">portal para testes de ux design</div>
+    <form id="auth-form" onsubmit="return authSubmit(event)">
+      <label class="auth-lbl" for="auth-email">E-mail</label>
+      <input type="email" id="auth-email" class="auth-input" placeholder="voce@empresa.com.br" autocomplete="email" autofocus required>
+      <div class="auth-error" id="auth-error"></div>
+      <button type="submit" class="auth-btn">Entrar</button>
+    </form>
+    <p class="auth-foot">Não tem acesso? Solicite ao responsável pelo portal.</p>
+  </div>
+</div>
+
+<button id="auth-logout" class="auth-logout" onclick="authLogout()" title="Encerrar sessão">&#128274; Sair</button>
+
+<script>
+// ===== Controle de acesso (gate de e-mail) =====
+// >>> Para LIBERAR uma nova pessoa: adicione o e-mail (minúsculo) na lista abaixo. <<<
+var AUTH_ALLOWED = [
+  'lucas.chagas@segurosunimed.com.br',
+  'daniel.amorim@segurosunimed.com.br',
+  'nathalia.melo@segurosunimed.com.br',
+  'camila.roquim.cs@segurosunimed.com.br',
+  'isabela.pazetto@segurosunimed.com.br',
+  'flavia.berchielli@segurosunimed.com.br',
+  'tatiane.leite.mind@segurosunimed.com.br',
+  'tamyris.cardozo@segurosunimed.com.br'
+];
+
+var AUTH_KEY = 'portal_corretor_auth_email';
+function authNorm(e){ return (e || '').trim().toLowerCase(); }
+function authIsAllowed(email){
+  var n = authNorm(email);
+  for (var i = 0; i < AUTH_ALLOWED.length; i++){ if (authNorm(AUTH_ALLOWED[i]) === n) return true; }
+  return false;
+}
+function authGrant(email){
+  try { localStorage.setItem(AUTH_KEY, authNorm(email)); } catch(e){}
+  var gate = document.getElementById('auth-gate');
+  var logout = document.getElementById('auth-logout');
+  if (gate) gate.style.display = 'none';
+  if (logout) logout.style.display = 'inline-flex';
+}
+function authSubmit(ev){
+  ev.preventDefault();
+  var input = document.getElementById('auth-email');
+  var err = document.getElementById('auth-error');
+  var email = authNorm(input ? input.value : '');
+  if (!email){ return false; }
+  if (authIsAllowed(email)){
+    if (err) err.style.display = 'none';
+    authGrant(email);
+  } else {
+    if (err){ err.textContent = 'E-mail não autorizado. Solicite acesso ao responsável pelo portal.'; err.style.display = 'block'; }
+  }
+  return false;
+}
+function authLogout(){
+  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
+  var gate = document.getElementById('auth-gate');
+  var logout = document.getElementById('auth-logout');
+  if (gate) gate.style.display = 'flex';
+  if (logout) logout.style.display = 'none';
+  var input = document.getElementById('auth-email');
+  if (input){ input.value = ''; input.focus(); }
+}
+// Na carga: se já logou antes com um e-mail que continua autorizado, libera direto.
+(function authInit(){
+  var saved = '';
+  try { saved = localStorage.getItem(AUTH_KEY) || ''; } catch(e){}
+  if (saved && authIsAllowed(saved)) { authGrant(saved); }
+})();
+</script>
+
 <!-- HEADER -->
 <header id="site-header">
   <div class="header-inner">
