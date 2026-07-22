@@ -8638,7 +8638,7 @@ function apeBuildPlanCard(g, estipName, estipCnpj) {
               '<span class="ape-side-taxa">Taxa Referencial VG e AP: 0,003500</span>' +
             '</div>' +
             checkRows +
-            '<button class="ape-outras-btn">Outras coberturas e serviços</button>' +
+            '<button class="ape-outras-btn" onclick="ocModalOpen()">Outras coberturas e serviços</button>' +
           '</div>' +
         '</div>' +
         '<p class="ape-ipa-note">A cobertura (IPA) \u2013 Invalidez Permanente Total ou Parcial por Acidente não se aplica para o grupo segurável de alunos de 0 a 13 anos</p>' +
@@ -9172,6 +9172,151 @@ function massaOnFile(input){
   sheet.addEventListener('click', function(e){ var td = e.target.closest('td[data-ref]'); if (td) reflect(td); });
   sheet.addEventListener('input', function(e){ var td = e.target.closest('td.massa-cell'); if (td){ document.getElementById('massa-fx-val').textContent = td.textContent; massaCheckTela(); } });
 })();
+</script>
+
+<!-- ===================================================================
+     Modal OUTRAS COBERTURAS E SERVIÇOS (AP Escolar) — "Essencial"
+==================================================================== -->
+<style>
+#oc-modal-overlay{z-index:9100}
+.oc-modal{max-width:900px}
+.oc-modal .ape-modal-hdr{position:relative;border-bottom:1px solid #eef1f4;padding-bottom:14px}
+.oc-modal .ape-modal-title{border-bottom:none}
+.oc-modal .ape-modal-hdr::before{content:'';position:absolute;left:0;top:20px;width:5px;height:30px;background:#e63329;border-radius:0 3px 3px 0}
+
+.oc-section{display:flex;border:1px solid #e6eaef;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.06);margin-bottom:18px;overflow:hidden}
+.oc-rail{flex-shrink:0;width:64px;display:flex;align-items:center;justify-content:center;border-right:2px solid var(--azure);color:var(--azure)}
+.oc-main{flex:1;min-width:0}
+.oc-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer}
+.oc-title{font-size:17px;font-weight:700;color:var(--azure)}
+.oc-chev{transition:transform .2s;flex-shrink:0}
+.oc-section.collapsed .oc-chev{transform:rotate(-90deg)}
+.oc-section.collapsed .oc-body{display:none}
+.oc-body{padding:2px 18px 14px}
+
+.oc-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:3px}
+.oc-item.oc-alt{background:#f5f7f9}
+.oc-info{width:18px;height:18px;border-radius:50%;background:#0f2a51;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;cursor:help;font-style:italic}
+.oc-check{width:18px;height:18px;flex-shrink:0;accent-color:#0f2a51;cursor:pointer}
+.oc-item-lbl{font-size:14px;color:#44546c;line-height:1.35;flex:1;min-width:0}
+.oc-item-lbl a{color:var(--azure)}
+.oc-item-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.oc-vbox{border:1px solid #d0d5dd;border-radius:4px;padding:5px 12px;min-width:96px;text-align:left;background:#fff}
+.oc-vbox-lbl{display:block;font-size:10px;color:#a2aaad;line-height:1.2}
+.oc-vbox-val{display:block;font-size:13px;color:#44546c;font-weight:600}
+.oc-vval{font-size:14px;color:#1f2a51;font-weight:700;white-space:nowrap}
+</style>
+
+<div class="ape-overlay" id="oc-modal-overlay" style="display:none" onclick="ocModalClose(event)">
+  <div class="ape-modal oc-modal" id="oc-modal-inner">
+    <div class="ape-modal-hdr">
+      <span class="ape-modal-title">Essencial</span>
+      <button class="ape-modal-close" onclick="ocModalClose()" title="Fechar">&#10005;</button>
+    </div>
+    <div class="ape-modal-body">
+
+      <div class="oc-section collapsed">
+        <div class="oc-rail">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 00-1 1v.6A8 8 0 003.05 11a1 1 0 001.32.94A3 3 0 018.2 12.9a1 1 0 001.6 0 3 3 0 014.4 0 1 1 0 001.6 0 3 3 0 013.83-.96A1 1 0 0020.95 11 8 8 0 0013 3.6V3a1 1 0 00-1-1z"/><path d="M11 13.2V19a1 1 0 01-2 0 1 1 0 00-2 0 3 3 0 006 0v-5.8h-2z"/></svg>
+        </div>
+        <div class="oc-main">
+          <div class="oc-hdr" onclick="ocToggle(this)"><span class="oc-title">Coberturas</span>
+            <svg class="oc-chev" width="18" height="18" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="oc-body" id="oc-cob-body"></div>
+        </div>
+      </div>
+
+      <div class="oc-section collapsed">
+        <div class="oc-rail">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.83-.17-.17-2.83 2.5-2.5z"/></svg>
+        </div>
+        <div class="oc-main">
+          <div class="oc-hdr" onclick="ocToggle(this)"><span class="oc-title">Assistências</span>
+            <svg class="oc-chev" width="18" height="18" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="oc-body" id="oc-ass-body"></div>
+        </div>
+      </div>
+
+      <div class="oc-section collapsed">
+        <div class="oc-rail">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.83-.17-.17-2.83 2.5-2.5z"/></svg>
+        </div>
+        <div class="oc-main">
+          <div class="oc-hdr" onclick="ocToggle(this)"><span class="oc-title">Benefícios</span>
+            <svg class="oc-chev" width="18" height="18" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="oc-body" id="oc-ben-body"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="ape-modal-footer" style="justify-content:flex-end">
+      <button class="ape-btn-fechar" onclick="ocModalClose()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Modal Outras Coberturas e Serviços (AP Escolar) =====
+var OC_COBERTURAS = [
+  {lbl:'(M) – Morte', checked:true, right:[{box:'Capital', val:'R$ 100.000,00'}]},
+  {lbl:'(IEA) – Indenização Especial por Morte Acidental', checked:true, right:[{val:'R$ 100.000,00'}]},
+  {lbl:'(IPA) – Invalidez Permanente Total ou Parcial por Acidente', checked:true, right:[{box:'Percentual', val:'100%'},{val:'R$ 100.000,00'}]},
+  {lbl:'(DIT) – Diária de Incapacidade Temporária por Acidente', checked:true, right:[{box:'Franquia (dias)', val:'15'},{box:'Capital', val:'R$ 8.000,00'}]},
+  {lbl:'(IPAM) – Invalidez Permanente por Acidente Majorada', checked:false},
+  {lbl:'(IFPD) – Invalidez Funcional Permanente Total por Doença', checked:false},
+  {lbl:'(DCM) – Diagnóstico de Câncer Masculino', checked:false},
+  {lbl:'(DIH) – Diária de Internação Hospitalar', checked:false},
+  {lbl:'(DUTI) – Diária por Internação Hospitalar em UTI', checked:false},
+  {lbl:'(GFI) – Garantia Funeral Individual', checked:true, right:[{box:'Capital', val:'R$ 5.000,00'}]},
+  {lbl:'(GFC) – Garantia Funeral Casal', checked:false},
+  {lbl:'(GFFILH) – Garantia Funeral Filhos', checked:false},
+  {lbl:'(GFF) – Garantia Funeral Familiar', checked:false},
+  {lbl:'(GFFM) – Garantia Funeral Familiar Master', checked:false},
+  {lbl:'(GFFP) – Garantia Funeral Familiar Plus', checked:false},
+  {lbl:'(DG) – Doenças Graves', checked:false}
+];
+var OC_ASSIST = ['Orientação Psicológica','Pet Premium','Farma Assist','Acessibilidade','Bike','Segunda opinião médica','Kids','Help desk','Auto 24h','Residencial','Corredor','Torcedor','Orientação Nutricional','Assessoria Profissional'];
+var OC_BENEF = ['Orientação Financeira','Telemedicina','Vida Saudável'];
+
+function ocInfoIco(){ return '<span class="oc-info" title="Informações">i</span>'; }
+function ocRightHtml(right){
+  if (!right) return '';
+  var parts = right.map(function(r){
+    if (r.box) return '<div class="oc-vbox"><span class="oc-vbox-lbl">' + r.box + '</span><span class="oc-vbox-val">' + r.val + '</span></div>';
+    return '<span class="oc-vval">' + r.val + '</span>';
+  }).join('');
+  return '<div class="oc-item-right">' + parts + '</div>';
+}
+function ocSimpleRows(list, allChecked){
+  return list.map(function(name, i){
+    return '<div class="oc-item' + (i % 2 === 1 ? ' oc-alt' : '') + '">' + ocInfoIco() +
+      '<input type="checkbox" class="oc-check"' + (allChecked ? ' checked' : '') + '>' +
+      '<span class="oc-item-lbl">' + name + '</span></div>';
+  }).join('');
+}
+function ocBuild(){
+  var cob = OC_COBERTURAS.map(function(c, i){
+    return '<div class="oc-item' + (i % 2 === 1 ? ' oc-alt' : '') + '">' + ocInfoIco() +
+      '<input type="checkbox" class="oc-check"' + (c.checked ? ' checked' : '') + '>' +
+      '<span class="oc-item-lbl">' + c.lbl + '</span>' + ocRightHtml(c.right) + '</div>';
+  }).join('');
+  document.getElementById('oc-cob-body').innerHTML = cob;
+  document.getElementById('oc-ass-body').innerHTML = ocSimpleRows(OC_ASSIST, false);
+  document.getElementById('oc-ben-body').innerHTML = ocSimpleRows(OC_BENEF, true);
+}
+function ocModalOpen(){
+  document.querySelectorAll('#oc-modal-overlay .oc-section').forEach(function(s){ s.classList.add('collapsed'); });
+  document.getElementById('oc-modal-overlay').style.display = 'flex';
+}
+function ocModalClose(evt){
+  if (evt && evt.target !== document.getElementById('oc-modal-overlay')) return;
+  document.getElementById('oc-modal-overlay').style.display = 'none';
+}
+function ocToggle(el){ var s = el.closest('.oc-section'); if (s) s.classList.toggle('collapsed'); }
+ocBuild();
 </script>
 
 <!-- Modal GLOBAL VIDA -->
