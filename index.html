@@ -672,6 +672,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .prop-radio-lbl{font-size:13px;color:#586880;display:flex;align-items:center;gap:5px}
 .prop-radio-row{display:flex;gap:20px;flex-wrap:wrap}
 .prop-radio-item{display:flex;align-items:center;gap:6px;font-size:14px;color:#44546c;cursor:pointer;white-space:nowrap}
+.prop-radio-item:has(input:disabled){color:#a2aaad;cursor:not-allowed}
 .prop-radio-block-item{white-space:normal;line-height:1.5;align-items:flex-start}
 .prop-radio-block-item input{margin-top:3px}
 .prop-check-item{display:flex;align-items:center;gap:6px;font-size:14px;color:#44546c}
@@ -3985,7 +3986,7 @@ function authLogout(){
                   <div class="vcalc-row prop-row-pag-a">
                     <div class="vcalc-f">
                       <span class="vcalc-f-lbl">Dia preferencial do vencimento <span class="vcalc-req">*</span></span>
-                      <input type="text" id="prop-dia-vencimento" inputmode="numeric" maxlength="2" oninput="this.value=this.value.replace(/\\D/g,'');propCheckPagamento()">
+                      <input type="text" id="prop-dia-vencimento" inputmode="numeric" maxlength="2" oninput="this.value=this.value.replace(/\\D/g,'');propApplyPeriodoRule();propCheckPagamento()">
                     </div>
                     <div class="prop-radio-block">
                       <span class="prop-radio-lbl">Período de Vencimento da Fatura <span class="vcalc-req">*</span></span>
@@ -4700,6 +4701,7 @@ function vcalcGoToProposta() {
   if (viewCotacao) viewCotacao.style.display = 'none';
   if (viewProposta) viewProposta.style.display = 'block';
   vcalcPopulateProposta();
+  propApplyProdutoRules();
 
   var titleText = document.getElementById('vcs-title-text');
   var badge = document.getElementById('vcalc-cotacao-num');
@@ -4802,6 +4804,42 @@ function propCheckPagamento() {
   var vigOk = propValidateVigencia();
   var allFilled = !!(vig && vig.value.trim() && vigOk && dia && dia.value.trim() && periodo && atualizacao);
   propUpdateSubcard('prop-sub-pagamento', allFilled);
+}
+
+// Regras específicas do AP Escolar na seção "Dados de pagamento e vigência"
+function propApplyProdutoRules() {
+  var isApEscolar = VCALC_CURRENT_PRODUTO === 'AP Escolar';
+  document.querySelectorAll('input[name="prop-forma-pag"]').forEach(function(r) {
+    var item = r.closest('.prop-radio-item');
+    if (isApEscolar) {
+      var isBoleto = r.value === 'Boleto';
+      if (item) item.style.display = isBoleto ? '' : 'none';
+      r.disabled = !isBoleto;
+      if (isBoleto) r.checked = true;
+    } else {
+      if (item) item.style.display = '';
+      r.disabled = false;
+    }
+  });
+  propApplyPeriodoRule();
+}
+
+function propApplyPeriodoRule() {
+  var mesRadio = document.querySelector('input[name="prop-periodo"][value="mes"]');
+  var mesSegRadio = document.querySelector('input[name="prop-periodo"][value="mes-seguinte"]');
+  if (!mesRadio || !mesSegRadio) return;
+  if (VCALC_CURRENT_PRODUTO !== 'AP Escolar') {
+    mesRadio.disabled = false;
+    return;
+  }
+  var dia = parseInt((document.getElementById('prop-dia-vencimento') || {}).value, 10);
+  if (!isNaN(dia) && dia < 10) {
+    mesRadio.disabled = true;
+    if (mesRadio.checked) mesRadio.checked = false;
+    mesSegRadio.checked = true;
+  } else {
+    mesRadio.disabled = false;
+  }
 }
 
 function propCopiarEmailEndereco() {
@@ -7555,6 +7593,7 @@ function initTestandoAquiPage(){
 // =====================
 // VIDA CALCULE+ PAGE
 // =====================
+var VCALC_CURRENT_PRODUTO = '';
 function vcalcSetPerson(tipo) {
   document.getElementById('vcp-pf').classList.toggle('vcp-on', tipo === 'pf');
   document.getElementById('vcp-pj').classList.toggle('vcp-on', tipo === 'pj');
@@ -7781,6 +7820,7 @@ function vcalcSelectProd(card) {
   document.querySelectorAll('.vcalc-prod-card').forEach(c => c.classList.remove('vpcard-selected'));
   card.classList.add('vpcard-selected');
   const label = card.querySelector('.vcalc-prod-lbl');
+  VCALC_CURRENT_PRODUTO = label ? label.textContent.trim() : '';
   if (label && label.textContent.trim() === 'AP Escolar') {
     apeModalOpen();
   } else if (label && label.textContent.trim() === 'Global Vida') {
@@ -8750,7 +8790,7 @@ function apeBuildPlanCard(g, estipName, estipCnpj) {
             '<div class="ape-plan-side-hdr">' +
               '<span class="ape-side-title">Plano Ideal ' + apeCheckSvg() + '</span>' +
               '<span class="ape-side-price">R$ 1.647,97 <small>/ mês</small></span>' +
-              '<span class="ape-side-taxa">Taxa Referencial VG e AP: 0,003500</span>' +
+              '<span class="ape-side-taxa">Taxa Referencial: 0,003500</span>' +
             '</div>' +
             checkRows +
             '<button class="ape-outras-btn" onclick="ocModalOpen()">Outras coberturas e serviços</button>' +
@@ -9337,7 +9377,7 @@ function massaOnFile(input){
     </div>
     <div class="ape-modal-body">
 
-      <div class="oc-section collapsed">
+      <div class="oc-section">
         <div class="oc-rail">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 00-1 1v.6A8 8 0 003.05 11a1 1 0 001.32.94A3 3 0 018.2 12.9a1 1 0 001.6 0 3 3 0 014.4 0 1 1 0 001.6 0 3 3 0 013.83-.96A1 1 0 0020.95 11 8 8 0 0013 3.6V3a1 1 0 00-1-1z"/><path d="M11 13.2V19a1 1 0 01-2 0 1 1 0 00-2 0 3 3 0 006 0v-5.8h-2z"/></svg>
         </div>
@@ -9349,19 +9389,7 @@ function massaOnFile(input){
         </div>
       </div>
 
-      <div class="oc-section collapsed">
-        <div class="oc-rail">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.83-.17-.17-2.83 2.5-2.5z"/></svg>
-        </div>
-        <div class="oc-main">
-          <div class="oc-hdr" onclick="ocToggle(this)"><span class="oc-title">Assistências</span>
-            <svg class="oc-chev" width="18" height="18" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="oc-body" id="oc-ass-body"></div>
-        </div>
-      </div>
-
-      <div class="oc-section collapsed">
+      <div class="oc-section">
         <div class="oc-rail">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.83-.17-.17-2.83 2.5-2.5z"/></svg>
         </div>
@@ -9383,25 +9411,12 @@ function massaOnFile(input){
 <script>
 // ===== Modal Outras Coberturas e Serviços (AP Escolar) =====
 var OC_COBERTURAS = [
-  {lbl:'(M) – Morte', checked:true, right:[{box:'Capital', val:'R$ 100.000,00'}]},
-  {lbl:'(IEA) – Indenização Especial por Morte Acidental', checked:true, right:[{val:'R$ 100.000,00'}]},
-  {lbl:'(IPA) – Invalidez Permanente Total ou Parcial por Acidente', checked:true, right:[{box:'Percentual', val:'100%'},{val:'R$ 100.000,00'}]},
-  {lbl:'(DIT) – Diária de Incapacidade Temporária por Acidente', checked:true, right:[{box:'Franquia (dias)', val:'15'},{box:'Capital', val:'R$ 8.000,00'}]},
-  {lbl:'(IPAM) – Invalidez Permanente por Acidente Majorada', checked:false},
-  {lbl:'(IFPD) – Invalidez Funcional Permanente Total por Doença', checked:false},
-  {lbl:'(DCM) – Diagnóstico de Câncer Masculino', checked:false},
-  {lbl:'(DIH) – Diária de Internação Hospitalar', checked:false},
-  {lbl:'(DUTI) – Diária por Internação Hospitalar em UTI', checked:false},
-  {lbl:'(GFI) – Garantia Funeral Individual', checked:true, right:[{box:'Capital', val:'R$ 5.000,00'}]},
-  {lbl:'(GFC) – Garantia Funeral Casal', checked:false},
-  {lbl:'(GFFILH) – Garantia Funeral Filhos', checked:false},
-  {lbl:'(GFF) – Garantia Funeral Familiar', checked:false},
-  {lbl:'(GFFM) – Garantia Funeral Familiar Master', checked:false},
-  {lbl:'(GFFP) – Garantia Funeral Familiar Plus', checked:false},
-  {lbl:'(DG) – Doenças Graves', checked:false}
+  {lbl:'(MA) – Morte Acidental', checked:true, right:[{box:'Capital', val:'R$ 100.000,00'}]},
+  {lbl:'(IPA) – Invalidez Permanente Total ou Parcial por Acidente', checked:true, right:[{box:'Percentual', val:'100%'},{box:'Capital', val:'R$ 100.000,00'}]},
+  {lbl:'(DMHO) – Despesas Médicas, Hospitalares e Odontológicas', checked:true},
+  {lbl:'(GFI) – Garantia Funeral Individual', checked:true, right:[{box:'Capital', val:'R$ 5.000,00'}]}
 ];
-var OC_ASSIST = ['Orientação Psicológica','Pet Premium','Farma Assist','Acessibilidade','Bike','Segunda opinião médica','Kids','Help desk','Auto 24h','Residencial','Corredor','Torcedor','Orientação Nutricional','Assessoria Profissional'];
-var OC_BENEF = ['Orientação Financeira','Telemedicina','Vida Saudável'];
+var OC_BENEF = ['Assistência Escolar'];
 
 function ocInfoIco(){ return '<span class="oc-info" title="Informações">i</span>'; }
 function ocRightHtml(right){
@@ -9426,11 +9441,10 @@ function ocBuild(){
       '<span class="oc-item-lbl">' + c.lbl + '</span>' + ocRightHtml(c.right) + '</div>';
   }).join('');
   document.getElementById('oc-cob-body').innerHTML = cob;
-  document.getElementById('oc-ass-body').innerHTML = ocSimpleRows(OC_ASSIST, false);
   document.getElementById('oc-ben-body').innerHTML = ocSimpleRows(OC_BENEF, true);
 }
 function ocModalOpen(){
-  document.querySelectorAll('#oc-modal-overlay .oc-section').forEach(function(s){ s.classList.add('collapsed'); });
+  document.querySelectorAll('#oc-modal-overlay .oc-section').forEach(function(s){ s.classList.remove('collapsed'); });
   document.getElementById('oc-modal-overlay').style.display = 'flex';
 }
 function ocModalClose(evt){
