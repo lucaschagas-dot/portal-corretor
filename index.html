@@ -1145,12 +1145,27 @@ function authIsAllowed(email){
   for (var i = 0; i < AUTH_ALLOWED.length; i++){ if (authNorm(AUTH_ALLOWED[i]) === n) return true; }
   return false;
 }
+function authFirstName(email){
+  var local = (email || '').split('@')[0] || '';
+  var first = local.split('.')[0] || local;
+  if (!first) return '';
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+}
+function authUpdateUserName(email){
+  var nameEl = document.querySelector('.user-name');
+  if (nameEl) { nameEl.textContent = authFirstName(email) || 'Usuário'; return; }
+  document.addEventListener('DOMContentLoaded', function(){
+    var el = document.querySelector('.user-name');
+    if (el) el.textContent = authFirstName(email) || 'Usuário';
+  });
+}
 function authGrant(email){
   try { localStorage.setItem(AUTH_KEY, authNorm(email)); } catch(e){}
   var gate = document.getElementById('auth-gate');
   var logout = document.getElementById('auth-logout');
   if (gate) gate.style.display = 'none';
   if (logout) logout.style.display = 'inline-flex';
+  authUpdateUserName(email);
 }
 function authSubmit(ev){
   ev.preventDefault();
