@@ -8385,8 +8385,11 @@ function apeApplyRules(gid) {
   var group = APE_GROUPS.find(function(g){ return g.id === gid; });
   if (!group) return;
   var has013 = group.values.indexOf('0_13') >= 0;
+  var has14mais = group.values.indexOf('14_mais') >= 0;
   group.locked = has013;
+  group.noMultiplo = has013 || has14mais;
   if (has013) group.tipoCapital = 'uniforme';
+  else if (group.noMultiplo && group.tipoCapital === 'multiplo') group.tipoCapital = 'uniforme';
 }
 
 function apeRenderChips(gid) {
@@ -8442,12 +8445,13 @@ function apeRenderFields(gid) {
   var existingVidasEl = document.getElementById('ape-vidas-' + gid);
   var vidasVal = vidasDisabled ? '0' : (existingVidasEl ? existingVidasEl.value : '');
 
+  var multiploOptHTML = group.noMultiplo ? '' : ('<option value="multiplo"' + (tipo === 'multiplo' ? ' selected' : '') + '>Múltiplo Salarial</option>');
   var tipoHTML =
     '<div class="ape-gfield">' +
     '<span class="ape-gfield-lbl">Tipo de Capital <span class="ape-gfield-req">*</span></span>' +
     '<select id="ape-tipo-' + gid + '" data-gid="' + gid + '" class="ape-tipo-sel"' + (locked ? ' disabled' : '') + '>' +
       '<option value="uniforme"' + (tipo === 'uniforme' ? ' selected' : '') + '>Uniforme</option>' +
-      '<option value="multiplo"' + (tipo === 'multiplo' ? ' selected' : '') + '>Múltiplo Salarial</option>' +
+      multiploOptHTML +
       '<option value="escalonado"' + (tipo === 'escalonado' ? ' selected' : '') + '>Escalonado</option>' +
     '</select></div>';
 
@@ -8971,6 +8975,7 @@ startCarousel();
       <div style="margin-top:16px">
         <p class="ape-info-text">Os limites de idade para a contratação do seguro é de 0 anos (6 meses) a 70 anos.</p>
         <p class="ape-info-text">É possível criar até 3 grupos sem repetir o grupo segurável. Para confirmar, é obrigatório ter ao menos um grupo de alunos.</p>
+        <p class="ape-info-text">Nenhum grupo de alunos (0 a 13 anos ou 14 anos acima) pode contratar o tipo de capital Múltiplo Salarial.</p>
         <p class="ape-info-text">Atenção: O upload de massa (arquivo) é obrigatório para as opções Múltiplo Salarial e Escalonado.</p>
       </div>
     </div>
