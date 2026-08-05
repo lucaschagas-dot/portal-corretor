@@ -8128,8 +8128,6 @@ const GV_COVERAGE = [
   {code:'(IPA)', label:'Invalidez Permanente Total ou Parcial por Acidente', fit:true, plus:true, premium:true},
   {code:'(IFPD)', label:'Invalidez Funcional Permanente Total por Doença', fit:false, plus:true, premium:true},
   {code:'(DMHO)', label:'Despesas Médicas, Hospitalares e Odontológicas', fit:false, plus:true, premium:true},
-  {code:'(CDAP)', label:'Cobertura de Diárias por Acidente Pessoal *', fit:false, plus:true, premium:true},
-  {code:'(ADPT)', label:'Auxílio por Doença Profissional Temporária *', fit:false, plus:false, premium:true},
   {code:'(GFI)', label:'Garantia Funeral Individual', fit:true, plus:true, premium:false},
   {code:'(GFF)', label:'Garantia Funeral Familiar', fit:false, plus:false, premium:true},
   {code:'(MCONJ)', label:'Morte Cônjuge', fit:false, plus:false, premium:true},
@@ -8194,7 +8192,6 @@ function gvBuildPlanCard(group, estipName, estipCnpj) {
       </div>
       <div class="ape-plan-body">
         <div class="gv-plan-grid">${cells}</div>
-        <p class="gv-cov-note">* Novas coberturas &mdash; nomenclatura e regras a confirmar com a área técnica.</p>
         <div class="gv-assist-section">
           <div class="gv-assist-hdr" onclick="gvToggleAssist(this)">
             <span class="gv-assist-title">Assistências Inclusas (${GV_ASSISTANCES.length})</span>
