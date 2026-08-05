@@ -623,7 +623,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .vab-revisao{background:#175c3c}
 .vab-proposta{background:var(--green)}
 
-.vcalc-info-bar{background:#0c2340;color:#fff;display:flex;align-items:center;padding:12px 28px;gap:34px;flex-wrap:wrap;font-size:12.5px}
+.vcalc-info-bar{background:#0c2340;color:#fff;display:flex;align-items:center;padding:12px 28px;gap:22px;flex-wrap:wrap;font-size:12.5px}
 .vib-col{display:flex;flex-direction:column;gap:3px}
 .vib-lbl{color:#9fb2c9;font-size:11.5px}
 .vib-val{font-weight:600;color:#fff;display:flex;align-items:center;gap:6px;white-space:nowrap}
@@ -635,6 +635,20 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .vib-premio-lbl{font-size:11px;color:#9fb2c9}
 .vib-premio-val{font-size:20px;font-weight:700;color:#fff}
 .vib-premio-val span{font-size:13px;font-weight:600;margin-right:2px}
+
+/* Cupom de desconto dentro da barra azul (ao lado do Prêmio Total) */
+.vib-right-group{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:nowrap}
+.vib-right-group .vib-premio{margin-left:0}
+.vib-cupom{position:relative;display:flex;flex-direction:column;gap:3px}
+.vib-cupom-row{display:flex;align-items:center;gap:6px}
+.vib-cupom-row input{width:112px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:3px;color:#fff;font-size:12px;padding:5px 8px;outline:none;font-family:inherit}
+.vib-cupom-row input::placeholder{color:#9fb2c9}
+.vib-cupom-row input:focus{border-color:#4dd4ff}
+.vib-cupom-btn{background:var(--azure);color:#fff;border:none;border-radius:3px;padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .15s}
+.vib-cupom-btn:hover{opacity:0.88}
+.vib-cupom .gv-cupom-feedback{display:none;position:absolute;bottom:calc(100% + 7px);right:0;width:272px;background:#173a63;border:1px solid rgba(255,255,255,0.18);border-radius:3px;padding:7px 10px;font-size:11.5px;line-height:1.4;box-shadow:0 4px 14px rgba(0,0,0,0.32)}
+.vib-cupom .gv-cupom-feedback.gv-cupom-ok{display:block;color:#6ee7a8}
+.vib-cupom .gv-cupom-feedback.gv-cupom-err{display:block;color:#ff8a80}
 
 .vcalc-site-footer{background:#0c2340;border-top:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:space-between;padding:10px 28px;gap:20px;flex-wrap:wrap;font-size:11px;color:#9fb2c9}
 .vsf-left{display:flex;align-items:center;gap:16px}
@@ -3806,15 +3820,6 @@ function authLogout(){
           <div id="gv-plan-cards"></div>
 
           <button class="vcalc-subestip-btn" id="gv-add-grupo-page-btn" onclick="gvReopenModal()">+ Adicionar Grupo</button>
-
-          <div class="gv-cupom-box">
-            <div class="gv-f" style="max-width:280px">
-              <span class="gv-f-lbl">Cupom de desconto</span>
-              <input type="text" id="gv-cupom-input" placeholder="Digite o código" oninput="this.value=this.value.toUpperCase()">
-            </div>
-            <button class="gv-add-btn" type="button" onclick="gvAplicarCupom()">Aplicar cupom</button>
-            <span id="gv-cupom-feedback" class="gv-cupom-feedback"></span>
-          </div>
         </div>
 
         </div><!-- /vcalc-view-cotacao -->
@@ -4177,9 +4182,19 @@ function authLogout(){
               <div class="vib-mini-box"><span class="vib-mini-lbl">Periodicidade</span><span class="vib-mini-val">Mensal</span></div>
             </div>
           </div>
-          <div class="vib-premio">
-            <div class="vib-premio-lbl">Prêmio Total:</div>
-            <div class="vib-premio-val"><span>R$</span> 46,21</div>
+          <div class="vib-right-group">
+            <div class="vib-cupom" id="vib-cupom">
+              <span class="vib-lbl">Cupom de desconto</span>
+              <div class="vib-cupom-row">
+                <input type="text" id="gv-cupom-input" placeholder="Digite o código" oninput="this.value=this.value.toUpperCase()">
+                <button class="vib-cupom-btn" type="button" onclick="gvAplicarCupom()">Aplicar cupom</button>
+              </div>
+              <span id="gv-cupom-feedback" class="gv-cupom-feedback"></span>
+            </div>
+            <div class="vib-premio">
+              <div class="vib-premio-lbl">Prêmio Total:</div>
+              <div class="vib-premio-val"><span>R$</span> 46,21</div>
+            </div>
           </div>
         </div>
 
@@ -4712,6 +4727,32 @@ function vcalcSetFooterVisible(visible) {
   var page = document.querySelector('.vcalc-page');
   if (footer) footer.classList.toggle('vsf-active', visible);
   if (page) page.classList.toggle('vpage-has-footer', visible);
+  vcalcUpdateFooterCupom();
+  vcalcSyncFooterSpacer();
+}
+
+// Reserva no fim da página exatamente a altura do rodapé fixo (que varia se a barra quebra linha)
+function vcalcSyncFooterSpacer() {
+  var footer = document.querySelector('.vcalc-sticky-footer');
+  var page = document.querySelector('.vcalc-page');
+  if (!footer || !page) return;
+  if (!footer.classList.contains('vsf-active')) { page.style.paddingBottom = ''; return; }
+  page.style.paddingBottom = (footer.getBoundingClientRect().height + 14) + 'px';
+}
+window.addEventListener('resize', vcalcSyncFooterSpacer);
+
+// O cupom de desconto no rodapé é exclusivo do Global Vida
+function vcalcUpdateFooterCupom() {
+  var box = document.getElementById('vib-cupom');
+  if (!box) return;
+  var isGlobalVida = VCALC_CURRENT_PRODUTO === 'Global Vida';
+  box.style.display = isGlobalVida ? '' : 'none';
+  if (!isGlobalVida) {
+    var inp = document.getElementById('gv-cupom-input');
+    var fb  = document.getElementById('gv-cupom-feedback');
+    if (inp) inp.value = '';
+    if (fb) { fb.textContent = ''; fb.className = 'gv-cupom-feedback'; }
+  }
 }
 
 // =====================
@@ -7746,6 +7787,7 @@ function initVidaCalculePage() {
     if (el) el.value = '';
   });
   document.querySelectorAll('input[name="vcgenero"]').forEach(r => r.checked = false);
+  VCALC_CURRENT_PRODUTO = '';
   const subestipContainer = document.getElementById('vcalc-subestip-container');
   if (subestipContainer) subestipContainer.innerHTML = '';
   vcalcSubestipNextId = 1;
@@ -8191,6 +8233,15 @@ function gvPlanToggle(el) {
   if (card) card.classList.toggle('ape-plan-collapsed');
 }
 
+let gvCupomFbTimer = null;
+function gvCupomFeedbackAutoHide(fb) {
+  if (gvCupomFbTimer) clearTimeout(gvCupomFbTimer);
+  gvCupomFbTimer = setTimeout(function(){
+    fb.textContent = '';
+    fb.className = 'gv-cupom-feedback';
+  }, 6000);
+}
+
 function gvAplicarCupom() {
   const inp = document.getElementById('gv-cupom-input');
   const fb = document.getElementById('gv-cupom-feedback');
@@ -8199,10 +8250,12 @@ function gvAplicarCupom() {
   if (!code) {
     fb.textContent = 'Informe um código de cupom.';
     fb.className = 'gv-cupom-feedback gv-cupom-err';
+    gvCupomFeedbackAutoHide(fb);
     return;
   }
   fb.textContent = `Cupom "${code}" aplicado — 10% de desconto vinculado ao seu cadastro de corretor.`;
   fb.className = 'gv-cupom-feedback gv-cupom-ok';
+  gvCupomFeedbackAutoHide(fb);
 }
 
 // ---- Modal Solicitação de Análise de Condição Personalizada ----
