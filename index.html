@@ -687,6 +687,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .prop-row-endereco2{grid-template-columns:2fr 1fr 1fr}
 .prop-row-endereco3{grid-template-columns:90px 1fr 1.8fr}
 .prop-row-pag-a{grid-template-columns:1fr 1fr}
+.prop-row-banco{grid-template-columns:1.6fr 1fr 1fr}
 .prop-row-pag-b{grid-template-columns:2fr 1fr 1fr;align-items:end}
 
 .prop-radio-block{display:flex;flex-direction:column;gap:8px;padding:4px 0}
@@ -3989,11 +3990,67 @@ function authLogout(){
                     <div class="prop-radio-block">
                       <span class="prop-radio-lbl">Forma de pagamento</span>
                       <div class="prop-radio-row">
-                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Boleto" checked> Boleto</label>
-                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Débito em conta"> Débito em conta</label>
-                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Cartão de crédito"> Cartão de crédito</label>
-                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="PIX"> PIX</label>
+                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Boleto" checked onchange="propToggleDadosBancarios()"> Boleto</label>
+                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Débito em conta" onchange="propToggleDadosBancarios()"> Débito em conta</label>
+                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="Cartão de crédito" onchange="propToggleDadosBancarios()"> Cartão de crédito</label>
+                        <label class="prop-radio-item"><input type="radio" name="prop-forma-pag" value="PIX" onchange="propToggleDadosBancarios()"> PIX</label>
                       </div>
+                    </div>
+                  </div>
+
+                  <!-- Dados bancários: só para Débito em conta / PIX -->
+                  <div class="vcalc-row prop-row-banco" id="prop-banco-fields" style="display:none">
+                    <div class="vcalc-f">
+                      <span class="vcalc-f-lbl">Seleção de Banco</span>
+                      <select id="prop-banco">
+                        <option value=""></option>
+                        <option>001 &ndash; Banco do Brasil</option>
+                        <option>033 &ndash; Santander</option>
+                        <option>036 &ndash; Banco Bradesco BBI</option>
+                        <option>037 &ndash; Banpará</option>
+                        <option>041 &ndash; Banrisul</option>
+                        <option>070 &ndash; BRB &ndash; Banco de Brasília</option>
+                        <option>077 &ndash; Banco Inter</option>
+                        <option>082 &ndash; Banco Topázio</option>
+                        <option>084 &ndash; Uniprime</option>
+                        <option>097 &ndash; Credisis</option>
+                        <option>099 &ndash; Uniprime Central</option>
+                        <option>104 &ndash; Caixa Econômica Federal</option>
+                        <option>121 &ndash; Banco Agibank</option>
+                        <option>136 &ndash; Unicred</option>
+                        <option>197 &ndash; Stone</option>
+                        <option>208 &ndash; Banco BTG Pactual</option>
+                        <option>212 &ndash; Banco Original</option>
+                        <option>218 &ndash; Banco BS2</option>
+                        <option>237 &ndash; Bradesco</option>
+                        <option>246 &ndash; Banco ABC Brasil</option>
+                        <option>260 &ndash; Nu Pagamentos (Nubank)</option>
+                        <option>290 &ndash; PagBank (PagSeguro)</option>
+                        <option>318 &ndash; Banco BMG</option>
+                        <option>323 &ndash; Mercado Pago</option>
+                        <option>336 &ndash; Banco C6</option>
+                        <option>341 &ndash; Itaú Unibanco</option>
+                        <option>380 &ndash; PicPay</option>
+                        <option>389 &ndash; Banco Mercantil do Brasil</option>
+                        <option>422 &ndash; Banco Safra</option>
+                        <option>604 &ndash; Banco Industrial do Brasil</option>
+                        <option>633 &ndash; Banco Rendimento</option>
+                        <option>637 &ndash; Banco Sofisa</option>
+                        <option>652 &ndash; Itaú Unibanco Holding</option>
+                        <option>655 &ndash; Banco Votorantim</option>
+                        <option>707 &ndash; Banco Daycoval</option>
+                        <option>745 &ndash; Citibank</option>
+                        <option>748 &ndash; Sicredi</option>
+                        <option>756 &ndash; Sicoob</option>
+                      </select>
+                    </div>
+                    <div class="vcalc-f">
+                      <span class="vcalc-f-lbl">Agência</span>
+                      <input type="text" id="prop-agencia" placeholder="0000" inputmode="numeric" maxlength="4" oninput="maskAgencia(this)">
+                    </div>
+                    <div class="vcalc-f">
+                      <span class="vcalc-f-lbl">Conta e dígito</span>
+                      <input type="text" id="prop-conta" placeholder="0000-00" inputmode="numeric" maxlength="7" oninput="maskContaDigito(this)">
                     </div>
                   </div>
 
@@ -4869,6 +4926,34 @@ function propCheckPagamento() {
   propUpdateSubcard('prop-sub-pagamento', allFilled);
 }
 
+// Dados bancários aparecem apenas para "Débito em conta" e "PIX"
+function propToggleDadosBancarios() {
+  var box = document.getElementById('prop-banco-fields');
+  if (!box) return;
+  var sel = document.querySelector('input[name="prop-forma-pag"]:checked');
+  var forma = sel ? sel.value : '';
+  var precisaBanco = (forma === 'Débito em conta' || forma === 'PIX');
+  box.style.display = precisaBanco ? '' : 'none';
+  if (!precisaBanco) {
+    ['prop-banco','prop-agencia','prop-conta'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+  propCheckPagamento();
+}
+
+// Agência: somente dígitos (0000)
+function maskAgencia(el) {
+  el.value = el.value.replace(/[^0-9]/g, '').slice(0, 4);
+}
+
+// Máscara da conta no formato 0000-00
+function maskContaDigito(el) {
+  var d = el.value.replace(/[^0-9]/g, '').slice(0, 6);
+  el.value = d.length > 4 ? d.slice(0, 4) + '-' + d.slice(4) : d;
+}
+
 // Regras específicas do AP Escolar na seção "Dados de pagamento e vigência"
 function propApplyProdutoRules() {
   var isApEscolar = VCALC_CURRENT_PRODUTO === 'AP Escolar';
@@ -4885,6 +4970,7 @@ function propApplyProdutoRules() {
     }
   });
   propApplyPeriodoRule();
+  propToggleDadosBancarios();
 }
 
 function propApplyPeriodoRule() {
