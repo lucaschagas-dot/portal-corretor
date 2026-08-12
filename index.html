@@ -1076,7 +1076,6 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 /* ===== MODAL: SOLICITAÇÃO DE ANÁLISE DE CONDIÇÃO PERSONALIZADA ===== */
 .ra-analise-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:3px;margin-bottom:16px;cursor:pointer;background:#fafbfc}
 .ra-analise-title{font-size:15px;font-weight:700;color:#1f2a51}
-.ra-analise-status{color:#008C50;font-weight:700}
 .ra-details-toggle{font-size:13px;color:#a2aaad;display:flex;align-items:center;gap:6px}
 .ra-details-chevron{transition:transform .2s;flex-shrink:0}
 .ra-analise-hdr.ra-collapsed + .ra-analise-body{display:none}
@@ -8568,6 +8567,9 @@ function gvAplicarCupom() {
 let raFiles = [];
 
 function raModalOpen() {
+  const cnpj = (document.getElementById('vc-cnpj')?.value || '').trim();
+  const titleEl = document.getElementById('ra-analise-title');
+  if (titleEl) titleEl.textContent = 'Análise de Aceitação' + (cnpj ? ' ' + cnpj : '');
   document.getElementById('ra-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
@@ -9980,7 +9982,7 @@ ocBuild();
     </div>
     <div class="ape-modal-body">
       <div class="ra-analise-hdr" onclick="raToggleDetalhes(this)">
-        <span class="ra-analise-title">Analise 1 <span class="ra-analise-status">- Aceita</span></span>
+        <span class="ra-analise-title" id="ra-analise-title">Análise de Aceitação</span>
         <span class="ra-details-toggle">Veja detalhes da análise
           <svg class="ra-details-chevron" width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#a2aaad" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
