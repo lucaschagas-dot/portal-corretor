@@ -1008,10 +1008,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .gv-f-clear{position:absolute;top:7px;right:8px;cursor:pointer;color:#a2aaad;font-size:11px;line-height:1}
 .gv-f-clear:hover{color:#586880}
 .gv-cap-error{font-size:10.5px;color:#e53935;line-height:1.4;margin-top:2px}
+.gv-chip-list{display:flex;flex-wrap:wrap;gap:6px}
 .gv-chip{display:inline-flex;align-items:center;gap:8px;background:#eef1f4;border-radius:3px;padding:5px 10px;font-size:13px;font-weight:600;color:#44546c}
 .gv-chip-x{background:none;border:none;color:#8a94a3;cursor:pointer;font-size:13px;padding:0;display:flex;align-items:center;line-height:1}
 .gv-chip-x:hover{color:#586880}
-.gv-row-trash{position:absolute;top:-9px;right:0;cursor:pointer;background:#fff;border-radius:50%}
 .gv-add-btns-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
 .gv-add-btn{padding:9px 20px;background:var(--azure);color:#fff;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background 0.15s}
 .gv-add-btn:hover{background:#1557a0}
@@ -8030,20 +8030,30 @@ function gvFormatLimite(n) {
   return 'R$ ' + n.toLocaleString('pt-BR') + ',00';
 }
 
-function gvGroupRowHtml(kind) {
-  const def = GV_GROUP_DEFS[kind];
-  const trash = def.removable ? `<svg class="gv-row-trash" width="16" height="16" viewBox="0 0 24 24" fill="none" onclick="gvRemoveGroup('${kind}')"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '';
+function gvRowKinds(row) {
+  return (row.getAttribute('data-kind') || '').split(',').filter(Boolean);
+}
+
+function gvGroupRowHtml(kinds) {
+  const chips = kinds.map(function(kind) {
+    const def = GV_GROUP_DEFS[kind];
+    const x = def.removable ? `<button class="gv-chip-x" type="button" onclick="gvRemoveGroup('${kind}')">&#10005;</button>` : '';
+    return `<div class="gv-chip"><span>${def.label}</span>${x}</div>`;
+  }).join('');
+  const tooltip = kinds.map(function(kind) {
+    const def = GV_GROUP_DEFS[kind];
+    return `<strong>${def.label}:</strong> ${def.accept}`;
+  }).join('<br><br>');
   return `
-    <div class="gv-group-row" data-kind="${kind}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
-      ${trash}
+    <div class="gv-group-row" data-kind="${kinds.join(',')}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
       <div class="gv-f">
         <span class="gv-f-lbl">Grupo Segurável
           <span class="vcalc-tip">
             <span class="vcalc-tip-ico">i</span>
-            <span class="vcalc-tip-bubble"><strong>Documentos para aceitação:</strong><br>${def.accept}</span>
+            <span class="vcalc-tip-bubble"><strong>Documentos para aceitação:</strong><br>${tooltip}</span>
           </span>
         </span>
-        <div class="gv-chip"><span>${def.label}</span><button class="gv-chip-x" type="button">&#10005;</button></div>
+        <div class="gv-chip-list">${chips}</div>
       </div>
       <div class="gv-f gv-f-clr">
         <span class="gv-f-lbl">Tipo de Capital
@@ -8079,8 +8089,11 @@ function gvGroupRowHtml(kind) {
 function gvCheckCapitalLimit(input) {
   const row = input.closest('.gv-group-row');
   if (!row) return;
-  const kind = row.getAttribute('data-kind');
-  const def = GV_GROUP_DEFS[kind] || GV_GROUP_DEFS.funcionarios;
+  const kinds = gvRowKinds(row);
+  let def = GV_GROUP_DEFS[kinds[0]] || GV_GROUP_DEFS.funcionarios;
+  kinds.forEach(function(k) {
+    if (GV_GROUP_DEFS[k].limite < def.limite) def = GV_GROUP_DEFS[k];
+  });
   const val = gvParseCurrency(input.value);
   const errEl = row.querySelector('.gv-cap-error');
   const box = input.closest('.gv-f');
@@ -8128,7 +8141,7 @@ function gvClearField(iconEl) {
 function gvRenderGroups() {
   const container = document.getElementById('gv-groups-container');
   if (!container) return;
-  container.innerHTML = gvActiveGroups.map(k => gvGroupRowHtml(k)).join('');
+  container.innerHTML = gvGroupRowHtml(gvActiveGroups);
   gvRenderAddButtons();
 }
 
@@ -8150,6 +8163,7 @@ function gvAddGroup(kind) {
 
 function gvRemoveGroup(kind) {
   gvActiveGroups = gvActiveGroups.filter(k => k !== kind);
+  if (!gvActiveGroups.length) gvActiveGroups = ['funcionarios'];
   gvRenderGroups();
 }
 
@@ -8196,13 +8210,14 @@ let GV_CONFIRMED_GROUPS = [];
 function gvCaptureGroupData() {
   const rows = document.querySelectorAll('#gv-groups-container .gv-group-row');
   GV_CONFIRMED_GROUPS = Array.from(rows).map(row => {
-    const kind = row.getAttribute('data-kind');
+    const kinds = gvRowKinds(row);
     const capitalSel = row.querySelector('.gv-capital-sel');
     const valorInp = row.querySelector('.gv-valor-inp');
     const numvidasInp = row.querySelector('.gv-numvidas-inp');
     return {
-      kind: kind,
-      label: GV_GROUP_DEFS[kind].label,
+      kind: kinds.join(','),
+      kinds: kinds,
+      label: kinds.map(k => GV_GROUP_DEFS[k].label).join(', '),
       tipoCapital: capitalSel ? capitalSel.value : GV_CAPITAL_DEFAULT,
       capital: (valorInp && valorInp.value.trim()) ? valorInp.value.trim() : GV_VALOR_DEFAULT,
       vidas: (numvidasInp && numvidasInp.value.trim()) ? numvidasInp.value.trim() : '0'
@@ -8371,7 +8386,7 @@ function gvRenderResultCards() {
   const container = document.getElementById('gv-plan-cards');
   if (container) container.innerHTML = html;
   const pageBtn = document.getElementById('gv-add-grupo-page-btn');
-  const allAdded = GV_GROUP_ORDER.every(k => GV_CONFIRMED_GROUPS.some(g => g.kind === k));
+  const allAdded = GV_GROUP_ORDER.every(k => GV_CONFIRMED_GROUPS.some(g => (g.kinds || [g.kind]).includes(k)));
   if (pageBtn) pageBtn.style.display = allAdded ? 'none' : 'inline-flex';
 }
 
@@ -8468,21 +8483,23 @@ function raConfirmar() {
 }
 
 function gvReopenModal() {
-  gvActiveGroups = GV_CONFIRMED_GROUPS.length ? GV_CONFIRMED_GROUPS.map(g => g.kind) : ['funcionarios'];
+  const g0 = GV_CONFIRMED_GROUPS[0];
+  gvActiveGroups = (g0 && g0.kinds && g0.kinds.length) ? g0.kinds.slice() : ['funcionarios'];
   if (!gvActiveGroups.includes('funcionarios')) gvActiveGroups.unshift('funcionarios');
   gvSwitchTipo();
   gvRenderGroups();
-  GV_CONFIRMED_GROUPS.forEach(g => {
-    const row = document.querySelector(`#gv-groups-container .gv-group-row[data-kind="${g.kind}"]`);
-    if (!row) return;
-    const sel = row.querySelector('.gv-capital-sel');
-    const valorInp = row.querySelector('.gv-valor-inp');
-    const numvidasInp = row.querySelector('.gv-numvidas-inp');
-    if (sel) sel.value = g.tipoCapital;
-    if (valorInp) valorInp.value = g.capital;
-    if (numvidasInp) numvidasInp.value = g.vidas;
-    if (sel) gvOnFieldChange(sel);
-  });
+  if (g0) {
+    const row = document.querySelector('#gv-groups-container .gv-group-row');
+    if (row) {
+      const sel = row.querySelector('.gv-capital-sel');
+      const valorInp = row.querySelector('.gv-valor-inp');
+      const numvidasInp = row.querySelector('.gv-numvidas-inp');
+      if (sel) sel.value = g0.tipoCapital;
+      if (valorInp) valorInp.value = g0.capital;
+      if (numvidasInp) numvidasInp.value = g0.vidas;
+      if (sel) gvOnFieldChange(sel);
+    }
+  }
   document.getElementById('gv-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
