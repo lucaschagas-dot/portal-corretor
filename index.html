@@ -8027,25 +8027,28 @@ const GV_GROUP_DEFS = {
 };
 const GV_GROUP_ORDER = ['funcionarios', 'socios', 'prestadores', 'estagiarios'];
 
-// Cada item de GV_ROWS é uma linha com capital próprio.
-// kinds[] guarda os grupos contratados em conjunto naquela linha (dividem os mesmos campos).
-let GV_ROWS = [];
+// "Vida em Grupo" e "Acidentes Pessoais" têm cada um seu próprio conjunto de linhas de Grupo Segurável.
+// Cada linha (row) tem capital próprio; kinds[] guarda os grupos contratados em conjunto naquela linha.
+const GV_SEC = {
+  grupo: { rows: [], containerId: 'gv-groups-container', addBtnsId: 'gv-add-btns-wrap', hintId: 'gv-add-hint' },
+  ap: { rows: [], containerId: 'gv-ap-groups-container', addBtnsId: 'gv-ap-add-btns-wrap', hintId: 'gv-ap-add-hint' }
+};
 
 function gvNewRow(kinds) {
   return { kinds: kinds.slice(), tipoCapital: GV_CAPITAL_DEFAULT, capital: GV_VALOR_DEFAULT, vidas: '0' };
 }
 
-function gvResetRows() {
-  GV_ROWS = [gvNewRow(['funcionarios'])];
+function gvResetRows(sec) {
+  GV_SEC[sec].rows = [gvNewRow(['funcionarios'])];
 }
 
-function gvUsedKinds() {
-  return GV_ROWS.reduce((acc, r) => acc.concat(r.kinds), []);
+function gvUsedKinds(sec) {
+  return GV_SEC[sec].rows.reduce((acc, r) => acc.concat(r.kinds), []);
 }
 
-// Grupos opcionais ainda não usados em nenhuma linha
-function gvAvailableKinds() {
-  const used = gvUsedKinds();
+// Grupos opcionais ainda não usados em nenhuma linha da seção
+function gvAvailableKinds(sec) {
+  const used = gvUsedKinds(sec);
   return GV_GROUP_ORDER.filter(k => GV_GROUP_DEFS[k].removable && used.indexOf(k) < 0);
 }
 
@@ -8064,11 +8067,11 @@ function gvRowKinds(row) {
   return (row.getAttribute('data-kind') || '').split(',').filter(Boolean);
 }
 
-function gvGroupRowHtml(row, rowIdx) {
+function gvGroupRowHtml(sec, row, rowIdx) {
   const kinds = row.kinds;
   const chips = kinds.map(function(kind) {
     const def = GV_GROUP_DEFS[kind];
-    const x = def.removable ? `<button class="gv-chip-x" type="button" title="Remover grupo" onclick="gvRemoveKind(${rowIdx}, '${kind}')">&#10005;</button>` : '';
+    const x = def.removable ? `<button class="gv-chip-x" type="button" title="Remover grupo" onclick="gvRemoveKind('${sec}', ${rowIdx}, '${kind}')">&#10005;</button>` : '';
     return `<div class="gv-chip"><span>${def.label}</span>${x}</div>`;
   }).join('');
   const tooltip = kinds.map(function(kind) {
@@ -8077,21 +8080,21 @@ function gvGroupRowHtml(row, rowIdx) {
   }).join('<br><br>');
 
   // Adição conjunta: inclui outro grupo nesta mesma linha, dividindo o mesmo capital
-  const disponiveis = gvAvailableKinds();
+  const disponiveis = gvAvailableKinds(sec);
   const addJunto = disponiveis.length ? `
-        <button class="gv-chip-add" type="button" title="Adicionar outro grupo em conjunto (mesmo capital)" onclick="gvJointToggle(event, ${rowIdx})">
+        <button class="gv-chip-add" type="button" title="Adicionar outro grupo em conjunto (mesmo capital)" onclick="gvJointToggle(event, '${sec}', ${rowIdx})">
           <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
           Em conjunto
         </button>
-        <div class="gv-gms-dd" id="gv-gms-dd-${rowIdx}">
-          ${disponiveis.map(k => `<div class="gv-gms-item" onclick="gvAddKindToRow(${rowIdx}, '${k}')">${GV_GROUP_DEFS[k].label}</div>`).join('')}
+        <div class="gv-gms-dd" id="gv-gms-dd-${sec}-${rowIdx}">
+          ${disponiveis.map(k => `<div class="gv-gms-item" onclick="gvAddKindToRow('${sec}', ${rowIdx}, '${k}')">${GV_GROUP_DEFS[k].label}</div>`).join('')}
         </div>` : '';
 
   // Linhas sem Funcionários podem ser excluídas por inteiro (grupo separado)
-  const trash = kinds.indexOf('funcionarios') < 0 ? `<svg class="gv-row-trash" width="16" height="16" viewBox="0 0 24 24" fill="none" onclick="gvRemoveRow(${rowIdx})"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '';
+  const trash = kinds.indexOf('funcionarios') < 0 ? `<svg class="gv-row-trash" width="16" height="16" viewBox="0 0 24 24" fill="none" onclick="gvRemoveRow('${sec}', ${rowIdx})"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '';
 
   return `
-    <div class="gv-group-row" data-kind="${kinds.join(',')}" data-row="${rowIdx}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
+    <div class="gv-group-row" data-sec="${sec}" data-kind="${kinds.join(',')}" data-row="${rowIdx}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
       ${trash}
       <div class="gv-f">
         <span class="gv-f-lbl">Grupo Segurável
@@ -8162,7 +8165,8 @@ function gvOnFieldChange(el) {
   const valorInp = row.querySelector('.gv-valor-inp');
   const numvidasInp = row.querySelector('.gv-numvidas-inp');
   // Guarda no modelo para os valores sobreviverem ao redesenho das linhas
-  const model = GV_ROWS[parseInt(row.getAttribute('data-row'), 10)];
+  const sec = row.getAttribute('data-sec');
+  const model = GV_SEC[sec] && GV_SEC[sec].rows[parseInt(row.getAttribute('data-row'), 10)];
   if (model) {
     if (capitalSel) model.tipoCapital = capitalSel.value;
     if (valorInp) model.capital = valorInp.value;
@@ -8193,22 +8197,24 @@ function gvClearField(iconEl) {
   if (select) { select.selectedIndex = 0; gvOnFieldChange(select); }
 }
 
-function gvRenderGroups() {
-  const container = document.getElementById('gv-groups-container');
+function gvRenderGroups(sec) {
+  const s = GV_SEC[sec];
+  const container = document.getElementById(s.containerId);
   if (!container) return;
-  if (!GV_ROWS.length) gvResetRows();
-  container.innerHTML = GV_ROWS.map((r, i) => gvGroupRowHtml(r, i)).join('');
+  if (!s.rows.length) gvResetRows(sec);
+  container.innerHTML = s.rows.map((r, i) => gvGroupRowHtml(sec, r, i)).join('');
   container.querySelectorAll('.gv-valor-inp').forEach(inp => gvCheckCapitalLimit(inp));
-  gvRenderAddButtons();
+  gvRenderAddButtons(sec);
 }
 
-function gvRenderAddButtons() {
-  const wrap = document.getElementById('gv-add-btns-wrap');
-  const hint = document.getElementById('gv-add-hint');
+function gvRenderAddButtons(sec) {
+  const s = GV_SEC[sec];
+  const wrap = document.getElementById(s.addBtnsId);
+  const hint = document.getElementById(s.hintId);
   if (!wrap) return;
-  const remaining = gvAvailableKinds();
+  const remaining = gvAvailableKinds(sec);
   wrap.innerHTML = remaining.map(k => `
-    <button class="gv-add-btn" type="button" onclick="gvAddGroup('${k}')">
+    <button class="gv-add-btn" type="button" onclick="gvAddGroup('${sec}', '${k}')">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
       ${GV_GROUP_DEFS[k].label}
     </button>`).join('');
@@ -8216,24 +8222,24 @@ function gvRenderAddButtons() {
 }
 
 // Adição separada: cria uma linha nova, com Tipo de Capital / Valor / Vidas próprios
-function gvAddGroup(kind) {
-  if (gvUsedKinds().indexOf(kind) >= 0) return;
-  GV_ROWS.push(gvNewRow([kind]));
-  gvRenderGroups();
+function gvAddGroup(sec, kind) {
+  if (gvUsedKinds(sec).indexOf(kind) >= 0) return;
+  GV_SEC[sec].rows.push(gvNewRow([kind]));
+  gvRenderGroups(sec);
 }
 
 // Adição conjunta: inclui o grupo numa linha existente, dividindo os mesmos campos
-function gvAddKindToRow(rowIdx, kind) {
-  const row = GV_ROWS[rowIdx];
-  if (!row || gvUsedKinds().indexOf(kind) >= 0) return;
+function gvAddKindToRow(sec, rowIdx, kind) {
+  const row = GV_SEC[sec].rows[rowIdx];
+  if (!row || gvUsedKinds(sec).indexOf(kind) >= 0) return;
   row.kinds.push(kind);
   row.kinds.sort((a, b) => GV_GROUP_ORDER.indexOf(a) - GV_GROUP_ORDER.indexOf(b));
-  gvRenderGroups();
+  gvRenderGroups(sec);
 }
 
-function gvJointToggle(evt, rowIdx) {
+function gvJointToggle(evt, sec, rowIdx) {
   evt.stopPropagation();
-  const dd = document.getElementById('gv-gms-dd-' + rowIdx);
+  const dd = document.getElementById('gv-gms-dd-' + sec + '-' + rowIdx);
   const jaAberto = dd && dd.classList.contains('gv-dd-open');
   gvCloseJointDropdowns();
   if (dd && !jaAberto) dd.classList.add('gv-dd-open');
@@ -8248,36 +8254,44 @@ document.addEventListener('click', function(e) {
 });
 
 // Remove um grupo da linha; se a linha ficar vazia, ela some
-function gvRemoveKind(rowIdx, kind) {
-  const row = GV_ROWS[rowIdx];
+function gvRemoveKind(sec, rowIdx, kind) {
+  const rows = GV_SEC[sec].rows;
+  const row = rows[rowIdx];
   if (!row) return;
   row.kinds = row.kinds.filter(k => k !== kind);
-  if (!row.kinds.length) GV_ROWS.splice(rowIdx, 1);
-  if (!GV_ROWS.length) gvResetRows();
-  gvRenderGroups();
+  if (!row.kinds.length) rows.splice(rowIdx, 1);
+  if (!rows.length) gvResetRows(sec);
+  gvRenderGroups(sec);
 }
 
-function gvRemoveRow(rowIdx) {
-  GV_ROWS.splice(rowIdx, 1);
-  if (!GV_ROWS.length) gvResetRows();
-  gvRenderGroups();
+function gvRemoveRow(sec, rowIdx) {
+  GV_SEC[sec].rows.splice(rowIdx, 1);
+  if (!GV_SEC[sec].rows.length) gvResetRows(sec);
+  gvRenderGroups(sec);
 }
 
 function gvSwitchTipo() {
   const grupo = document.querySelector('input[name="gv-tipo"][value="grupo"]').checked;
-  const sec = document.getElementById('gv-grupo-section');
-  if (sec) sec.style.display = grupo ? 'block' : 'none';
+  const secGrupo = document.getElementById('gv-grupo-section');
+  const secAp = document.getElementById('gv-ap-section');
+  if (secGrupo) secGrupo.style.display = grupo ? 'block' : 'none';
+  if (secAp) secAp.style.display = grupo ? 'none' : 'block';
 }
 
 function gvModalOpen() {
-  gvResetRows();
+  gvResetRows('grupo');
+  gvResetRows('ap');
   const razao = (document.getElementById('vc-razao-social')?.value || '').trim();
+  const nomeEstip = (razao || 'Estipulante') + ' (Estipulante)';
   const nameEl = document.getElementById('gv-estip-name');
-  if (nameEl) nameEl.textContent = (razao || 'Estipulante') + ' (Estipulante)';
+  if (nameEl) nameEl.textContent = nomeEstip;
+  const nameElAp = document.getElementById('gv-ap-estip-name');
+  if (nameElAp) nameElAp.textContent = nomeEstip;
   const grupoRadio = document.querySelector('input[name="gv-tipo"][value="grupo"]');
   if (grupoRadio) grupoRadio.checked = true;
   gvSwitchTipo();
-  gvRenderGroups();
+  gvRenderGroups('grupo');
+  gvRenderGroups('ap');
   document.getElementById('gv-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
@@ -8579,18 +8593,22 @@ function raConfirmar() {
 }
 
 function gvReopenModal() {
-  // Reconstrói as linhas exatamente como foram confirmadas (conjuntas e separadas)
-  GV_ROWS = GV_CONFIRMED_GROUPS.map(function(g) {
+  // Reconstrói as linhas de "Vida em Grupo" exatamente como foram confirmadas (conjuntas e separadas)
+  GV_SEC.grupo.rows = GV_CONFIRMED_GROUPS.map(function(g) {
     const r = gvNewRow(g.kinds && g.kinds.length ? g.kinds : [g.kind]);
     r.tipoCapital = g.tipoCapital;
     r.capital = g.capital;
     r.vidas = g.vidas;
     return r;
   });
-  if (!GV_ROWS.length) gvResetRows();
-  if (gvUsedKinds().indexOf('funcionarios') < 0) GV_ROWS.unshift(gvNewRow(['funcionarios']));
+  if (!GV_SEC.grupo.rows.length) gvResetRows('grupo');
+  if (gvUsedKinds('grupo').indexOf('funcionarios') < 0) GV_SEC.grupo.rows.unshift(gvNewRow(['funcionarios']));
+  if (!GV_SEC.ap.rows.length) gvResetRows('ap');
+  const grupoRadio = document.querySelector('input[name="gv-tipo"][value="grupo"]');
+  if (grupoRadio) grupoRadio.checked = true;
   gvSwitchTipo();
-  gvRenderGroups();
+  gvRenderGroups('grupo');
+  gvRenderGroups('ap');
   document.getElementById('gv-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
@@ -9917,8 +9935,17 @@ ocBuild();
         </div>
       </div>
 
+      <div id="gv-ap-section" style="display:none">
+        <div class="gv-estip-box">
+          <p class="ape-estip-name" id="gv-ap-estip-name">(Estipulante)</p>
+          <div id="gv-ap-groups-container"></div>
+          <p class="gv-add-hint" id="gv-ap-add-hint">Adicionar como grupo separado, com capital próprio:</p>
+          <div class="gv-add-btns-wrap" id="gv-ap-add-btns-wrap"></div>
+        </div>
+      </div>
+
       <div style="margin-top:16px">
-        <p class="ape-info-text">Os limites de idade para a contratação do seguro é de 14 a 70 anos.</p>
+        <p class="ape-info-text">Os limites de idade para a contratação do seguro é de 14 a 75 anos.</p>
       </div>
     </div>
 
