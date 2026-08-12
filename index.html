@@ -8063,6 +8063,19 @@ function gvFormatLimite(n) {
   return 'R$ ' + n.toLocaleString('pt-BR') + ',00';
 }
 
+function gvFormatMoeda(n) {
+  return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Individual: valor informado é o capital de cada vida -> total do grupo = valor x vidas.
+// Global: valor informado é um total dividido entre as vidas -> capital por vida = valor / vidas.
+function gvCalcResumoCapital(tipoCapital, capitalStr, vidasStr) {
+  const capital = gvParseCurrency(capitalStr);
+  const vidas = parseInt(vidasStr, 10) || 0;
+  if (!vidas) return 0;
+  return tipoCapital === 'Global' ? (capital / vidas) : (capital * vidas);
+}
+
 function gvRowKinds(row) {
   return (row.getAttribute('data-kind') || '').split(',').filter(Boolean);
 }
@@ -8093,8 +8106,10 @@ function gvGroupRowHtml(sec, row, rowIdx) {
   // Linhas sem Funcionários podem ser excluídas por inteiro (grupo separado)
   const trash = kinds.indexOf('funcionarios') < 0 ? `<svg class="gv-row-trash" width="16" height="16" viewBox="0 0 24 24" fill="none" onclick="gvRemoveRow('${sec}', ${rowIdx})"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '';
 
+  const resumoValor = gvFormatMoeda(gvCalcResumoCapital(row.tipoCapital, row.capital, row.vidas));
+
   return `
-    <div class="gv-group-row" data-sec="${sec}" data-kind="${kinds.join(',')}" data-row="${rowIdx}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
+    <div class="gv-group-row" data-sec="${sec}" data-kind="${kinds.join(',')}" data-row="${rowIdx}">
       ${trash}
       <div class="gv-f">
         <span class="gv-f-lbl">Grupo Segurável
@@ -8129,9 +8144,9 @@ function gvGroupRowHtml(sec, row, rowIdx) {
         <input class="gv-numvidas-inp" type="number" min="0" value="${row.vidas}" oninput="gvOnFieldChange(this)">
         <span class="gv-f-clear" onclick="gvClearField(this)">&#10005;</span>
       </div>
-      <div class="gv-summary-row" style="display:none">
-        <div class="gv-summary-item"><span class="gv-summary-lbl">Tipo de Capital</span><span class="gv-summary-val gv-summary-capital"></span></div>
-        <div class="gv-summary-item"><span class="gv-summary-lbl">Valor do Capital Segurado</span><span class="gv-summary-val gv-summary-valor"></span></div>
+      <div class="gv-summary-row">
+        <div class="gv-summary-item"><span class="gv-summary-lbl">Tipo de Capital</span><span class="gv-summary-val gv-summary-capital">${row.tipoCapital}</span></div>
+        <div class="gv-summary-item"><span class="gv-summary-lbl">Valor do Capital Segurado</span><span class="gv-summary-val gv-summary-valor">${resumoValor}</span></div>
       </div>
     </div>`;
 }
@@ -8172,18 +8187,11 @@ function gvOnFieldChange(el) {
     if (valorInp) model.capital = valorInp.value;
     if (numvidasInp) model.vidas = numvidasInp.value;
   }
-  const origCapital = row.getAttribute('data-orig-capital');
-  const origValor = row.getAttribute('data-orig-valor');
-  const changed = (capitalSel.value !== origCapital) || (valorInp.value !== origValor);
   const summary = row.querySelector('.gv-summary-row');
-  if (summary) {
-    if (changed) {
-      row.querySelector('.gv-summary-capital').textContent = origCapital;
-      row.querySelector('.gv-summary-valor').textContent = origValor;
-      summary.style.display = 'flex';
-    } else {
-      summary.style.display = 'none';
-    }
+  if (summary && capitalSel && valorInp && numvidasInp) {
+    const resumo = gvCalcResumoCapital(capitalSel.value, valorInp.value, numvidasInp.value);
+    row.querySelector('.gv-summary-capital').textContent = capitalSel.value;
+    row.querySelector('.gv-summary-valor').textContent = gvFormatMoeda(resumo);
   }
   if (valorInp) gvCheckCapitalLimit(valorInp);
 }
