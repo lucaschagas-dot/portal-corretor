@@ -1033,8 +1033,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .gv-plan-grid{display:grid;grid-template-columns:170px 1fr 1fr 1fr;gap:0;margin-top:12px;border-top:1px solid var(--border)}
 .gv-plan-lbl-col{padding:10px 10px 10px 0;display:flex;flex-direction:column;justify-content:flex-end}
 .gv-plan-title-lbl{font-size:15px;font-weight:700;color:#1f2a51;text-align:center;margin-bottom:10px}
-.gv-plan-hdr2{padding:12px 10px;text-align:center;border-left:1px solid var(--border)}
+.gv-plan-hdr2{padding:12px 10px;text-align:center;border-left:1px solid var(--border);cursor:pointer}
+.gv-plan-hdr2:hover{background:#f4f9f5}
 .gv-plan-hdr2.gv-sel-col{background:#eef7f0;border-top:3px solid var(--green)}
+.gv-plan-hdr2.gv-sel-col:hover{background:#eef7f0}
 .gv-plan-name2{font-size:14px;font-weight:700;color:#1f2a51;display:flex;align-items:center;justify-content:center;gap:5px}
 .gv-plan-price2{font-size:16px;font-weight:700;color:var(--azure);margin-top:4px}
 .gv-plan-price2 small{font-size:11px;font-weight:500;color:#586880}
@@ -8429,10 +8431,10 @@ function gvBuildPlanCard(group, estipName, estipCnpj, cardIdx) {
   cells += `<div class="gv-plan-lbl-col"><span class="gv-plan-title-lbl">${selectedPlan.name}</span></div>`;
   GV_PLANS.forEach(p => {
     const selCls = p.selected ? ' gv-sel-col' : '';
-    cells += `<div class="gv-plan-hdr2${selCls}"><div class="gv-plan-name2">${p.name}${p.selected ? ' ' + check : ''}</div><div class="gv-plan-price2">${p.price} <small>/ mês</small></div><div class="gv-plan-desc2">${p.desc}</div></div>`;
+    cells += `<div class="gv-plan-hdr2${selCls}" onclick="gvSelectPlan('${p.key}')"><div class="gv-plan-name2">${p.name}${p.selected ? ' ' + check : ''}</div><div class="gv-plan-price2">${p.price} <small>/ mês</small></div><div class="gv-plan-desc2">${p.desc}</div></div>`;
   });
 
-  cells += `<div class="gv-plan-lbl-col"><div class="gv-cap-bar"><div class="gv-cap-bar-row"><div>Capital ${group.tipoCapital} &ndash; R$ ${group.capital}<br>Nº Vidas: ${group.vidas}</div><button class="gv-editar-btn" onclick="gvReopenModal()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Editar</button></div></div></div>`;
+  cells += `<div class="gv-plan-lbl-col"><div class="gv-cap-bar"><div class="gv-cap-bar-row"><div>Capital ${group.tipoCapital} &ndash; ${group.capital}<br>Nº Vidas: ${group.vidas}</div><button class="gv-editar-btn" onclick="gvReopenModal()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Editar</button></div></div></div>`;
   GV_PLANS.forEach(p => {
     const selCls = p.selected ? ' gv-sel-col' : '';
     cells += `<div class="gv-plan-blank${selCls}"></div>`;
@@ -8530,6 +8532,11 @@ function gvRerenderCards() {
 function gvPlanToggle(el) {
   const card = el.closest('.ape-plan-card');
   if (card) card.classList.toggle('ape-plan-collapsed');
+}
+
+function gvSelectPlan(key) {
+  GV_PLANS.forEach(p => { p.selected = (p.key === key); });
+  gvRerenderCards();
 }
 
 let gvCupomFbTimer = null;
