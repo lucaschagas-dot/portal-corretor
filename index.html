@@ -1008,11 +1008,20 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .gv-f-clear{position:absolute;top:7px;right:8px;cursor:pointer;color:#a2aaad;font-size:11px;line-height:1}
 .gv-f-clear:hover{color:#586880}
 .gv-cap-error{font-size:10.5px;color:#e53935;line-height:1.4;margin-top:2px}
-.gv-chip-list{display:flex;flex-wrap:wrap;gap:6px}
+.gv-chip-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px;position:relative}
 .gv-chip{display:inline-flex;align-items:center;gap:8px;background:#eef1f4;border-radius:3px;padding:5px 10px;font-size:13px;font-weight:600;color:#44546c}
 .gv-chip-x{background:none;border:none;color:#8a94a3;cursor:pointer;font-size:13px;padding:0;display:flex;align-items:center;line-height:1}
 .gv-chip-x:hover{color:#586880}
-.gv-add-btns-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.gv-chip-add{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px dashed #9fb6cd;color:var(--azure);border-radius:3px;padding:4px 9px;font-size:12px;font-weight:600;cursor:pointer;line-height:1.25;font-family:inherit}
+.gv-chip-add:hover{background:#f0f5fb;border-color:var(--azure)}
+.gv-gms-dd{position:absolute;top:calc(100% + 6px);left:0;min-width:215px;background:#fff;border:1px solid #c8cdd4;border-radius:3px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:120;display:none;overflow:hidden}
+.gv-gms-dd.gv-dd-open{display:block}
+.gv-gms-item{padding:9px 13px;font-size:13px;color:#44546c;cursor:pointer}
+.gv-gms-item:hover{background:#f0f5fb}
+.gv-row-trash{position:absolute;top:2px;right:0;cursor:pointer;background:#fff;border-radius:50%}
+.gv-group-row + .gv-group-row{border-top:1px dashed #e3e6ea;padding-top:22px;margin-top:6px}
+.gv-add-hint{font-size:11.5px;color:#8a94a3;margin-top:16px}
+.gv-add-btns-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
 .gv-add-btn{padding:9px 20px;background:var(--azure);color:#fff;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background 0.15s}
 .gv-add-btn:hover{background:#1557a0}
 .gv-summary-row{grid-column:2 / 4;display:flex;gap:32px;margin-top:4px;padding-top:8px;border-top:1px dashed #e3e6ea}
@@ -8017,7 +8026,28 @@ const GV_GROUP_DEFS = {
   }
 };
 const GV_GROUP_ORDER = ['funcionarios', 'socios', 'prestadores', 'estagiarios'];
-let gvActiveGroups = ['funcionarios'];
+
+// Cada item de GV_ROWS é uma linha com capital próprio.
+// kinds[] guarda os grupos contratados em conjunto naquela linha (dividem os mesmos campos).
+let GV_ROWS = [];
+
+function gvNewRow(kinds) {
+  return { kinds: kinds.slice(), tipoCapital: GV_CAPITAL_DEFAULT, capital: GV_VALOR_DEFAULT, vidas: '0' };
+}
+
+function gvResetRows() {
+  GV_ROWS = [gvNewRow(['funcionarios'])];
+}
+
+function gvUsedKinds() {
+  return GV_ROWS.reduce((acc, r) => acc.concat(r.kinds), []);
+}
+
+// Grupos opcionais ainda não usados em nenhuma linha
+function gvAvailableKinds() {
+  const used = gvUsedKinds();
+  return GV_GROUP_ORDER.filter(k => GV_GROUP_DEFS[k].removable && used.indexOf(k) < 0);
+}
 
 function gvParseCurrency(str) {
   if (!str) return 0;
@@ -8034,18 +8064,35 @@ function gvRowKinds(row) {
   return (row.getAttribute('data-kind') || '').split(',').filter(Boolean);
 }
 
-function gvGroupRowHtml(kinds) {
+function gvGroupRowHtml(row, rowIdx) {
+  const kinds = row.kinds;
   const chips = kinds.map(function(kind) {
     const def = GV_GROUP_DEFS[kind];
-    const x = def.removable ? `<button class="gv-chip-x" type="button" onclick="gvRemoveGroup('${kind}')">&#10005;</button>` : '';
+    const x = def.removable ? `<button class="gv-chip-x" type="button" title="Remover grupo" onclick="gvRemoveKind(${rowIdx}, '${kind}')">&#10005;</button>` : '';
     return `<div class="gv-chip"><span>${def.label}</span>${x}</div>`;
   }).join('');
   const tooltip = kinds.map(function(kind) {
     const def = GV_GROUP_DEFS[kind];
     return `<strong>${def.label}:</strong> ${def.accept}`;
   }).join('<br><br>');
+
+  // Adição conjunta: inclui outro grupo nesta mesma linha, dividindo o mesmo capital
+  const disponiveis = gvAvailableKinds();
+  const addJunto = disponiveis.length ? `
+        <button class="gv-chip-add" type="button" title="Adicionar outro grupo em conjunto (mesmo capital)" onclick="gvJointToggle(event, ${rowIdx})">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Em conjunto
+        </button>
+        <div class="gv-gms-dd" id="gv-gms-dd-${rowIdx}">
+          ${disponiveis.map(k => `<div class="gv-gms-item" onclick="gvAddKindToRow(${rowIdx}, '${k}')">${GV_GROUP_DEFS[k].label}</div>`).join('')}
+        </div>` : '';
+
+  // Linhas sem Funcionários podem ser excluídas por inteiro (grupo separado)
+  const trash = kinds.indexOf('funcionarios') < 0 ? `<svg class="gv-row-trash" width="16" height="16" viewBox="0 0 24 24" fill="none" onclick="gvRemoveRow(${rowIdx})"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>` : '';
+
   return `
-    <div class="gv-group-row" data-kind="${kinds.join(',')}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
+    <div class="gv-group-row" data-kind="${kinds.join(',')}" data-row="${rowIdx}" data-orig-capital="${GV_CAPITAL_DEFAULT}" data-orig-valor="${GV_VALOR_DEFAULT}">
+      ${trash}
       <div class="gv-f">
         <span class="gv-f-lbl">Grupo Segurável
           <span class="vcalc-tip">
@@ -8053,7 +8100,7 @@ function gvGroupRowHtml(kinds) {
             <span class="vcalc-tip-bubble"><strong>Documentos para aceitação:</strong><br>${tooltip}</span>
           </span>
         </span>
-        <div class="gv-chip-list">${chips}</div>
+        <div class="gv-chip-list">${chips}${addJunto}</div>
       </div>
       <div class="gv-f gv-f-clr">
         <span class="gv-f-lbl">Tipo de Capital
@@ -8063,20 +8110,20 @@ function gvGroupRowHtml(kinds) {
           </span>
         </span>
         <select class="gv-capital-sel" onchange="gvOnFieldChange(this)">
-          <option${GV_CAPITAL_DEFAULT==='Individual'?' selected':''}>Individual</option>
-          <option>Global</option>
+          <option${row.tipoCapital==='Individual'?' selected':''}>Individual</option>
+          <option${row.tipoCapital==='Global'?' selected':''}>Global</option>
         </select>
         <span class="gv-f-clear" onclick="gvClearField(this)">&#10005;</span>
       </div>
       <div class="gv-f gv-f-clr">
         <span class="gv-f-lbl">Valor do Capital Segurado</span>
-        <input class="gv-valor-inp" type="text" value="${GV_VALOR_DEFAULT}" oninput="gvOnFieldChange(this)">
+        <input class="gv-valor-inp" type="text" value="${row.capital}" oninput="gvOnFieldChange(this)">
         <span class="gv-f-clear" onclick="gvClearField(this)">&#10005;</span>
         <span class="gv-cap-error" style="display:none"></span>
       </div>
       <div class="gv-f gv-f-clr">
         <span class="gv-f-lbl">Número de Vidas</span>
-        <input class="gv-numvidas-inp" type="number" min="0" value="0">
+        <input class="gv-numvidas-inp" type="number" min="0" value="${row.vidas}" oninput="gvOnFieldChange(this)">
         <span class="gv-f-clear" onclick="gvClearField(this)">&#10005;</span>
       </div>
       <div class="gv-summary-row" style="display:none">
@@ -8113,6 +8160,14 @@ function gvOnFieldChange(el) {
   if (!row) return;
   const capitalSel = row.querySelector('.gv-capital-sel');
   const valorInp = row.querySelector('.gv-valor-inp');
+  const numvidasInp = row.querySelector('.gv-numvidas-inp');
+  // Guarda no modelo para os valores sobreviverem ao redesenho das linhas
+  const model = GV_ROWS[parseInt(row.getAttribute('data-row'), 10)];
+  if (model) {
+    if (capitalSel) model.tipoCapital = capitalSel.value;
+    if (valorInp) model.capital = valorInp.value;
+    if (numvidasInp) model.vidas = numvidasInp.value;
+  }
   const origCapital = row.getAttribute('data-orig-capital');
   const origValor = row.getAttribute('data-orig-valor');
   const changed = (capitalSel.value !== origCapital) || (valorInp.value !== origValor);
@@ -8141,29 +8196,70 @@ function gvClearField(iconEl) {
 function gvRenderGroups() {
   const container = document.getElementById('gv-groups-container');
   if (!container) return;
-  container.innerHTML = gvGroupRowHtml(gvActiveGroups);
+  if (!GV_ROWS.length) gvResetRows();
+  container.innerHTML = GV_ROWS.map((r, i) => gvGroupRowHtml(r, i)).join('');
+  container.querySelectorAll('.gv-valor-inp').forEach(inp => gvCheckCapitalLimit(inp));
   gvRenderAddButtons();
 }
 
 function gvRenderAddButtons() {
   const wrap = document.getElementById('gv-add-btns-wrap');
+  const hint = document.getElementById('gv-add-hint');
   if (!wrap) return;
-  const remaining = GV_GROUP_ORDER.filter(k => GV_GROUP_DEFS[k].removable && !gvActiveGroups.includes(k));
+  const remaining = gvAvailableKinds();
   wrap.innerHTML = remaining.map(k => `
     <button class="gv-add-btn" type="button" onclick="gvAddGroup('${k}')">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
       ${GV_GROUP_DEFS[k].label}
     </button>`).join('');
+  if (hint) hint.style.display = remaining.length ? 'block' : 'none';
 }
 
+// Adição separada: cria uma linha nova, com Tipo de Capital / Valor / Vidas próprios
 function gvAddGroup(kind) {
-  if (!gvActiveGroups.includes(kind)) gvActiveGroups.push(kind);
+  if (gvUsedKinds().indexOf(kind) >= 0) return;
+  GV_ROWS.push(gvNewRow([kind]));
   gvRenderGroups();
 }
 
-function gvRemoveGroup(kind) {
-  gvActiveGroups = gvActiveGroups.filter(k => k !== kind);
-  if (!gvActiveGroups.length) gvActiveGroups = ['funcionarios'];
+// Adição conjunta: inclui o grupo numa linha existente, dividindo os mesmos campos
+function gvAddKindToRow(rowIdx, kind) {
+  const row = GV_ROWS[rowIdx];
+  if (!row || gvUsedKinds().indexOf(kind) >= 0) return;
+  row.kinds.push(kind);
+  row.kinds.sort((a, b) => GV_GROUP_ORDER.indexOf(a) - GV_GROUP_ORDER.indexOf(b));
+  gvRenderGroups();
+}
+
+function gvJointToggle(evt, rowIdx) {
+  evt.stopPropagation();
+  const dd = document.getElementById('gv-gms-dd-' + rowIdx);
+  const jaAberto = dd && dd.classList.contains('gv-dd-open');
+  gvCloseJointDropdowns();
+  if (dd && !jaAberto) dd.classList.add('gv-dd-open');
+}
+
+function gvCloseJointDropdowns() {
+  document.querySelectorAll('.gv-gms-dd.gv-dd-open').forEach(dd => dd.classList.remove('gv-dd-open'));
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.gv-gms-dd') && !e.target.closest('.gv-chip-add')) gvCloseJointDropdowns();
+});
+
+// Remove um grupo da linha; se a linha ficar vazia, ela some
+function gvRemoveKind(rowIdx, kind) {
+  const row = GV_ROWS[rowIdx];
+  if (!row) return;
+  row.kinds = row.kinds.filter(k => k !== kind);
+  if (!row.kinds.length) GV_ROWS.splice(rowIdx, 1);
+  if (!GV_ROWS.length) gvResetRows();
+  gvRenderGroups();
+}
+
+function gvRemoveRow(rowIdx) {
+  GV_ROWS.splice(rowIdx, 1);
+  if (!GV_ROWS.length) gvResetRows();
   gvRenderGroups();
 }
 
@@ -8174,7 +8270,7 @@ function gvSwitchTipo() {
 }
 
 function gvModalOpen() {
-  gvActiveGroups = ['funcionarios'];
+  gvResetRows();
   const razao = (document.getElementById('vc-razao-social')?.value || '').trim();
   const nameEl = document.getElementById('gv-estip-name');
   if (nameEl) nameEl.textContent = (razao || 'Estipulante') + ' (Estipulante)';
@@ -8483,23 +8579,18 @@ function raConfirmar() {
 }
 
 function gvReopenModal() {
-  const g0 = GV_CONFIRMED_GROUPS[0];
-  gvActiveGroups = (g0 && g0.kinds && g0.kinds.length) ? g0.kinds.slice() : ['funcionarios'];
-  if (!gvActiveGroups.includes('funcionarios')) gvActiveGroups.unshift('funcionarios');
+  // Reconstrói as linhas exatamente como foram confirmadas (conjuntas e separadas)
+  GV_ROWS = GV_CONFIRMED_GROUPS.map(function(g) {
+    const r = gvNewRow(g.kinds && g.kinds.length ? g.kinds : [g.kind]);
+    r.tipoCapital = g.tipoCapital;
+    r.capital = g.capital;
+    r.vidas = g.vidas;
+    return r;
+  });
+  if (!GV_ROWS.length) gvResetRows();
+  if (gvUsedKinds().indexOf('funcionarios') < 0) GV_ROWS.unshift(gvNewRow(['funcionarios']));
   gvSwitchTipo();
   gvRenderGroups();
-  if (g0) {
-    const row = document.querySelector('#gv-groups-container .gv-group-row');
-    if (row) {
-      const sel = row.querySelector('.gv-capital-sel');
-      const valorInp = row.querySelector('.gv-valor-inp');
-      const numvidasInp = row.querySelector('.gv-numvidas-inp');
-      if (sel) sel.value = g0.tipoCapital;
-      if (valorInp) valorInp.value = g0.capital;
-      if (numvidasInp) numvidasInp.value = g0.vidas;
-      if (sel) gvOnFieldChange(sel);
-    }
-  }
   document.getElementById('gv-modal-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
@@ -9821,6 +9912,7 @@ ocBuild();
         <div class="gv-estip-box">
           <p class="ape-estip-name" id="gv-estip-name">(Estipulante)</p>
           <div id="gv-groups-container"></div>
+          <p class="gv-add-hint" id="gv-add-hint">Adicionar como grupo separado, com capital próprio:</p>
           <div class="gv-add-btns-wrap" id="gv-add-btns-wrap"></div>
         </div>
       </div>
