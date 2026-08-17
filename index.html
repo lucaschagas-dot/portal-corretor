@@ -3397,8 +3397,9 @@ function authLogout(){
           </div>
           <div class="vcalc-tools">
             <div class="vcs-doc-wrap">
-              <select class="vcs-doc-sel">
+              <select class="vcs-doc-sel" id="vcs-doc-sel">
                 <option value="">Selecione o documento</option>
+                <option selected>Cotação</option>
                 <option>Apólice</option>
                 <option>Proposta</option>
                 <option>Boleto</option>
@@ -4692,6 +4693,7 @@ function vcalcGoToPropostaFinal() {
   var viewFinal = document.getElementById('vcalc-view-proposta-final');
   if (viewProposta) viewProposta.style.display = 'none';
   if (viewFinal) viewFinal.style.display = 'block';
+  vcsSetDoc('Proposta');
 
   var stepCotacao = document.getElementById('vcs-step-cotacao');
   var stepProposta = document.getElementById('vcs-step-proposta');
@@ -4899,6 +4901,7 @@ function vcalcGoToProposta() {
   var viewProposta = document.getElementById('vcalc-view-proposta');
   if (viewCotacao) viewCotacao.style.display = 'none';
   if (viewProposta) viewProposta.style.display = 'block';
+  vcsSetDoc('Cotação');
   vcalcPopulateProposta();
   propApplyProdutoRules();
 
@@ -4922,6 +4925,7 @@ function vcalcVoltarCotacao() {
   var viewProposta = document.getElementById('vcalc-view-proposta');
   if (viewProposta) viewProposta.style.display = 'none';
   if (viewCotacao) viewCotacao.style.display = 'block';
+  vcsSetDoc('Cotação');
   var stepCotacao = document.getElementById('vcs-step-cotacao');
   var stepProposta = document.getElementById('vcs-step-proposta');
   if (stepProposta) stepProposta.classList.remove('vcs-step-current');
@@ -7978,6 +7982,12 @@ function vcalcToggleSubestip(id) {
 
 function vcalcDefinirEstipulante(id) {}
 
+// Dropdown "Selecione o documento": acompanha a fase do fluxo (Cotação enquanto preenchendo, Proposta ao emitir)
+function vcsSetDoc(valor) {
+  var sel = document.getElementById('vcs-doc-sel');
+  if (sel) sel.value = valor;
+}
+
 function initVidaCalculePage() {
   const pf = document.getElementById('vcp-pf');
   const pj = document.getElementById('vcp-pj');
@@ -7994,6 +8004,7 @@ function initVidaCalculePage() {
   });
   document.querySelectorAll('input[name="vcgenero"]').forEach(r => r.checked = false);
   VCALC_CURRENT_PRODUTO = '';
+  vcsSetDoc('Cotação');
   const subestipContainer = document.getElementById('vcalc-subestip-container');
   if (subestipContainer) subestipContainer.innerHTML = '';
   vcalcSubestipNextId = 1;
