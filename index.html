@@ -701,6 +701,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .prop-radio-block-item input{margin-top:3px}
 .prop-check-item{display:flex;align-items:center;gap:6px;font-size:14px;color:#44546c}
 .prop-check-item input{accent-color:var(--azure)}
+.prop-pep-note{font-size:12px;color:#a2aaad;margin-top:8px}
+.prop-row-pep-relac{grid-template-columns:1.2fr 1fr 1.2fr}
 .prop-copy-col{display:flex;align-items:center;justify-content:center;padding-bottom:16px}
 .prop-copy-link{color:var(--azure);font-size:13px;font-weight:500;text-decoration:underline;text-align:center;cursor:pointer}
 .prop-important-note{font-size:12.5px;color:#586880;margin-top:6px;line-height:1.5}
@@ -3875,12 +3877,52 @@ function authLogout(){
                   <div class="vcalc-row" style="grid-template-columns:1fr;margin-top:8px">
                     <div class="vcalc-f">
                       <span class="vcalc-f-lbl">Pessoa Politicamente Exposta (PEP)?</span>
-                      <select id="prop-pep" onchange="propCheckBasicos()">
+                      <select id="prop-pep" onchange="propTogglePep();propCheckBasicos()">
                         <option value=""></option>
                         <option value="nao">Não</option>
                         <option value="sim">Sim, sou PEP</option>
                         <option value="relacionamento">Sim, possuo relacionamento próximo</option>
                       </select>
+                    </div>
+                  </div>
+
+                  <div id="prop-pep-origem-box" style="display:none;margin-top:10px">
+                    <span class="prop-radio-lbl">PEP &ndash; Informe a origem dos recursos<span class="vcalc-req">*</span></span>
+                    <div class="prop-radio-row" style="margin-top:8px">
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Salário/Pró-Labore</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Aplicações Financeiras</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Comissões</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Herança</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Imóveis</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Aposentadoria</label>
+                      <label class="prop-check-item"><input type="checkbox" onchange="propCheckBasicos()"> Outros</label>
+                    </div>
+                    <p class="prop-pep-note">*Sujeito a solicitação de documentação comprobatória</p>
+                  </div>
+
+                  <div id="prop-pep-relac-box" style="display:none;margin-top:10px">
+                    <span class="prop-radio-lbl">PEP &ndash; Informe os dados do PEP titular</span>
+                    <div class="vcalc-row prop-row-pep-relac" style="margin-top:8px">
+                      <div class="vcalc-f">
+                        <span class="vcalc-f-lbl">Nome <span class="vcalc-req">*</span></span>
+                        <input type="text" id="prop-pep-nome" oninput="propCheckBasicos()">
+                      </div>
+                      <div class="vcalc-f">
+                        <span class="vcalc-f-lbl">CPF <span class="vcalc-req">*</span></span>
+                        <input type="text" id="prop-pep-cpf" inputmode="numeric" maxlength="14" oninput="maskCPF(this);propCheckBasicos()">
+                      </div>
+                      <div class="vcalc-f">
+                        <span class="vcalc-f-lbl">Grau de relacionamento <span class="vcalc-req">*</span></span>
+                        <select id="prop-pep-grau" onchange="propCheckBasicos()">
+                          <option value=""></option>
+                          <option>Cônjuge/Companheiro(a)</option>
+                          <option>Filho(a)/Enteado(a)</option>
+                          <option>Pai/Mãe</option>
+                          <option>Irmão(ã)</option>
+                          <option>Sócio(a) ou colaborador(a) próximo</option>
+                          <option>Outro</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -4914,9 +4956,40 @@ function propUpdateSubcard(id, isValid) {
   el.classList.toggle('prop-invalid', !isValid);
 }
 
+// Campos adicionais do PEP: origem dos recursos ("sim") ou dados do PEP titular ("relacionamento")
+function propTogglePep() {
+  var pep = document.getElementById('prop-pep');
+  var val = pep ? pep.value : '';
+
+  var boxOrigem = document.getElementById('prop-pep-origem-box');
+  if (boxOrigem) {
+    var mostraOrigem = val === 'sim';
+    boxOrigem.style.display = mostraOrigem ? 'block' : 'none';
+    if (!mostraOrigem) boxOrigem.querySelectorAll('input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
+  }
+
+  var boxRelac = document.getElementById('prop-pep-relac-box');
+  if (boxRelac) {
+    var mostraRelac = val === 'relacionamento';
+    boxRelac.style.display = mostraRelac ? 'block' : 'none';
+    if (!mostraRelac) boxRelac.querySelectorAll('input, select').forEach(function(el){ el.value = ''; });
+  }
+}
+
 function propCheckBasicos() {
   var pep = document.getElementById('prop-pep');
-  propUpdateSubcard('prop-sub-basicos', !!(pep && pep.value));
+  var val = pep ? pep.value : '';
+  var pepOk = !!val;
+  if (val === 'sim') {
+    var box = document.getElementById('prop-pep-origem-box');
+    pepOk = !!(box && box.querySelectorAll('input[type="checkbox"]:checked').length);
+  } else if (val === 'relacionamento') {
+    var nome = document.getElementById('prop-pep-nome');
+    var cpf = document.getElementById('prop-pep-cpf');
+    var grau = document.getElementById('prop-pep-grau');
+    pepOk = !!(nome && nome.value.trim() && cpf && cpf.value.trim() && grau && grau.value);
+  }
+  propUpdateSubcard('prop-sub-basicos', pepOk);
 }
 
 function propCheckEndereco() {
