@@ -8259,7 +8259,7 @@ function gvGroupRowHtml(sec, row, rowIdx) {
         <span class="gv-f-clear" onclick="gvClearField(this)">&#10005;</span>
       </div>
       <div class="gv-summary-row">
-        <div class="gv-summary-item"><span class="gv-summary-lbl">Tipo de Capital</span><span class="gv-summary-val gv-summary-capital">${row.tipoCapital}</span></div>
+        <div class="gv-summary-item"><span class="gv-summary-lbl">Tipo de Capital</span><span class="gv-summary-val gv-summary-capital">Individual</span></div>
         <div class="gv-summary-item"><span class="gv-summary-lbl">Valor do Capital Segurado</span><span class="gv-summary-val gv-summary-valor">${resumoValor}</span></div>
       </div>
     </div>`;
@@ -8304,7 +8304,7 @@ function gvOnFieldChange(el) {
   const summary = row.querySelector('.gv-summary-row');
   if (summary && capitalSel && valorInp && numvidasInp) {
     const resumo = gvCalcResumoCapital(capitalSel.value, valorInp.value, numvidasInp.value);
-    row.querySelector('.gv-summary-capital').textContent = capitalSel.value;
+    row.querySelector('.gv-summary-capital').textContent = 'Individual';
     row.querySelector('.gv-summary-valor').textContent = gvFormatMoeda(resumo);
   }
   if (valorInp) gvCheckCapitalLimit(valorInp);
@@ -8486,7 +8486,8 @@ const GV_COVERAGE_OPCIONAIS = [
   {code:'(GFC)', label:'Garantia Funeral Casal'},
   {code:'(GFFILH)', label:'Garantia Funeral Filhos'},
   {code:'(GFFM)', label:'Garantia Funeral Familiar Master'},
-  {code:'(GFFP)', label:'Garantia Funeral Familiar Plus'}
+  {code:'(GFFP)', label:'Garantia Funeral Familiar Plus'},
+  {code:'', label:'Revisão nas coberturas ofertadas (inclusão de novas, tais como CDAP, ADPT, etc)'}
 ].map(function(c){ return {code:c.code, label:c.label, fit:false, plus:false, premium:false}; });
 
 // Catálogo completo apresentado no modal "Outras coberturas e serviços"
@@ -8558,7 +8559,7 @@ function gvBuildPlanCard(group, estipName, estipCnpj, cardIdx) {
 
   covVisiveis.forEach((c, i) => {
     const alt = i % 2 === 1 ? ' gv-cov-alt' : '';
-    cells += `<div class="gv-cov-row${alt}">${c.code} &ndash; ${c.label}</div>`;
+    cells += `<div class="gv-cov-row${alt}">${c.code ? c.code + ' &ndash; ' : ''}${c.label}</div>`;
     GV_PLANS.forEach(p => {
       const has = sel.cob[p.key].indexOf(c.code) >= 0;
       const selCls = p.selected ? ' gv-sel-col' : '';
@@ -9995,7 +9996,7 @@ function gvOcBuild() {
     return '<div class="oc-item' + (i % 2 === 1 ? ' oc-alt' : '') + '">' + ocInfoIco() +
       '<input type="checkbox" class="oc-check"' + (marcado ? ' checked' : '') +
       ' onchange="gvOcToggleCobertura(this, ' + i + ')">' +
-      '<span class="oc-item-lbl">' + c.code + ' – ' + c.label + '</span></div>';
+      '<span class="oc-item-lbl">' + (c.code ? c.code + ' – ' : '') + c.label + '</span></div>';
   }).join('');
 
   var ass = GV_ASSISTANCES_ALL.map(function(a, i) {
