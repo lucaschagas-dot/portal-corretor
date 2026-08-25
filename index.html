@@ -4360,6 +4360,196 @@ function authLogout(){
 
     </div>
 
+
+    <!-- ================================================================ -->
+    <!-- ENDOSSO VIDA INDIVIDUAL — EM VALIDAÇÃO (PQA-447)                   -->
+    <!-- Área isolada da jornada "Vida Calcule+", para estudos e          -->
+    <!-- validações do fluxo Calcule Mais + E-vida + Dru(z) + Joker.       -->
+    <!-- ================================================================ -->
+    <div id="page-vida-endosso" class="page">
+      <div class="end-wrap">
+
+        <div class="end-topbar">
+          <div>
+            <h2 class="end-title">Endosso Vida Individual <span class="end-badge-pqa">PQA-447 &middot; em validação</span></h2>
+            <p class="end-subtitle">Fluxo integrado Calcule Mais + E-vida + Dru(z) + Joker — área isolada para estudos e validações, sem impacto na jornada de vendas nova.</p>
+          </div>
+          <div class="end-profile-btns">
+            <button class="end-profile-btn" data-profile="corretor" onclick="endSetProfile('corretor')">Corretor</button>
+            <button class="end-profile-btn" data-profile="analista" onclick="endSetProfile('analista')">Analista Técnico</button>
+            <button class="end-profile-btn" data-profile="retencao" onclick="endSetProfile('retencao')">Célula de Retenção</button>
+          </div>
+        </div>
+
+        <!-- ============ VISÃO: CORRETOR ============ -->
+        <div id="end-view-corretor">
+
+          <div class="end-carta-banner" id="end-carta-banner" style="display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#e58a00"/><line x1="12" y1="9" x2="12" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            <span id="end-carta-banner-txt"></span>
+            <button class="end-carta-banner-btn" onclick="endAbrirCarta()">Abrir</button>
+          </div>
+
+          <div class="end-steps" id="end-steps"></div>
+
+          <div class="end-card" id="end-fase-1"></div>
+          <div class="end-card" id="end-fase-2" style="display:none"></div>
+          <div class="end-card" id="end-fase-3" style="display:none"></div>
+          <div class="end-card" id="end-fase-4" style="display:none"></div>
+          <div class="end-card" id="end-fase-5" style="display:none"></div>
+
+        </div>
+
+        <!-- ============ VISÃO: ANALISTA TÉCNICO ============ -->
+        <div id="end-view-analista" style="display:none">
+          <div class="end-card" id="end-analista-body"></div>
+        </div>
+
+        <!-- ============ VISÃO: CÉLULA DE RETENÇÃO ============ -->
+        <div id="end-view-retencao" style="display:none">
+          <div class="end-card" id="end-retencao-body"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Modal: Carta de recusa / contraproposta / devolução (visão Corretor) -->
+    <div class="ape-overlay" id="end-carta-modal-overlay" style="display:none" onclick="endCartaModalClose(event)">
+      <div class="ape-modal" style="max-width:640px" onclick="event.stopPropagation()">
+        <div class="ape-modal-hdr">
+          <span class="ape-modal-title" id="end-carta-modal-title">Carta</span>
+          <button class="ape-modal-close" onclick="endCartaModalClose()" title="Fechar">&#10005;</button>
+        </div>
+        <div class="ape-modal-body" id="end-carta-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Modal: Recusar endosso (visão Analista Técnico) -->
+    <div class="ape-overlay" id="end-recusa-modal-overlay" style="display:none" onclick="endRecusaModalClose(event)">
+      <div class="ape-modal" style="max-width:560px" onclick="event.stopPropagation()">
+        <div class="ape-modal-hdr">
+          <span class="ape-modal-title">Recusar endosso</span>
+          <button class="ape-modal-close" onclick="endRecusaModalClose()" title="Fechar">&#10005;</button>
+        </div>
+        <div class="ape-modal-body" id="end-recusa-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Modal: E-mail simulado para alçada de resseguro -->
+    <div class="ape-overlay" id="end-resseguro-modal-overlay" style="display:none" onclick="endResseguroModalClose(event)">
+      <div class="ape-modal" style="max-width:560px" onclick="event.stopPropagation()">
+        <div class="ape-modal-hdr">
+          <span class="ape-modal-title">E-mail simulado — Alçada de Resseguro</span>
+          <button class="ape-modal-close" onclick="endResseguroModalClose()" title="Fechar">&#10005;</button>
+        </div>
+        <div class="ape-modal-body" id="end-resseguro-modal-body"></div>
+      </div>
+    </div>
+
+    <style>
+    .end-wrap{padding:24px 32px 60px;max-width:1400px;margin:0 auto}
+    .end-topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:20px;flex-wrap:wrap}
+    .end-title{font-size:22px;font-weight:700;color:var(--azure);font-family:'UnimedSlab',Georgia,serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .end-badge-pqa{font-size:11px;font-weight:700;color:#c1440e;background:#fff4e5;border:1px solid #ffd8a8;border-radius:12px;padding:3px 10px;letter-spacing:.2px}
+    .end-subtitle{font-size:13px;color:#8a94a3;margin-top:4px;max-width:680px;line-height:1.5}
+    .end-profile-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .end-profile-btn{padding:9px 16px;border:1px solid #d0d5dd;border-radius:20px;background:#fff;font-size:13px;font-weight:600;color:#586880;cursor:pointer;transition:all .15s}
+    .end-profile-btn:hover{border-color:var(--azure);color:var(--azure)}
+    .end-profile-btn.end-profile-active{background:#1f2a51;border-color:#1f2a51;color:#fff}
+
+    .end-carta-banner{display:flex;align-items:center;gap:10px;background:#fff4e5;border:1px solid #ffd8a8;border-radius:4px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#8a5a00;font-weight:600}
+    .end-carta-banner-btn{margin-left:auto;background:#e58a00;color:#fff;border:none;border-radius:3px;padding:7px 16px;font-size:12.5px;font-weight:700;cursor:pointer;flex-shrink:0}
+    .end-carta-banner-btn:hover{background:#c97600}
+
+    .end-steps{display:flex;align-items:center;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+    .end-step{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#a2aaad;padding:8px 6px}
+    .end-step-num{width:22px;height:22px;border-radius:50%;background:#e8ecf0;color:#8a94a3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+    .end-step.end-step-active{color:var(--azure)}
+    .end-step.end-step-active .end-step-num{background:var(--azure);color:#fff}
+    .end-step.end-step-done{color:var(--green)}
+    .end-step.end-step-done .end-step-num{background:var(--green);color:#fff}
+    .end-step-div{width:24px;height:1px;background:#d0d5dd;flex-shrink:0}
+
+    .end-card{background:#fff;border-left:5px solid #e58a00;border-radius:0 4px 4px 0;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.04);padding:22px 26px 26px;margin-bottom:20px}
+    .end-card-title{font-size:18px;font-weight:700;color:#1f2a51;font-family:'UnimedSlab',Georgia,serif;margin-bottom:4px}
+    .end-card-sub{font-size:13px;color:#8a94a3;margin-bottom:18px;line-height:1.5}
+
+    .end-alert{display:flex;align-items:flex-start;gap:10px;border-radius:4px;padding:12px 14px;font-size:13px;line-height:1.55;margin:14px 0}
+    .end-alert svg{flex-shrink:0;margin-top:1px}
+    .end-alert-err{background:#fdecea;border:1px solid #f5b8b1;color:#8a1c14}
+    .end-alert-warn{background:#fff4e5;border:1px solid #ffd8a8;color:#8a5a00}
+    .end-alert-ok{background:#eef7f0;border:1px solid #b7dfc3;color:#0f5c30}
+    .end-alert-info{background:#eaf6fc;border:1px solid #a8dcf2;color:#0a5a80}
+
+    .end-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .end-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+    .end-grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+
+    .end-cadbox{border:1px solid #d0d5dd;border-radius:3px;padding:10px 14px;background:#fafbfc}
+    .end-cadbox-lbl{font-size:11.5px;color:#a2aaad;display:block;margin-bottom:3px}
+    .end-cadbox-val{font-size:14px;font-weight:600;color:#44546c}
+    .end-analista-readonly{background:#eef1f4}
+
+    .end-cov-table{border:1px solid #e3e6ea;border-radius:4px;overflow:hidden;margin-top:8px}
+    .end-cov-row{display:grid;grid-template-columns:26px 1.7fr 200px 170px;gap:14px;align-items:center;padding:12px 14px;border-bottom:1px solid #eef1f4}
+    .end-cov-row:last-child{border-bottom:none}
+    .end-cov-row.end-cov-alt{background:#fafbfc}
+    .end-cov-row.end-cov-off{opacity:.55}
+    .end-cov-check{width:17px;height:17px;cursor:pointer;accent-color:var(--azure)}
+    .end-cov-lbl{font-size:13.5px;color:#44546c;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .end-cov-tag{font-size:10px;font-weight:700;color:#c1440e;background:#ffe8db;border-radius:10px;padding:2px 8px;letter-spacing:.2px}
+    .end-cov-tag-req{font-size:10px;font-weight:700;color:#586880;background:#eef1f4;border-radius:10px;padding:2px 8px}
+    .end-cov-capital{border:1px solid #d0d5dd;border-radius:3px;padding:7px 9px;font-size:13px;font-weight:600;color:#44546c;width:100%;font-family:inherit}
+    .end-cov-capital:disabled{background:#f4f6f8;color:#a2aaad}
+    .end-cov-pct{font-size:11px;color:#8a94a3;margin-top:3px}
+    .end-cov-note{font-size:11px;color:#e58a00;margin-top:4px}
+    .end-cov-err{font-size:11px;color:#e53935;margin-top:4px}
+    .end-cov-vig{font-size:12px;color:#8a94a3}
+
+    .end-compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+    .end-compare-col{border:1px solid #d0d5dd;border-radius:4px;overflow:hidden}
+    .end-compare-hdr{padding:12px 14px;font-size:14px;font-weight:700;color:#fff}
+    .end-compare-hdr.end-vig{background:#586880}
+    .end-compare-hdr.end-novo{background:var(--azure)}
+    .end-compare-body{padding:12px 14px}
+    .end-compare-item{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#44546c;padding:6px 0;border-bottom:1px dashed #eef1f4}
+    .end-compare-item:last-child{border-bottom:none}
+    .end-compare-total{display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#1f2a51;padding-top:10px;margin-top:6px;border-top:1px solid #e3e6ea}
+    .end-compare-total .end-novo-val{color:var(--azure)}
+
+    .end-dps-q{border:1px solid #e3e6ea;border-radius:3px;padding:12px 14px;margin-bottom:8px;font-size:13.5px;color:#44546c;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .end-dps-q-radios{display:flex;gap:16px;flex-shrink:0}
+    .end-dps-q-radios label{display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer}
+
+    .end-btn{padding:10px 22px;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+    .end-btn-primary{background:var(--azure);color:#fff}
+    .end-btn-primary:hover{background:#0080b3}
+    .end-btn-primary:disabled{background:#a8d8ec;cursor:not-allowed}
+    .end-btn-success{background:var(--green);color:#fff}
+    .end-btn-success:hover{background:#0a6b3c}
+    .end-btn-success:disabled{background:#9fcbb0;cursor:not-allowed}
+    .end-btn-outline{background:#fff;border:1px solid #d0d5dd;color:#586880}
+    .end-btn-outline:hover{background:#f4f6f8}
+    .end-btn-danger{background:#e53935;color:#fff}
+    .end-btn-danger:hover{background:#c62828}
+    .end-actions-row{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;padding-top:16px;border-top:1px solid #eef1f4;flex-wrap:wrap}
+    .end-actions-row.end-actions-between{justify-content:space-between}
+
+    .end-analista-split{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .end-queue-item{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #e3e6ea;border-radius:4px;padding:12px 14px;margin-bottom:10px}
+    .end-queue-item:hover{border-color:var(--azure)}
+    .end-queue-meta{font-size:12px;color:#8a94a3;margin-top:2px}
+    .end-queue-motivos{font-size:11.5px;color:#e58a00;margin-top:4px}
+    .end-empty-state{text-align:center;padding:40px 20px;color:#a2aaad;font-size:14px;line-height:1.6}
+
+    .end-retencao-card{border:1px solid #e3e6ea;border-radius:4px;padding:16px;margin-bottom:14px}
+    .end-slider-row{display:flex;align-items:center;gap:14px}
+    .end-slider-row input[type=range]{flex:1;accent-color:var(--azure)}
+
+    .end-recibo{background:#eef7f0;border:1px solid #b7dfc3;border-radius:4px;padding:24px;text-align:center}
+    .end-recibo-num{font-size:22px;font-weight:700;color:#0f5c30;margin:6px 0}
+    </style>
+
     <!-- CALCULE+ PAGE -->
     <div id="page-calcule-mais" class="page">
       <div class="calc-page">
@@ -5289,6 +5479,7 @@ const segmentsData = [
     id:"vida",letter:"V",label:"Vida",color:"#f86060",
     menuItems:[
       {label:"Calcule +",hasSubmenu:false},
+      {label:"Endosso (em validação)",hasSubmenu:false},
       {label:"Consultar",hasSubmenu:true,sub:["Extrato de Comissão","Movimentação Financeira"]},
       {label:"Consultas e Serviços",hasSubmenu:true,sub:["2ª Via de Boleto","2ª Via de Certificados ou Apólices","Consultar Beneficiários","Consultar Endossos","Dados para Correspondência","Renovação"]},
       {label:"Propostas",hasSubmenu:true,sub:["Digital+","Alteração Contratual e Endosso","Consultar Proposta","Nova Proposta","Simulação","Status da Análise"]},
@@ -5502,6 +5693,12 @@ function handleRoute() {
     setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Vida — Calcule +</span>');
     stopCarousel();
     initVidaCalculePage();
+  } else if (path === '/vida/endosso') {
+    document.getElementById('page-vida-endosso').classList.add('active');
+    portalName.textContent = 'Endosso (em validação)';
+    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Vida — Endosso (em validação)</span>');
+    stopCarousel();
+    endInit();
   } else if (path === '/calcule-mais') {
     document.getElementById('page-calcule-mais').classList.add('active');
     portalName.textContent = 'Calcule +';
@@ -5700,6 +5897,7 @@ function toggleSegment(segId) {
         const topLevelRoutes = {
           'ramos/Calcule +': '/calcule-mais',
           'vida/Calcule +': '/vida/calcule-mais',
+          'vida/Endosso (em validação)': '/vida/endosso',
           'ramos/Material de Apoio': '/material-apoio'
         };
         navigate(topLevelRoutes[segId + '/' + item.label] || '/' + encodeURIComponent(item.label));
@@ -10284,5 +10482,1029 @@ ocBuild();
   </div>
 </div>
 
+<script>
+// ================================================================
+// ENDOSSO VIDA INDIVIDUAL — PQA-447 (protótipo em validação)
+// Área isolada da jornada "Vida Calcule+", para estudos e validações
+// do fluxo integrado Calcule Mais + E-vida + Dru(z) + Joker.
+// Todo identificador aqui usa o prefixo "end" para não colidir com
+// nenhuma outra função/variável do restante do portal.
+// ================================================================
+
+function endFmtMoeda(n) {
+  var v = isFinite(n) ? n : 0;
+  return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function endParseMoeda(str) {
+  if (!str) return 0;
+  var digits = String(str).replace(/[^\d,.]/g, '').replace(/\.(?=\d{3})/g, '').replace(',', '.');
+  var n = parseFloat(digits);
+  return isNaN(n) ? 0 : n;
+}
+function endAlertIco(tipo) {
+  if (tipo === 'ok') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0f5c30" stroke-width="1.8"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="#0f5c30" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  if (tipo === 'warn' || tipo === 'err') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="' + (tipo==='err' ? '#e53935' : '#e58a00') + '"/><line x1="12" y1="9" x2="12" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
+  return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a5a80" stroke-width="1.8"/><line x1="12" y1="11" x2="12" y2="16" stroke="#0a5a80" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="1" fill="#0a5a80"/></svg>';
+}
+
+// ---- Catálogo de coberturas e cenários simulados (uso interno de validação) ----
+function endCoberturasBase() {
+  return [
+    {cod:'morte',   label:'Morte',                                                    capital:300000, ativa:true,  obrigatoria:true, altoRisco:false, percentual:null, requer:[]},
+    {cod:'ipa',     label:'IPA — Invalidez Permanente Total ou Parcial por Acidente',  capital:300000, ativa:true,  obrigatoria:false,altoRisco:false, percentual:100,  requer:[]},
+    {cod:'ipam',    label:'IPAM — Invalidez Permanente por Acidente Majorada',         capital:0,      ativa:false, obrigatoria:false,altoRisco:false, percentual:null, requer:['ipa']},
+    {cod:'ifpd',    label:'IFPD — Invalidez Funcional Permanente Total por Doença',    capital:0,      ativa:false, obrigatoria:false,altoRisco:true,  percentual:null, requer:['morte']},
+    {cod:'dcm',     label:'DCM — Diagnóstico de Câncer Masculino',                     capital:0,      ativa:false, obrigatoria:false,altoRisco:true,  percentual:null, requer:[]},
+    {cod:'dcf',     label:'DCF — Diagnóstico de Câncer Feminino',                      capital:0,      ativa:false, obrigatoria:false,altoRisco:true,  percentual:null, requer:[]},
+    {cod:'serit',   label:'SERIT — Seguro de Renda por Incapacidade Temporária',       capital:0,      ativa:false, obrigatoria:false,altoRisco:true,  percentual:null, requer:[]},
+    {cod:'dgcombo', label:'DG Combos — Doenças Graves (combo)',                        capital:0,      ativa:false, obrigatoria:false,altoRisco:true,  percentual:null, requer:[]}
+  ];
+}
+
+var END_SCENARIOS = {
+  clean: {
+    key:'clean', nome:'Marcos Vinícius Almeida', cpf:'123.456.789-00', apolice:'AP-200134',
+    profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'24,1 (Normal)', vinculo:'CLT',
+    idade:34, restritiva:false, naoRenovar:false, inadimplente:false, sinistroAtivo:false,
+    premioVigente:141.00, periodicidade:'Mensal'
+  },
+  restritiva: {
+    key:'restritiva', nome:'Renata Souza Lima', cpf:'234.567.890-11', apolice:'AP-200179',
+    profissao:'Motorista de Aplicativo', renda:'R$ 3.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Autônomo',
+    idade:41, restritiva:true, naoRenovar:false, inadimplente:false, sinistroAtivo:false,
+    premioVigente:141.00, periodicidade:'Mensal'
+  },
+  naorenovar: {
+    key:'naorenovar', nome:'Fernando Augusto Reis', cpf:'345.678.901-22', apolice:'AP-200231',
+    profissao:'Vigilante', renda:'R$ 2.800,00', imc:'29,8 (Sobrepeso)', vinculo:'CLT',
+    idade:52, restritiva:false, naoRenovar:true, inadimplente:false, sinistroAtivo:true,
+    premioVigente:141.00, periodicidade:'Mensal'
+  },
+  inadimplente: {
+    key:'inadimplente', nome:'Camila Ribeiro Teixeira', cpf:'456.789.012-33', apolice:'AP-200205',
+    profissao:'Professora', renda:'R$ 4.500,00', imc:'22,9 (Normal)', vinculo:'CLT',
+    idade:29, restritiva:false, naoRenovar:false, inadimplente:true, sinistroAtivo:false,
+    premioVigente:141.00, periodicidade:'Mensal'
+  }
+};
+
+var END_RATES = {morte:0.35, ipa:0.12, ipam:0.10, ifpd:0.28, dcm:0.20, dcf:0.20, serit:0.15, dgcombo:0.30};
+function endCalcPremio(coberturas) {
+  var total = 0;
+  coberturas.forEach(function(c){ if (c.ativa) total += (c.capital/1000) * (END_RATES[c.cod] || 0.2); });
+  return Math.round(total * 100) / 100;
+}
+
+var END_PROFISSOES = [
+  {v:'analista', label:'Analista de Sistemas', agravada:false},
+  {v:'professor', label:'Professor(a)', agravada:false},
+  {v:'comerciante', label:'Comerciante', agravada:false},
+  {v:'motociclista', label:'Motociclista Profissional (Motoboy/App)', agravada:true},
+  {v:'altura', label:'Trabalho em Altura / Construção Civil', agravada:true},
+  {v:'seguranca', label:'Segurança Armado', agravada:true}
+];
+
+var END_DPS_PERGUNTAS_SIMPLES = [
+  'Você possui ou já possuiu alguma doença cardíaca, diabetes ou hipertensão?',
+  'Você pratica esportes radicais ou de risco (mergulho, paraquedismo, etc)?',
+  'Você é fumante ou ex-fumante nos últimos 12 meses?'
+];
+var END_DPS_PERGUNTAS_COMPLETAS = END_DPS_PERGUNTAS_SIMPLES.concat([
+  'Você já foi submetido a alguma cirurgia nos últimos 5 anos?',
+  'Há histórico familiar de doenças graves (câncer, cardiopatias) em parentes de 1º grau?',
+  'Você está em acompanhamento médico contínuo para alguma condição crônica?',
+  'Você já teve algum pedido de seguro de vida recusado ou agravado anteriormente?',
+  'Sua ocupação envolve exposição a risco físico elevado no dia a dia?'
+]);
+
+var END_STEP_LABELS = ['Validação','Cotação','Precificação','Assinatura (DPS)','Implantação'];
+
+// ---- Estado ----
+var END_STATE = {};
+var END_QUEUE = [];
+var END_CASE_SEQ = 9000;
+var END_ACTIVE_ANALISE = null;
+var END_ULTIMA_CARTA = null;
+var END_RETENCAO_ATIVO = null;
+
+var END_RETENCAO_CLIENTES = [
+  {nome:'Beatriz Nogueira Dias', apolice:'AP-200257', capital:180000, premio:63.00, jaRecebeuDesconto:false},
+  {nome:'Escola Aprender Mais', apolice:'AP-200218', capital:250000, premio:87.50, jaRecebeuDesconto:true},
+  {nome:'NESTLE BRASIL LTDA', apolice:'AP-200244', capital:500000, premio:175.00, jaRecebeuDesconto:false}
+];
+
+// ---- Boot / navegação de perfis ----
+function endInit() {
+  endSetProfile(END_STATE.profile || 'corretor');
+  endResetCorretorState();
+  endRenderSteps();
+  endUpdateCartaBanner();
+}
+
+function endSetProfile(p) {
+  END_STATE.profile = p;
+  document.querySelectorAll('.end-profile-btn').forEach(function(b){ b.classList.toggle('end-profile-active', b.dataset.profile === p); });
+  var vc = document.getElementById('end-view-corretor');
+  var va = document.getElementById('end-view-analista');
+  var vr = document.getElementById('end-view-retencao');
+  if (vc) vc.style.display = p === 'corretor' ? '' : 'none';
+  if (va) va.style.display = p === 'analista' ? '' : 'none';
+  if (vr) vr.style.display = p === 'retencao' ? '' : 'none';
+  if (p === 'analista') endRenderAnalista();
+  if (p === 'retencao') endRenderRetencao();
+}
+
+function endResetCorretorState() {
+  var profileKeep = END_STATE.profile;
+  END_STATE = {
+    profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[],
+    cadastroConfirmado:false, modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
+    premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'', dpsReaproveitada:false,
+    dpsRespondida:false, _dpsRespostas:{}, assinaturaEnviada:false, assinaturaConcluida:false,
+    caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista'
+  };
+  for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i===1)?'block':'none'; }
+  endRenderFase1();
+}
+function endReset() {
+  endResetCorretorState();
+  endRenderSteps();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function endRenderSteps() {
+  var wrap = document.getElementById('end-steps');
+  if (!wrap) return;
+  var html = '';
+  END_STEP_LABELS.forEach(function(lbl, i) {
+    var n = i + 1;
+    var cls = 'end-step' + (n === END_STATE.fase ? ' end-step-active' : (n < END_STATE.fase ? ' end-step-done' : ''));
+    html += '<div class="' + cls + '"><span class="end-step-num">' + n + '</span>' + lbl + '</div>';
+    if (n < END_STEP_LABELS.length) html += '<div class="end-step-div"></div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function endGoFase(n) {
+  if (n === 2) {
+    endRenderFase2();
+  } else if (n === 3) {
+    if (!endValidaFase2()) return;
+    endRenderFase3();
+  } else if (n === 4) {
+    if (!endValidaFase3()) return;
+    endRenderFase4();
+  } else if (n === 5) {
+    if (!endValidaFase4()) { apeShowError('Conclua a assinatura digital antes de avançar para a implantação.'); return; }
+    endRenderFase5();
+  } else if (n === 1) {
+    endRenderFase1Voltar();
+  }
+  END_STATE.fase = n;
+  for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i===n) ? 'block' : 'none'; }
+  endRenderSteps();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ================= FASE 1 — VALIDAÇÃO (ELEGIBILIDADE) =================
+function endRenderFase1() {
+  var el = document.getElementById('end-fase-1');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="end-card-title">Fase 1 — Validação (Elegibilidade)</div>' +
+    '<p class="end-card-sub">Consulta simulada à API do E-vida para checar restrições cadastrais e financeiras antes de liberar a edição de coberturas.</p>' +
+    '<div class="end-grid3">' +
+      '<div class="vcalc-f"><span class="vcalc-f-lbl">CPF do Segurado ou Nº da Apólice</span>' +
+        '<input type="text" id="end-busca" placeholder="Ex: 123.456.789-00 ou AP-200134">' +
+      '</div>' +
+      '<div class="vcalc-f"><span class="vcalc-f-lbl">Cenário de simulação (uso interno de validação)</span>' +
+        '<select id="end-cenario">' +
+          '<option value="">Selecione</option>' +
+          '<option value="clean">Caso limpo — sem restrições</option>' +
+          '<option value="restritiva">CPF em Lista Restritiva</option>' +
+          '<option value="naorenovar">Apólice flegada para Não Renovar</option>' +
+          '<option value="inadimplente">Segurado inadimplente</option>' +
+        '</select>' +
+      '</div>' +
+      '<div style="display:flex;align-items:flex-end">' +
+        '<button class="end-btn end-btn-primary" style="width:100%" id="end-consultar-btn" onclick="endConsultar()">Consultar</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="end-fase1-msg" style="display:none"></div>' +
+    '<div id="end-fase1-resultado"></div>' +
+    '<div class="end-actions-row" id="end-fase1-actions" style="display:none;justify-content:flex-end">' +
+      '<button class="end-btn end-btn-primary" id="end-fase1-avancar" onclick="endGoFase(2)">Avançar para Cotação &rsaquo;</button>' +
+    '</div>';
+}
+
+function endRenderFase1Voltar() {
+  endRenderFase1();
+  if (END_STATE.cliente) {
+    document.getElementById('end-busca').value = END_STATE.cliente.apolice;
+    document.getElementById('end-cenario').value = END_STATE.cenarioKey;
+    endRenderFase1Resultado();
+  }
+}
+
+function endConsultar() {
+  var cenario = document.getElementById('end-cenario').value;
+  var busca = document.getElementById('end-busca').value.trim();
+  var msgEl = document.getElementById('end-fase1-msg');
+  if (!busca || !cenario) {
+    msgEl.className = 'end-alert end-alert-err';
+    msgEl.style.display = 'flex';
+    msgEl.innerHTML = endAlertIco('err') + '<span>Informe o CPF do segurado (ou nº da apólice) e selecione um cenário de simulação para consultar.</span>';
+    return;
+  }
+  msgEl.style.display = 'none';
+  var cli = END_SCENARIOS[cenario];
+  END_STATE.cenarioKey = cenario;
+  END_STATE.cliente = Object.assign({}, cli);
+  END_STATE.coberturasVig = endCoberturasBase();
+  END_STATE.coberturas = endCoberturasBase();
+  END_STATE.modoRestrito = !!(cli.restritiva || cli.naoRenovar);
+  END_STATE.cadastroConfirmado = false;
+  END_STATE._profissaoSel = 'analista';
+  END_STATE.motivoNaoClean = [];
+  END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false; END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
+  END_STATE.assinaturaEnviada = false; END_STATE.assinaturaConcluida = false;
+  END_STATE.resseguroAprovado = false;
+  endRenderFase1Resultado();
+}
+
+function endRenderFase1Resultado() {
+  var cli = END_STATE.cliente;
+  var res = document.getElementById('end-fase1-resultado');
+  var actions = document.getElementById('end-fase1-actions');
+  var avancar = document.getElementById('end-fase1-avancar');
+  var html = '<div class="end-cadbox" style="margin-top:14px"><span class="end-cadbox-lbl">Segurado</span><span class="end-cadbox-val">' + cli.nome + ' — ' + cli.cpf + ' (' + cli.apolice + ')</span></div>';
+
+  if (cli.inadimplente) {
+    html += '<div class="end-alert end-alert-err">' + endAlertIco('err') + '<span><strong>Seguro com parcelas em aberto!</strong> Necessário quitá-las para seguir com qualquer endosso!</span></div>';
+    avancar.disabled = true;
+  } else if (cli.restritiva) {
+    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span><strong>CPF em Lista Restritiva.</strong> Novos aumentos de capital e novas coberturas estão bloqueados. Você poderá seguir apenas com redução de capital ou exclusão de coberturas vigentes.</span></div>';
+    avancar.disabled = false;
+  } else if (cli.naoRenovar) {
+    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span><strong>Aumento de capital não permitido.</strong> Para maiores informações, procure seu Escritório Regional. Esta apólice está flegada para não renovação — você poderá seguir apenas com redução de capital ou exclusão de coberturas.</span></div>';
+    avancar.disabled = false;
+  } else {
+    html += '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>Consulta realizada com sucesso. Cliente sem restrições — edição completa das coberturas liberada.</span></div>';
+    avancar.disabled = false;
+  }
+  res.innerHTML = html;
+  actions.style.display = 'flex';
+}
+
+// ================= FASE 2 — COTAÇÃO (TELA ÚNICA DE EDIÇÃO) =================
+function endRenderFase2() {
+  var el = document.getElementById('end-fase-2');
+  var cli = END_STATE.cliente;
+
+  var restritoNota = END_STATE.modoRestrito
+    ? '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Esta apólice está sob restrição — apenas <strong>redução de capital</strong> ou <strong>exclusão de coberturas</strong> são permitidas. Inclusões e aumentos aparecem desabilitados no grid abaixo.</span></div>'
+    : '';
+
+  el.innerHTML =
+    '<div class="end-card-title">Fase 2 — Cotação (Tela única de edição)</div>' +
+    '<p class="end-card-sub">Dados cadastrais atuais obtidos do E-vida e grid dinâmico de coberturas vigentes.</p>' +
+    restritoNota +
+    '<div class="end-grid4">' +
+      '<div class="end-cadbox"><span class="end-cadbox-lbl">Profissão</span>' +
+        '<select id="end-profissao" onchange="endOnProfissaoChange(this)" style="border:none;background:transparent;width:100%;font:inherit;font-weight:600;color:#44546c;cursor:pointer">' +
+          END_PROFISSOES.map(function(p){ return '<option value="' + p.v + '"' + (p.v===END_STATE._profissaoSel?' selected':'') + '>' + p.label + '</option>'; }).join('') +
+        '</select>' +
+      '</div>' +
+      '<div class="end-cadbox"><span class="end-cadbox-lbl">Renda Mensal</span><span class="end-cadbox-val">' + cli.renda + '</span></div>' +
+      '<div class="end-cadbox"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + cli.imc + '</span></div>' +
+      '<div class="end-cadbox"><span class="end-cadbox-lbl">Vínculo Empregatício</span><span class="end-cadbox-val">' + cli.vinculo + '</span></div>' +
+    '</div>' +
+    '<label class="prop-check-item" style="margin-top:14px"><input type="checkbox" id="end-cadastro-ok" onchange="endOnCadastroOkChange(this)"' + (END_STATE.cadastroConfirmado?' checked':'') + '> Confirmo que os dados cadastrais acima estão atualizados</label>' +
+    '<div id="end-profissao-alerta"></div>' +
+    '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
+    '<div class="end-actions-row end-actions-between">' +
+      '<button class="end-btn end-btn-outline" onclick="endGoFase(1)">&lsaquo; Voltar</button>' +
+      '<button class="end-btn end-btn-primary" id="end-fase2-avancar" onclick="endGoFase(3)">Avançar para Precificação &rsaquo;</button>' +
+    '</div>';
+
+  endRenderCovTable();
+  endUpdateFase2AvancarState();
+  endOnProfissaoChange(document.getElementById('end-profissao'), true);
+}
+
+function endOnProfissaoChange(sel, silencioso) {
+  var novaVal = sel.value;
+  var nova = END_PROFISSOES.find(function(p){ return p.v === novaVal; });
+  var alertaEl = document.getElementById('end-profissao-alerta');
+  var antigaAgravada = END_STATE._profissaoAgravadaSnapshot;
+  if (antigaAgravada === undefined) antigaAgravada = false;
+  END_STATE._profissaoSel = novaVal;
+  if (nova && nova.agravada) {
+    alertaEl.innerHTML = '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Profissão de risco agravado selecionada. Este caso será direcionado para a <strong>Mesa Técnica</strong> (Não Clean Case).</span></div>';
+  } else {
+    alertaEl.innerHTML = '';
+  }
+}
+function endOnCadastroOkChange(chk) {
+  END_STATE.cadastroConfirmado = chk.checked;
+  endUpdateFase2AvancarState();
+}
+function endUpdateFase2AvancarState() {
+  var btn = document.getElementById('end-fase2-avancar');
+  if (btn) btn.disabled = !END_STATE.cadastroConfirmado;
+}
+
+function endRenderCovTable() {
+  var wrap = document.getElementById('end-cov-table');
+  if (!wrap) return;
+  var html = '';
+  END_STATE.coberturas.forEach(function(c, i) {
+    var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === c.cod; });
+    var alt = i % 2 === 1 ? ' end-cov-alt' : '';
+    var off = !c.ativa ? ' end-cov-off' : '';
+    var checkboxDisabled = c.obrigatoria ? ' disabled' : '';
+    if (END_STATE.modoRestrito && !c.ativa) checkboxDisabled = ' disabled';
+    var tag = c.altoRisco ? '<span class="end-cov-tag">alto risco</span>' : '';
+    var tagReq = (c.requer && c.requer.length) ? '<span class="end-cov-tag-req">requer ' + c.requer.map(function(r){ return r.toUpperCase(); }).join(', ') + '</span>' : '';
+
+    var capitalField;
+    if (c.cod === 'ipa') {
+      capitalField = '<div><input type="text" id="end-cov-ipa-capital" class="end-cov-capital" value="' + endFmtMoeda(c.capital) + '" disabled><div class="end-cov-pct">' + c.percentual + '% do capital de Morte (recálculo automático)</div></div>';
+    } else {
+      var maxAttr = (END_STATE.modoRestrito) ? ' data-max="' + vig.capital + '"' : '';
+      capitalField = '<input type="text" class="end-cov-capital" data-cod="' + c.cod + '" value="' + endFmtMoeda(c.capital) + '"' + (c.ativa ? '' : ' disabled') + maxAttr + ' oninput="endOnCapitalInput(this)" onblur="endOnCapitalBlur(this)">';
+    }
+
+    html += '<div class="end-cov-row' + alt + off + '">' +
+      '<input type="checkbox" class="end-cov-check" data-cod="' + c.cod + '"' + (c.ativa?' checked':'') + checkboxDisabled + ' onchange="endOnCoberturaToggle(this)">' +
+      '<div><span class="end-cov-lbl">' + c.label + ' ' + tag + ' ' + tagReq + '</span>' +
+        '<div class="end-cov-err" id="end-cov-err-' + c.cod + '" style="display:none"></div>' +
+      '</div>' +
+      '<div>' + capitalField + '</div>' +
+      '<div class="end-cov-vig">Vigente: ' + (vig.ativa ? endFmtMoeda(vig.capital) : 'Não contratada') + '</div>' +
+    '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function endOnCoberturaToggle(chk) {
+  var cod = chk.dataset.cod;
+  var c = END_STATE.coberturas.find(function(x){ return x.cod === cod; });
+  if (!c) return;
+  if (c.obrigatoria) { chk.checked = true; return; }
+  if (chk.checked && END_STATE.modoRestrito) { chk.checked = false; return; }
+
+  c.ativa = chk.checked;
+  if (!c.ativa) {
+    c.capital = 0;
+  } else if (!c.capital) {
+    var vigRef = END_STATE.coberturasVig.find(function(v){ return v.cod === cod; });
+    c.capital = (vigRef && vigRef.capital) || 100000;
+  }
+
+  if (cod === 'ipa' && !c.ativa) {
+    var ipam = END_STATE.coberturas.find(function(x){ return x.cod === 'ipam'; });
+    if (ipam && ipam.ativa) { ipam.ativa = false; ipam.capital = 0; }
+  }
+  if (cod === 'ipam' && c.ativa) {
+    var ipa = END_STATE.coberturas.find(function(x){ return x.cod === 'ipa'; });
+    if (!ipa || !ipa.ativa) {
+      c.ativa = false; c.capital = 0;
+      var errEl0 = document.getElementById('end-cov-err-ipam');
+      if (errEl0) { errEl0.textContent = 'IPAM exige que a cobertura IPA esteja contratada.'; errEl0.style.display = 'block'; }
+    }
+  }
+  endRecalcIpa();
+  endRenderCovTable();
+  endUpdateFase2AvancarState();
+}
+
+function endOnCapitalInput(inp) {
+  var cod = inp.dataset.cod;
+  var c = END_STATE.coberturas.find(function(x){ return x.cod === cod; });
+  if (!c) return;
+  var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === cod; });
+  var val = endParseMoeda(inp.value);
+  c.capital = val;
+  var errEl = document.getElementById('end-cov-err-' + cod);
+  if (END_STATE.modoRestrito && val > vig.capital) {
+    if (errEl) { errEl.textContent = 'Apólice restrita: o capital não pode ser superior ao vigente (' + endFmtMoeda(vig.capital) + ').'; errEl.style.display = 'block'; }
+  } else if (errEl) {
+    errEl.style.display = 'none';
+  }
+  if (cod === 'morte') endRecalcIpa();
+}
+function endOnCapitalBlur(inp) {
+  var cod = inp.dataset.cod;
+  var c = END_STATE.coberturas.find(function(x){ return x.cod === cod; });
+  var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === cod; });
+  if (!c) return;
+  if (END_STATE.modoRestrito && c.capital > vig.capital) c.capital = vig.capital;
+  inp.value = endFmtMoeda(c.capital);
+  if (cod === 'morte') endRecalcIpa();
+}
+function endRecalcIpa() {
+  var morte = END_STATE.coberturas.find(function(x){ return x.cod === 'morte'; });
+  var ipa = END_STATE.coberturas.find(function(x){ return x.cod === 'ipa'; });
+  if (morte && ipa) {
+    if (ipa.ativa) ipa.capital = Math.round(morte.capital * (ipa.percentual/100));
+    var ipaInp = document.getElementById('end-cov-ipa-capital');
+    if (ipaInp) ipaInp.value = endFmtMoeda(ipa.capital);
+  }
+}
+
+function endValidaFase2() {
+  if (!END_STATE.cadastroConfirmado) {
+    apeShowError('Confirme que os dados cadastrais estão atualizados antes de avançar.');
+    return false;
+  }
+  if (END_STATE.modoRestrito) {
+    END_STATE.coberturas.forEach(function(c) {
+      var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === c.cod; });
+      if (c.capital > vig.capital) c.capital = vig.capital;
+      if (!vig.ativa && c.ativa) { c.ativa = false; c.capital = 0; }
+    });
+  }
+  END_STATE.motivoNaoClean = [];
+  var profissaoObj = END_PROFISSOES.find(function(p){ return p.v === END_STATE._profissaoSel; });
+  if (profissaoObj && profissaoObj.agravada) END_STATE.motivoNaoClean.push('Mudança para profissão de risco agravado (' + profissaoObj.label + ')');
+  var totalVig = END_STATE.coberturasVig.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  var totalNovo = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  if (totalVig > 0 && totalNovo > totalVig * 1.5) END_STATE.motivoNaoClean.push('Aumento de capital superior a 50% sobre o valor vigente');
+  return true;
+}
+
+// ================= FASE 3 — PRECIFICAÇÃO (COMPARAÇÃO EM TELA) =================
+function endRenderFase3() {
+  var el = document.getElementById('end-fase-3');
+  var premioNovo = endCalcPremio(END_STATE.coberturas);
+  var premioVig = END_STATE.cliente.premioVigente;
+  END_STATE.premioNovo = premioNovo;
+
+  el.innerHTML =
+    '<div class="end-card-title">Fase 3 — Precificação (Comparação em tela)</div>' +
+    '<p class="end-card-sub">Visualização "antes e depois" entre a apólice vigente e a condição proposta.</p>' +
+    '<div class="end-compare" id="end-compare"></div>' +
+    '<div class="end-alert end-alert-info">' + endAlertIco('info') +
+      '<span>A alteração de prêmio é diluída nas parcelas futuras já em aberto no E-vida (substituição de parcelas), sem cobranças ou devoluções imediatas em boleto avulso.</span></div>' +
+    '<div id="end-premio-min-area"></div>' +
+    '<div class="end-actions-row end-actions-between">' +
+      '<button class="end-btn end-btn-outline" onclick="endGoFase(2)">&lsaquo; Voltar</button>' +
+      '<button class="end-btn end-btn-primary" id="end-fase3-avancar" onclick="endGoFase(4)">Avançar para Assinatura (DPS) &rsaquo;</button>' +
+    '</div>';
+
+  endRenderCompare('end-compare', END_STATE.coberturasVig, END_STATE.coberturas, premioVig, premioNovo);
+  endRenderPremioMinArea();
+}
+
+function endRenderCompare(containerId, vigList, novoList, premioVig, premioNovo) {
+  var vigItems = vigList.filter(function(c){return c.ativa;}).map(function(c){
+    return '<div class="end-compare-item"><span>' + c.label + '</span><span>' + endFmtMoeda(c.capital) + '</span></div>';
+  }).join('') || '<div class="end-compare-item"><span>Nenhuma cobertura ativa</span><span>&mdash;</span></div>';
+  var novoItems = novoList.filter(function(c){return c.ativa;}).map(function(c){
+    var vig = vigList.find(function(v){ return v.cod === c.cod; });
+    var mudou = !vig.ativa || vig.capital !== c.capital;
+    return '<div class="end-compare-item"><span>' + c.label + (mudou ? ' <strong style="color:var(--azure)">&#9679;</strong>' : '') + '</span><span>' + endFmtMoeda(c.capital) + '</span></div>';
+  }).join('') || '<div class="end-compare-item"><span>Nenhuma cobertura ativa</span><span>&mdash;</span></div>';
+
+  var target = document.getElementById(containerId);
+  if (!target) return;
+  target.innerHTML =
+    '<div class="end-compare-col"><div class="end-compare-hdr end-vig">Vigente</div><div class="end-compare-body">' + vigItems +
+      '<div class="end-compare-total"><span>Prêmio Vigente</span><span>' + endFmtMoeda(premioVig) + ' /mês</span></div></div></div>' +
+    '<div class="end-compare-col"><div class="end-compare-hdr end-novo">Recálculo Proposto</div><div class="end-compare-body">' + novoItems +
+      '<div class="end-compare-total"><span>Novo Prêmio</span><span class="end-novo-val">' + endFmtMoeda(premioNovo) + ' /mês</span></div></div></div>';
+}
+
+function endRenderPremioMinArea() {
+  var area = document.getElementById('end-premio-min-area');
+  var avancar = document.getElementById('end-fase3-avancar');
+  var mult = {Mensal:1, Bimestral:2, Trimestral:3};
+  var efetivo = END_STATE.premioNovo * mult[END_STATE.periodicidadeNova];
+  if (END_STATE.premioNovo < 35) {
+    area.innerHTML = '<div class="end-alert end-alert-warn">' + endAlertIco('warn') +
+      '<span>O novo prêmio recalculado (' + endFmtMoeda(END_STATE.premioNovo) + '/mês) é inferior ao mínimo de R$ 35,00. Ajuste a periodicidade de pagamento para viabilizar o envio: ' +
+      '<select id="end-periodicidade" onchange="endOnPeriodicidadeChange(this)" style="margin-left:8px">' +
+        ['Mensal','Bimestral','Trimestral'].map(function(p){ return '<option value="' + p + '"' + (p===END_STATE.periodicidadeNova?' selected':'') + '>' + p + '</option>'; }).join('') +
+      '</select>' +
+      ' — parcela efetiva: <strong id="end-periodicidade-efetivo">' + endFmtMoeda(efetivo) + '</strong></span></div>';
+    avancar.disabled = efetivo < 35;
+  } else {
+    area.innerHTML = '';
+    avancar.disabled = false;
+  }
+}
+function endOnPeriodicidadeChange(sel) {
+  END_STATE.periodicidadeNova = sel.value;
+  endRenderPremioMinArea();
+}
+function endValidaFase3() { return true; }
+
+// ================= FASE 4 — EFETIVAÇÃO E ASSINATURA (DPS) =================
+function endComputeDpsTipo() {
+  var vigAtivos = END_STATE.coberturasVig.filter(function(c){return c.ativa;});
+  var novoAtivos = END_STATE.coberturas.filter(function(c){return c.ativa;});
+  var houveAumentoOuInclusao = false;
+  novoAtivos.forEach(function(c) {
+    var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === c.cod; });
+    if (!vig.ativa || c.capital > vig.capital) houveAumentoOuInclusao = true;
+  });
+  if (!houveAumentoOuInclusao) return 'isenta';
+  var totalVig = vigAtivos.reduce(function(s,c){return s+c.capital;},0);
+  var totalNovo = novoAtivos.reduce(function(s,c){return s+c.capital;},0);
+  var percInc = totalVig > 0 ? ((totalNovo - totalVig) / totalVig) * 100 : 100;
+  if (percInc > 50 || totalNovo > 3500000) return 'completa';
+  return 'simplificada';
+}
+
+function endRenderFase4() {
+  var el = document.getElementById('end-fase-4');
+  var novoTipo = endComputeDpsTipo();
+  if (novoTipo !== END_STATE.dpsTipo) {
+    END_STATE.dpsRespondida = false;
+    END_STATE.dpsReaproveitada = false;
+    END_STATE._dpsRespostas = {};
+    END_STATE.assinaturaEnviada = false;
+    END_STATE.assinaturaConcluida = false;
+  }
+  END_STATE.dpsTipo = novoTipo;
+
+  el.innerHTML =
+    '<div class="end-card-title">Fase 4 — Efetivação e Assinatura</div>' +
+    '<p class="end-card-sub">Direcionamento de DPS conforme a hierarquia do Gerenciador de Fontes.</p>' +
+    '<div id="end-dps-area"></div>' +
+    '<div id="end-assinatura-area"></div>' +
+    '<div class="end-actions-row end-actions-between">' +
+      '<button class="end-btn end-btn-outline" onclick="endGoFase(3)">&lsaquo; Voltar</button>' +
+      '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Avançar para Implantação &rsaquo;</button>' +
+    '</div>';
+
+  endRenderDpsArea();
+}
+
+function endRenderDpsArea() {
+  var area = document.getElementById('end-dps-area');
+  var tipo = END_STATE.dpsTipo;
+  var label = {isenta:'Isento de DPS', simplificada:'DPS Simplificada', completa:'DPS Completa'}[tipo];
+  var html = '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Regra aplicada: <strong>' + label + '</strong>' +
+    (tipo === 'isenta' ? ' — apenas redução/exclusão foi solicitada.' : (tipo === 'completa' ? ' — aumento acima de 50% sobre o capital vigente ou capital total acima de R$ 3.500.000,00.' : ' — aumento de capital ou inclusão de cobertura dentro dos limites automáticos.')) +
+    '</span></div>';
+
+  if (tipo === 'isenta') {
+    END_STATE.dpsRespondida = true;
+    area.innerHTML = html;
+    endRenderAssinaturaArea();
+    return;
+  }
+
+  html += '<label class="prop-check-item" style="margin:10px 0"><input type="checkbox" id="end-dps-reaproveita" onchange="endOnDpsReaproveitaChange(this)"' + (END_STATE.dpsReaproveitada?' checked':'') + '> Cliente já respondeu este modelo de DPS há menos de 30 dias, sem novas patologias declaradas (reaproveitar histórico)</label>';
+  html += '<div id="end-dps-form"></div>';
+  area.innerHTML = html;
+  endRenderDpsForm();
+}
+
+function endOnDpsReaproveitaChange(chk) {
+  END_STATE.dpsReaproveitada = chk.checked;
+  if (chk.checked) END_STATE.dpsRespondida = true;
+  else END_STATE.dpsRespondida = false;
+  endRenderDpsForm();
+  endRenderAssinaturaArea();
+}
+
+function endRenderDpsForm() {
+  var wrap = document.getElementById('end-dps-form');
+  if (!wrap) return;
+  if (END_STATE.dpsReaproveitada) {
+    wrap.innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS reaproveitada do histórico recente. Preenchimento dispensado.</span></div>';
+    endRenderAssinaturaArea();
+    return;
+  }
+  var perguntas = END_STATE.dpsTipo === 'completa' ? END_DPS_PERGUNTAS_COMPLETAS : END_DPS_PERGUNTAS_SIMPLES;
+  var html = perguntas.map(function(p, i) {
+    var val = END_STATE._dpsRespostas[i] || '';
+    return '<div class="end-dps-q"><span>' + p + '</span><div class="end-dps-q-radios">' +
+      '<label><input type="radio" name="end-dps-q-' + i + '" value="nao" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='nao'?' checked':'') + '> Não</label>' +
+      '<label><input type="radio" name="end-dps-q-' + i + '" value="sim" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='sim'?' checked':'') + '> Sim</label>' +
+    '</div></div>';
+  }).join('');
+  html += '<button class="end-btn end-btn-primary" style="margin-top:10px" onclick="endResponderDps()">Confirmar respostas da DPS</button>';
+  html += '<div id="end-dps-confirmado"></div>';
+  wrap.innerHTML = html;
+}
+function endOnDpsResposta(i, radio) {
+  END_STATE._dpsRespostas[i] = radio.value;
+}
+function endResponderDps() {
+  var perguntas = END_STATE.dpsTipo === 'completa' ? END_DPS_PERGUNTAS_COMPLETAS : END_DPS_PERGUNTAS_SIMPLES;
+  var respondidas = Object.keys(END_STATE._dpsRespostas || {}).length;
+  if (respondidas < perguntas.length) {
+    apeShowError('Responda todas as perguntas da DPS antes de confirmar.');
+    return;
+  }
+  END_STATE.dpsRespondida = true;
+  document.getElementById('end-dps-confirmado').innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS respondida e registrada.</span></div>';
+  endRenderAssinaturaArea();
+}
+
+function endRenderAssinaturaArea() {
+  var area = document.getElementById('end-assinatura-area');
+  var btnAvancar = document.getElementById('end-fase4-avancar');
+  if (!area) return;
+  if (!END_STATE.dpsRespondida) { area.innerHTML=''; if (btnAvancar) btnAvancar.disabled = true; return; }
+
+  var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  var precisaResseguro = totalCapital > 5000000;
+
+  var html = '<div class="end-card-title" style="font-size:15px;margin-top:18px">Assinatura Digital</div>';
+  if (precisaResseguro && !END_STATE.resseguroAprovado) {
+    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Capital segurado total (' + endFmtMoeda(totalCapital) + ') ultrapassa os limites da política de subscrição. Um e-mail foi enviado para a alçada de resseguro. ' +
+      '<button class="end-btn end-btn-outline" style="margin-left:8px;padding:6px 12px;font-size:12px" onclick="endAbrirResseguroModal()">Ver e-mail simulado</button></span></div>';
+  }
+
+  if (!END_STATE.assinaturaEnviada) {
+    html += '<button class="end-btn end-btn-primary" id="end-btn-enviar-assinatura" onclick="endEnviarAssinatura()"' + ((precisaResseguro && !END_STATE.resseguroAprovado) ? ' disabled' : '') + '>Enviar link de assinatura (Docusign / Área Logada)</button>';
+  } else if (!END_STATE.assinaturaConcluida) {
+    html += '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Link de assinatura enviado ao segurado. Aguardando confirmação.</span></div>' +
+      '<button class="end-btn end-btn-success" onclick="endClienteAssinou()">Simular: cliente validou a DPS e assinou</button>';
+  } else {
+    html += '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>Proposta de alteração assinada digitalmente pelo segurado.</span></div>';
+  }
+  area.innerHTML = html;
+  if (btnAvancar) btnAvancar.disabled = !END_STATE.assinaturaConcluida;
+}
+function endEnviarAssinatura() {
+  END_STATE.assinaturaEnviada = true;
+  endRenderAssinaturaArea();
+}
+function endClienteAssinou() {
+  END_STATE.assinaturaConcluida = true;
+  endRenderAssinaturaArea();
+}
+function endValidaFase4() { return END_STATE.assinaturaConcluida; }
+
+function endAbrirResseguroModal() {
+  var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  document.getElementById('end-resseguro-modal-body').innerHTML =
+    '<div class="end-cadbox" style="margin-bottom:14px">' +
+      '<span class="end-cadbox-lbl">Para</span><span class="end-cadbox-val">alcada.resseguro@segurosunimed.com.br</span></div>' +
+    '<p style="font-size:13px;color:#44546c;line-height:1.6">Prezados,<br><br>O endosso do segurado <strong>' + END_STATE.cliente.nome + '</strong> (apólice ' + END_STATE.cliente.apolice + ') resultou em capital segurado total de <strong>' + endFmtMoeda(totalCapital) + '</strong>, acima dos limites da tabela da política de subscrição.<br><br>Solicita-se análise e aprovação dos riscos acumulados para prosseguimento do endosso.</p>' +
+    '<button class="end-btn end-btn-success" id="end-btn-aprovar-resseguro" onclick="endAprovarResseguro()">Aprovar riscos acumulados</button>';
+  document.getElementById('end-resseguro-modal-overlay').style.display = 'flex';
+}
+function endResseguroModalClose(evt) {
+  if (evt && evt.target !== document.getElementById('end-resseguro-modal-overlay')) return;
+  document.getElementById('end-resseguro-modal-overlay').style.display = 'none';
+}
+function endAprovarResseguro() {
+  END_STATE.resseguroAprovado = true;
+  endResseguroModalClose();
+  endRenderAssinaturaArea();
+}
+
+// ================= FASE 5 — IMPLANTAÇÃO =================
+function endComputeMotivosFinal() {
+  var motivos = END_STATE.motivoNaoClean.slice();
+  if (END_STATE.cliente.idade > 70) motivos.push('Segurado com idade superior a 70 anos');
+  if (END_STATE.cliente.sinistroAtivo) motivos.push('Sinistro ativo identificado no RGS/E-vida');
+  var totalNovo = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  if (totalNovo > 3500000) motivos.push('Capital segurado total elevado (acima de R$ 3.500.000,00)');
+  if (END_STATE.dpsTipo === 'completa' && !END_STATE.dpsReaproveitada) motivos.push('DPS Completa exigida para o aumento solicitado');
+  return motivos;
+}
+
+function endCriarCaso() {
+  END_CASE_SEQ++;
+  return {
+    id: END_CASE_SEQ,
+    status: 'pendente',
+    cliente: Object.assign({}, END_STATE.cliente),
+    coberturasVig: END_STATE.coberturasVig.map(function(c){ return Object.assign({}, c); }),
+    coberturasNovo: END_STATE.coberturas.map(function(c){ return Object.assign({}, c); }),
+    premioVig: END_STATE.cliente.premioVigente,
+    premioNovo: END_STATE.premioNovo,
+    motivos: END_STATE.motivosFinal.slice(),
+    dpsTipo: END_STATE.dpsTipo
+  };
+}
+
+function endRenderFase5() {
+  var el = document.getElementById('end-fase-5');
+  var motivos = endComputeMotivosFinal();
+  END_STATE.motivosFinal = motivos;
+  END_STATE.cleanCase = motivos.length === 0;
+
+  var html = '<div class="end-card-title">Fase 5 — Implantação</div>';
+  if (END_STATE.cleanCase) {
+    html += '<div class="end-recibo">' + endAlertIco('ok') +
+      '<div style="font-weight:700;color:#0f5c30;margin-top:6px">Clean Case — Endosso implantado automaticamente</div>' +
+      '<div class="end-recibo-num" id="end-protocolo-clean">Protocolo #' + (END_CASE_SEQ + 1) + '</div>' +
+      '<p style="font-size:13px;color:#44546c">Transmitido ao E-vida: parcelas em aberto canceladas e novos valores reemitidos. Novo prêmio: <strong>' + endFmtMoeda(END_STATE.premioNovo) + '/mês</strong>.</p>' +
+      '<button class="end-btn end-btn-primary" onclick="endReset()">Simular novo endosso</button>' +
+    '</div>';
+    END_CASE_SEQ++;
+  } else {
+    var caseObj = endCriarCaso();
+    END_QUEUE.push(caseObj);
+    END_STATE.caseId = caseObj.id;
+    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') +
+      '<span><strong>Non-Clean Case — encaminhado para a Mesa Técnica.</strong><br>Protocolo #' + caseObj.id + '<br>Motivos: ' + motivos.join('; ') + '</span></div>' +
+      '<div class="end-actions-row end-actions-between">' +
+        '<button class="end-btn end-btn-outline" onclick="endSetProfile(\'analista\')">Ver na Mesa Técnica (perfil Analista Técnico)</button>' +
+        '<button class="end-btn end-btn-primary" onclick="endReset()">Simular novo endosso</button>' +
+      '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// ================= PERFIL: ANALISTA TÉCNICO (MESA TÉCNICA) =================
+function endRenderAnalista() {
+  var el = document.getElementById('end-analista-body');
+  if (!el) return;
+  if (!END_ACTIVE_ANALISE) {
+    endRenderAnalistaQueue(el);
+  } else {
+    endRenderAnalistaCaso(el);
+  }
+}
+
+function endRenderAnalistaQueue(el) {
+  var pendentes = END_QUEUE.filter(function(c){ return c.status === 'pendente'; });
+  var html = '<div class="end-card-title">Mesa Técnica — Casos Non-Clean pendentes</div>' +
+    '<p class="end-card-sub">Selecione um caso para análise e ajuste de margem, DA, agenciamento ou agravo.</p>';
+  if (!pendentes.length) {
+    html += '<div class="end-empty-state">Nenhum caso pendente de análise no momento.<br>Simule um endosso non-clean pelo perfil Corretor para popular esta fila.</div>';
+  } else {
+    pendentes.forEach(function(c) {
+      html += '<div class="end-queue-item" data-case="' + c.id + '">' +
+        '<div><strong>#' + c.id + ' &mdash; ' + c.cliente.nome + '</strong>' +
+          '<div class="end-queue-meta">Apólice ' + c.cliente.apolice + ' &middot; Prêmio novo: ' + endFmtMoeda(c.premioNovo) + '/mês</div>' +
+          '<div class="end-queue-motivos">' + c.motivos.join(' &middot; ') + '</div>' +
+        '</div>' +
+        '<button class="end-btn end-btn-primary" onclick="endAbrirAnalise(' + c.id + ')">Analisar</button>' +
+      '</div>';
+    });
+  }
+  el.innerHTML = html;
+}
+
+function endAbrirAnalise(id) {
+  END_ACTIVE_ANALISE = END_QUEUE.find(function(c){ return c.id === id; });
+  endRenderAnalista();
+}
+function endVoltarFila() { END_ACTIVE_ANALISE = null; endRenderAnalista(); }
+
+function endRenderAnalistaCaso(el) {
+  var c = END_ACTIVE_ANALISE;
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">' +
+    '<div class="end-card-title" style="margin-bottom:0">Análise do caso #' + c.id + '</div>' +
+    '<button class="end-btn end-btn-outline" onclick="endVoltarFila()">&lsaquo; Voltar à fila</button></div>' +
+    '<div class="end-grid4">' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Nome</span><span class="end-cadbox-val">' + c.cliente.nome + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">CPF</span><span class="end-cadbox-val">' + c.cliente.cpf + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + c.cliente.imc + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">% Comissão / Corretagem</span><span class="end-cadbox-val">20% / 100</span></div>' +
+    '</div>' +
+    '<div class="end-alert end-alert-warn" style="margin-top:12px">' + endAlertIco('warn') + '<span>' + c.motivos.join(' &middot; ') + '</span></div>' +
+    '<div class="end-analista-split" style="margin-top:14px">' +
+      '<div><div style="font-weight:700;color:#44546c;margin-bottom:8px">Precificação proposta pelo motor</div><div id="end-analista-compare"></div></div>' +
+      '<div><div style="font-weight:700;color:#44546c;margin-bottom:8px">Ajuste do Analista Técnico</div>' +
+        '<div class="end-grid2">' +
+          '<div class="vcalc-f"><span class="vcalc-f-lbl">Margem (%)</span><input type="number" id="end-adj-margem" value="20"></div>' +
+          '<div class="vcalc-f"><span class="vcalc-f-lbl">Despesas Administrativas &mdash; DA (%)</span><input type="number" id="end-adj-da" value="8"></div>' +
+          '<div class="vcalc-f"><span class="vcalc-f-lbl">Fator de Agenciamento (%)</span><input type="number" id="end-adj-agenc" value="100"></div>' +
+          '<div class="vcalc-f"><span class="vcalc-f-lbl">Agravo (%)</span><input type="number" id="end-adj-agravo" value="0"></div>' +
+        '</div>' +
+        '<div id="end-adj-resultado" style="margin-top:12px"></div>' +
+        '<div class="end-actions-row" style="justify-content:flex-start">' +
+          '<button class="end-btn end-btn-primary" onclick="endCalcularAjuste()">Calcular contraproposta</button>' +
+          '<button class="end-btn end-btn-success" onclick="endAprovarComAjuste()">Aprovar com Ajuste</button>' +
+          '<button class="end-btn end-btn-danger" onclick="endAbrirRecusaModal()">Recusar</button>' +
+          '<button class="end-btn end-btn-outline" onclick="endDevolverCorrecao()">Devolver para Correção</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  el.innerHTML = html;
+  endRenderCompare('end-analista-compare', c.coberturasVig, c.coberturasNovo, c.premioVig, c.premioNovo);
+}
+
+function endCalcularAjuste() {
+  var c = END_ACTIVE_ANALISE;
+  var margem = parseFloat(document.getElementById('end-adj-margem').value) || 0;
+  var da = parseFloat(document.getElementById('end-adj-da').value) || 0;
+  var agenc = parseFloat(document.getElementById('end-adj-agenc').value) || 100;
+  var agravo = parseFloat(document.getElementById('end-adj-agravo').value) || 0;
+  var ajustado = c.premioNovo * (1 + margem/100 + da/100) * (agenc/100) * (1 + agravo/100);
+  c._premioAjustado = Math.round(ajustado * 100) / 100;
+  document.getElementById('end-adj-resultado').innerHTML = '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Prêmio recalculado com ajustes: <strong id="end-premio-ajustado">' + endFmtMoeda(c._premioAjustado) + '/mês</strong> (base do motor: ' + endFmtMoeda(c.premioNovo) + ')</span></div>';
+}
+
+function endAprovarComAjuste() {
+  var c = END_ACTIVE_ANALISE;
+  if (!c._premioAjustado) endCalcularAjuste();
+  c.status = 'aprovado_ajuste';
+  endNotificarCorretor({
+    tipo: 'contraproposta', caseId: c.id,
+    titulo: 'Contraproposta da Mesa Técnica — Endosso #' + c.id,
+    texto: 'A Mesa Técnica aprovou o endosso #' + c.id + ' com ajuste de precificação.\n\nNovo prêmio proposto: ' + endFmtMoeda(c._premioAjustado) + '/mês.\n\nEnvie o novo link de assinatura ao cliente para concluir.'
+  });
+  END_ACTIVE_ANALISE = null;
+  endRenderAnalista();
+}
+
+function endDevolverCorrecao() {
+  var c = END_ACTIVE_ANALISE;
+  c.status = 'devolvido';
+  endNotificarCorretor({
+    tipo:'devolucao', caseId:c.id, titulo:'Caso devolvido para correção — Endosso #' + c.id,
+    texto:'A Mesa Técnica devolveu o endosso #' + c.id + ' para correção.\n\nReabra a simulação e ajuste os dados cadastrais ou coberturas indicados antes de reenviar.'
+  });
+  END_ACTIVE_ANALISE = null;
+  endRenderAnalista();
+}
+
+function endAbrirRecusaModal() {
+  var c = END_ACTIVE_ANALISE;
+  var novasCoberturas = c.coberturasNovo.filter(function(n) {
+    var vig = c.coberturasVig.find(function(v){ return v.cod === n.cod; });
+    return n.ativa && (!vig.ativa || n.capital > vig.capital);
+  });
+  var opcoesParcial = novasCoberturas.map(function(n){ return '<option value="' + n.cod + '">' + n.label + '</option>'; }).join('');
+  document.getElementById('end-recusa-modal-body').innerHTML =
+    '<div class="prop-radio-row" style="margin-bottom:14px">' +
+      '<label class="prop-radio-item"><input type="radio" name="end-recusa-tipo" value="total" checked onchange="endToggleRecusaParcial()"> Recusa Total</label>' +
+      '<label class="prop-radio-item"><input type="radio" name="end-recusa-tipo" value="parcial" onchange="endToggleRecusaParcial()"' + (novasCoberturas.length ? '' : ' disabled') + '> Recusa Parcial</label>' +
+    '</div>' +
+    '<div class="vcalc-f" id="end-recusa-parcial-box" style="display:none;margin-bottom:14px"><span class="vcalc-f-lbl">Cobertura recusada</span><select id="end-recusa-cobertura">' + opcoesParcial + '</select></div>' +
+    '<div class="vcalc-f"><span class="vcalc-f-lbl">Motivo da recusa <span class="vcalc-req">*</span></span><textarea id="end-recusa-motivo" rows="3" style="width:100%;border:none;outline:none;font:inherit;resize:vertical" placeholder="Ex: patologia crônica declarada incompatível com a cobertura solicitada"></textarea></div>' +
+    '<button class="end-btn end-btn-danger" style="margin-top:14px" onclick="endConfirmarRecusa()">Confirmar recusa</button>';
+  document.getElementById('end-recusa-modal-overlay').style.display = 'flex';
+}
+function endToggleRecusaParcial() {
+  var tipo = document.querySelector('input[name="end-recusa-tipo"]:checked').value;
+  document.getElementById('end-recusa-parcial-box').style.display = tipo === 'parcial' ? 'block' : 'none';
+}
+function endRecusaModalClose(evt) {
+  if (evt && evt.target !== document.getElementById('end-recusa-modal-overlay')) return;
+  document.getElementById('end-recusa-modal-overlay').style.display = 'none';
+}
+function endConfirmarRecusa() {
+  var motivo = document.getElementById('end-recusa-motivo').value.trim();
+  if (!motivo) { apeShowError('Informe o motivo da recusa antes de confirmar.'); return; }
+  var tipo = document.querySelector('input[name="end-recusa-tipo"]:checked').value;
+  var c = END_ACTIVE_ANALISE;
+
+  if (tipo === 'total') {
+    c.status = 'recusado';
+    endNotificarCorretor({
+      tipo:'recusa_total', caseId:c.id, titulo:'Carta de Recusa — Endosso #' + c.id,
+      texto:'O endosso solicitado para ' + c.cliente.nome + ' foi recusado pela análise médica/técnica.\n\nMotivo: ' + motivo + '\n\nA apólice permanece nas condições vigentes.'
+    });
+  } else {
+    var codRecusado = document.getElementById('end-recusa-cobertura').value;
+    var covRecusada = c.coberturasNovo.find(function(x){ return x.cod === codRecusado; });
+    var clone = c.coberturasNovo.map(function(x){ return Object.assign({}, x); });
+    var alvo = clone.find(function(x){ return x.cod === codRecusado; });
+    var vigAlvo = c.coberturasVig.find(function(x){ return x.cod === codRecusado; });
+    alvo.ativa = vigAlvo.ativa; alvo.capital = vigAlvo.capital;
+    var novoPremio = endCalcPremio(clone);
+    c.status = 'recusa_parcial';
+    c.coberturasNovoClonado = clone;
+    c.premioNovoClonado = novoPremio;
+    endNotificarCorretor({
+      tipo:'recusa_parcial', caseId:c.id, titulo:'Carta de Recusa Parcial — Endosso #' + c.id,
+      texto:'A análise médica aceitou o aumento/inclusão solicitado, exceto a cobertura "' + covRecusada.label + '" (' + motivo + ').\n\nUma nova cotação foi gerada automaticamente sem essa cobertura, mantendo as demais alterações aceitas. Novo prêmio: ' + endFmtMoeda(novoPremio) + '/mês.\n\nGere um novo link de assinatura para o cliente concluir o endosso apenas com as coberturas aceitas.'
+    });
+  }
+  endRecusaModalClose();
+  END_ACTIVE_ANALISE = null;
+  endRenderAnalista();
+}
+
+// ---- Notificação/carta visível para o perfil Corretor ----
+function endNotificarCorretor(carta) {
+  END_ULTIMA_CARTA = carta;
+  endUpdateCartaBanner();
+}
+function endUpdateCartaBanner() {
+  var banner = document.getElementById('end-carta-banner');
+  var txt = document.getElementById('end-carta-banner-txt');
+  if (!banner) return;
+  if (END_ULTIMA_CARTA) {
+    txt.textContent = END_ULTIMA_CARTA.titulo + ' disponível para revisão.';
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+function endAbrirCarta() {
+  var carta = END_ULTIMA_CARTA;
+  if (!carta) return;
+  document.getElementById('end-carta-modal-title').textContent = carta.titulo;
+  var acoesHtml = '<div id="end-carta-acoes">';
+  if (carta.tipo === 'recusa_parcial' || carta.tipo === 'contraproposta') {
+    acoesHtml += '<button class="end-btn end-btn-primary" onclick="endEnviarNovoLink()">Enviar novo link de assinatura ao cliente</button>' +
+      '<div id="end-carta-assinatura-status" style="margin-top:10px"></div>';
+  } else {
+    acoesHtml += '<button class="end-btn end-btn-outline" onclick="endFecharCarta()">Marcar como lido</button>';
+  }
+  acoesHtml += '</div>';
+  document.getElementById('end-carta-modal-body').innerHTML =
+    '<p style="font-size:13.5px;color:#44546c;line-height:1.6;white-space:pre-line">' + carta.texto + '</p>' + acoesHtml;
+  document.getElementById('end-carta-modal-overlay').style.display = 'flex';
+}
+function endCartaModalClose(evt) {
+  if (evt && evt.target !== document.getElementById('end-carta-modal-overlay')) return;
+  document.getElementById('end-carta-modal-overlay').style.display = 'none';
+}
+function endEnviarNovoLink() {
+  document.getElementById('end-carta-assinatura-status').innerHTML =
+    '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Link enviado. Aguardando confirmação do cliente.</span></div>' +
+    '<button class="end-btn end-btn-success" style="margin-top:8px" onclick="endClienteAssinouNovoLink()">Simular: cliente assinou</button>';
+}
+function endClienteAssinouNovoLink() {
+  document.getElementById('end-carta-assinatura-status').innerHTML =
+    '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>Endosso implantado com as condições aceitas pelo cliente.</span></div>' +
+    '<button class="end-btn end-btn-outline" style="margin-top:8px" onclick="endFecharCarta()">Concluir</button>';
+  var carta = END_ULTIMA_CARTA;
+  if (carta) {
+    var caso = END_QUEUE.find(function(x){ return x.id === carta.caseId; });
+    if (caso) caso.status = 'implantado';
+  }
+}
+function endFecharCarta() {
+  END_ULTIMA_CARTA = null;
+  endUpdateCartaBanner();
+  endCartaModalClose();
+}
+
+// ================= PERFIL: CÉLULA DE RETENÇÃO (CENTRAL) =================
+function endRenderRetencao() {
+  var el = document.getElementById('end-retencao-body');
+  if (!el) return;
+  if (!END_RETENCAO_ATIVO) {
+    var html = '<div class="end-card-title">Célula de Retenção — Central</div>' +
+      '<p class="end-card-sub">Atendimento telefônico para simular redução de capital e conter cancelamentos.</p>';
+    END_RETENCAO_CLIENTES.forEach(function(cl, i) {
+      html += '<div class="end-queue-item"><div><strong>' + cl.nome + '</strong>' +
+        '<div class="end-queue-meta">Apólice ' + cl.apolice + ' &middot; Capital atual: ' + endFmtMoeda(cl.capital) + ' &middot; Prêmio: ' + endFmtMoeda(cl.premio) + '/mês</div></div>' +
+        '<button class="end-btn end-btn-primary" onclick="endAtenderRetencao(' + i + ')">Atender</button></div>';
+    });
+    el.innerHTML = html;
+    return;
+  }
+  endRenderRetencaoAtivo(el);
+}
+function endAtenderRetencao(i) {
+  var base = END_RETENCAO_CLIENTES[i];
+  END_RETENCAO_ATIVO = Object.assign({}, base, {capitalNovo: base.capital, cupom:0});
+  endRenderRetencao();
+}
+function endRenderRetencaoAtivo(el) {
+  var cl = END_RETENCAO_ATIVO;
+  var premioBase = endCalcPremio([{cod:'morte', ativa:true, capital: cl.capitalNovo}]);
+  var premioComCupom = premioBase * (1 - cl.cupom/100);
+
+  el.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">' +
+      '<div class="end-card-title" style="margin-bottom:0">Atendimento &mdash; ' + cl.nome + '</div>' +
+      '<button class="end-btn end-btn-outline" onclick="endFinalizarRetencao()">&lsaquo; Voltar</button></div>' +
+    '<div class="end-retencao-card">' +
+      '<span class="end-cadbox-lbl">Capital segurado atual: ' + endFmtMoeda(cl.capital) + '</span>' +
+      '<div class="end-slider-row" style="margin-top:8px"><input type="range" min="0" max="' + cl.capital + '" step="5000" value="' + cl.capitalNovo + '" id="end-ret-slider" oninput="endOnRetSlider(this)"><strong id="end-ret-capital-lbl">' + endFmtMoeda(cl.capitalNovo) + '</strong></div>' +
+      '<p style="font-size:11.5px;color:#8a94a3;margin-top:4px">Apenas redução de capital é permitida na célula de retenção.</p>' +
+    '</div>' +
+    '<div class="end-retencao-card">' +
+      (cl.jaRecebeuDesconto
+        ? '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Cliente já recebeu desconto nos últimos 90 dias &mdash; nova concessão de cupom bloqueada pelo motor de regras.</span></div>'
+        : '<div class="vcalc-f"><span class="vcalc-f-lbl">Cupom de desconto (até 10%)</span><input type="number" id="end-ret-cupom" min="0" max="10" value="' + cl.cupom + '" oninput="endOnRetCupom(this)"></div>') +
+    '</div>' +
+    '<div class="end-compare-total" style="border-top:none;padding-top:0"><span>Novo prêmio estimado</span><span class="end-novo-val" id="end-ret-premio">' + endFmtMoeda(premioComCupom) + '/mês</span></div>' +
+    '<div class="end-actions-row"><button class="end-btn end-btn-success" onclick="endAplicarRetencao()">Aplicar redução e enviar</button></div>' +
+    '<div id="end-ret-resultado"></div>';
+}
+function endOnRetSlider(inp) {
+  END_RETENCAO_ATIVO.capitalNovo = parseFloat(inp.value);
+  document.getElementById('end-ret-capital-lbl').textContent = endFmtMoeda(END_RETENCAO_ATIVO.capitalNovo);
+  endAtualizarPremioRetencao();
+}
+function endOnRetCupom(inp) {
+  var v = Math.min(10, Math.max(0, parseFloat(inp.value) || 0));
+  END_RETENCAO_ATIVO.cupom = v;
+  endAtualizarPremioRetencao();
+}
+function endAtualizarPremioRetencao() {
+  var cl = END_RETENCAO_ATIVO;
+  var premioBase = endCalcPremio([{cod:'morte', ativa:true, capital: cl.capitalNovo}]);
+  var premioComCupom = premioBase * (1 - cl.cupom/100);
+  document.getElementById('end-ret-premio').textContent = endFmtMoeda(premioComCupom) + '/mês';
+}
+function endAplicarRetencao() {
+  document.getElementById('end-ret-resultado').innerHTML = '<div class="end-alert end-alert-ok" style="margin-top:14px">' + endAlertIco('ok') + '<span>Retenção registrada. Nova condição enviada ao cliente para confirmação.</span></div>';
+}
+function endFinalizarRetencao() {
+  END_RETENCAO_ATIVO = null;
+  endRenderRetencao();
+}
+</script>
 </body>
 </html>
