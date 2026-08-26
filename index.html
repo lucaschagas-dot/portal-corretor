@@ -4376,7 +4376,7 @@ function authLogout(){
           </div>
           <div class="end-profile-btns">
             <button class="end-profile-btn" data-profile="corretor" onclick="endSetProfile('corretor')">Corretor</button>
-            <button class="end-profile-btn" data-profile="analista" onclick="endSetProfile('analista')">Analista Técnico</button>
+            <button class="end-profile-btn end-profile-btn-link" onclick="endIrPortalAdmin()" title="Atalho: abre o Portal Admin, onde fica a Análise de Endosso (Mesa Técnica)">Portal Admin (atalho)<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4l-8.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 14.5V19a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <button class="end-profile-btn" data-profile="retencao" onclick="endSetProfile('retencao')">Célula de Retenção</button>
           </div>
         </div>
@@ -4400,10 +4400,9 @@ function authLogout(){
 
         </div>
 
-        <!-- ============ VISÃO: ANALISTA TÉCNICO ============ -->
-        <div id="end-view-analista" style="display:none">
-          <div class="end-card" id="end-analista-body"></div>
-        </div>
+        <!-- A visão do Analista Técnico (Mesa Técnica) foi migrada para o        -->
+        <!-- Portal Admin > Análise de Endosso (#page-portal-admin). O botão      -->
+        <!-- "Portal Admin (atalho)" no topo desta página leva até lá.            -->
 
         <!-- ============ VISÃO: CÉLULA DE RETENÇÃO ============ -->
         <div id="end-view-retencao" style="display:none">
@@ -4412,6 +4411,265 @@ function authLogout(){
 
       </div>
     </div>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL ADMIN — réplica de homologacao-administrativo.segurosunimed -->
+    <!-- Tela "Acesso Rápido" com o novo módulo "Análise de Endosso", que   -->
+    <!-- recebeu a Mesa Técnica antes hospedada no perfil Analista Técnico  -->
+    <!-- dentro de Vida > Endosso (em validação).                           -->
+    <!-- ================================================================ -->
+    <div id="page-portal-admin" class="page">
+      <div class="padm-shell">
+
+        <aside class="padm-side" id="padm-side">
+
+          <div class="padm-side-top">
+            <button class="padm-burger" onclick="padmToggleSide()" title="Recolher / expandir menu" aria-label="Recolher ou expandir menu">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="4.5" y1="6.5" x2="15.5" y2="6.5" stroke="#1f2a51" stroke-width="1.6" stroke-linecap="round"/>
+                <line x1="4.5" y1="10" x2="15.5" y2="10" stroke="#1f2a51" stroke-width="1.6" stroke-linecap="round"/>
+                <line x1="4.5" y1="13.5" x2="15.5" y2="13.5" stroke="#1f2a51" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="padm-logo-box" id="padm-logo"></div>
+          </div>
+
+          <div class="padm-user">
+            <span class="padm-ico" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9.2" stroke="#44546c" stroke-width="1.5"/>
+                <circle cx="12" cy="9.6" r="2.9" stroke="#44546c" stroke-width="1.5"/>
+                <path d="M6.6 19.4a6.1 6.1 0 0110.8 0" stroke="#44546c" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="padm-nav-lbl padm-user-nome">Lucas Henrique Da Silva Chagas</span>
+          </div>
+
+          <div class="padm-side-nav">
+            <button class="padm-nav" data-nav="cadastro" onclick="padmToggleNav('cadastro')">
+              <span class="padm-ico" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect x="2.6" y="5" width="18.8" height="14" rx="2" stroke="#44546c" stroke-width="1.5"/>
+                  <line x1="8.3" y1="5" x2="8.3" y2="19" stroke="#44546c" stroke-width="1.5"/>
+                </svg>
+              </span>
+              <span class="padm-nav-lbl">Gestão de Cadastro</span>
+              <span class="padm-nav-chev" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5l4-4" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <div class="padm-sub" id="padm-sub-cadastro">
+              <button class="padm-sub-item" onclick="padmModuloNaoMapeado('Gestão Portal Seguros')">Gestão Portal Seguros</button>
+              <button class="padm-sub-item" onclick="padmModuloNaoMapeado('Gestão Portal Seguros (Novo Portal)')">Gestão Portal Seguros (Novo Portal)</button>
+            </div>
+
+            <button class="padm-nav" data-nav="atendimento" onclick="padmToggleNav('atendimento')">
+              <span class="padm-ico" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M4.5 13.2v-1.4a7.5 7.5 0 0115 0v1.4" stroke="#44546c" stroke-width="1.5" stroke-linecap="round"/>
+                  <rect x="2.6" y="12.8" width="4.2" height="6.4" rx="1.7" stroke="#44546c" stroke-width="1.5"/>
+                  <rect x="17.2" y="12.8" width="4.2" height="6.4" rx="1.7" stroke="#44546c" stroke-width="1.5"/>
+                  <path d="M19.3 19.2v.6a2.4 2.4 0 01-2.4 2.4H13" stroke="#44546c" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="padm-nav-lbl">Atendimento</span>
+              <span class="padm-nav-chev" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5l4-4" stroke="#8a94a3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <div class="padm-sub" id="padm-sub-atendimento">
+              <button class="padm-sub-item" onclick="padmModuloNaoMapeado('Sistema Calcule+')">Sistema Calcule+</button>
+              <button class="padm-sub-item" id="padm-sub-endosso" onclick="padmAbrirEndosso()">Análise de Endosso</button>
+            </div>
+          </div>
+
+          <div class="padm-side-sep"></div>
+
+          <button class="padm-nav" onclick="padmSair()">
+            <span class="padm-ico" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9.2" stroke="#44546c" stroke-width="1.5"/>
+                <path d="M13.6 8.6L10.2 12l3.4 3.4" stroke="#44546c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="10.4" y1="12" x2="16.2" y2="12" stroke="#44546c" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="padm-nav-lbl">Trocar ou Sair</span>
+          </button>
+
+          <div class="padm-side-foot">
+            <span>A08976</span>
+            <span>PORTAL ADMIN</span>
+            <span>SEGUROS UNIMED</span>
+          </div>
+
+        </aside>
+
+        <div class="padm-main">
+
+          <!-- ---------- VIEW: ACESSO RÁPIDO ---------- -->
+          <div id="padm-view-home">
+            <h2 class="padm-title">Acesso Rápido</h2>
+            <hr class="padm-divider">
+
+            <div class="padm-groups">
+
+              <div class="padm-group" id="padm-group-cadastro">
+                <h3 class="padm-group-title">Gestão de Cadastro</h3>
+                <div class="padm-cards">
+                  <button class="padm-card" onclick="padmModuloNaoMapeado('Gestão Portal Seguros')">
+                    <span class="padm-card-ico">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                        <rect x="2.6" y="5" width="18.8" height="14" rx="2" stroke="#44546c" stroke-width="1.5"/>
+                        <line x1="8.3" y1="5" x2="8.3" y2="19" stroke="#44546c" stroke-width="1.5"/>
+                      </svg>
+                    </span>
+                    <span class="padm-card-lbl">Gestão Portal Seguros</span>
+                  </button>
+                  <button class="padm-card" onclick="padmModuloNaoMapeado('Gestão Portal Seguros (Novo Portal)')">
+                    <span class="padm-card-ico">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                        <rect x="2.6" y="5" width="18.8" height="14" rx="2" stroke="#44546c" stroke-width="1.5"/>
+                        <line x1="8.3" y1="5" x2="8.3" y2="19" stroke="#44546c" stroke-width="1.5"/>
+                      </svg>
+                    </span>
+                    <span class="padm-card-lbl">Gestão Portal Seguros<br>(Novo Portal)</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="padm-group" id="padm-group-atendimento">
+                <h3 class="padm-group-title">Atendimento</h3>
+                <div class="padm-cards">
+                  <button class="padm-card" onclick="padmModuloNaoMapeado('Sistema Calcule+')">
+                    <span class="padm-card-ico">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                        <rect x="4.6" y="2.6" width="14.8" height="18.8" rx="2" stroke="#44546c" stroke-width="1.5"/>
+                        <rect x="7.4" y="5.6" width="9.2" height="3.4" rx="0.7" stroke="#44546c" stroke-width="1.3"/>
+                        <rect x="7.4" y="11.6" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                        <rect x="10.7" y="11.6" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                        <rect x="14" y="11.6" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                        <rect x="7.4" y="15.8" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                        <rect x="10.7" y="15.8" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                        <rect x="14" y="15.8" width="2.6" height="2.4" rx="0.5" stroke="#44546c" stroke-width="1.2"/>
+                      </svg>
+                    </span>
+                    <span class="padm-card-lbl">Sistema Calcule+</span>
+                  </button>
+                  <button class="padm-card" id="padm-card-endosso" onclick="padmAbrirEndosso()">
+                    <span class="padm-card-ico">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                        <path d="M13.4 2.6H6.6A1.6 1.6 0 005 4.2v15.6a1.6 1.6 0 001.6 1.6h10.8a1.6 1.6 0 001.6-1.6V8.2l-5.6-5.6z" stroke="#44546c" stroke-width="1.5" stroke-linejoin="round"/>
+                        <path d="M13.4 2.6V8.2H19" stroke="#44546c" stroke-width="1.5" stroke-linejoin="round"/>
+                        <circle cx="11.2" cy="13.6" r="2.9" stroke="#44546c" stroke-width="1.5"/>
+                        <line x1="13.5" y1="15.9" x2="15.8" y2="18.2" stroke="#44546c" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="padm-card-lbl">Análise de Endosso</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ---------- VIEW: ANÁLISE DE ENDOSSO (MESA TÉCNICA) ---------- -->
+          <div id="padm-view-endosso" style="display:none">
+            <div class="padm-crumb">
+              <a onclick="padmVoltarHome()">Acesso Rápido</a>
+              <svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="#8a94a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Análise de Endosso</span>
+            </div>
+            <h2 class="padm-title">Análise de Endosso</h2>
+            <p class="padm-subtitle">Mesa Técnica — análise dos endossos non-clean recebidos do Portal do Corretor (Vida &gt; Endosso).</p>
+            <hr class="padm-divider">
+            <div class="padm-end-wrap">
+              <div class="end-card" id="end-analista-body"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <style>
+    /* ===== PORTAL ADMIN — chrome próprio (esconde o header do Portal do Corretor) ===== */
+    body.padm-mode #site-header{display:none}
+    body.padm-mode #app-content{padding:0;overflow-x:hidden}
+    body.padm-mode .content-inner{max-width:none;padding:0}
+    /* o botão flutuante de logout do protótipo cobriria o rodapé da sidebar */
+    body.padm-mode #auth-logout{left:auto;right:14px}
+
+    .padm-shell{display:flex;align-items:stretch;min-height:100vh;background:#f7f8f9;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+
+    /* ---- Sidebar ---- */
+    .padm-side{width:284px;flex-shrink:0;background:#fff;border-right:1px solid #e4e7ec;display:flex;flex-direction:column;transition:width .18s ease}
+    .padm-side-top{display:flex;align-items:center;gap:14px;padding:18px 16px 16px}
+    .padm-burger{width:38px;height:38px;flex-shrink:0;border:1.4px solid #1f2a51;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+    .padm-burger:hover{background:#f2f5f8}
+    .padm-logo-box{border:1px solid #d8dde5;border-radius:5px;padding:2px 6px;display:flex;align-items:center;overflow:hidden}
+
+    .padm-user{display:flex;align-items:flex-start;gap:14px;padding:14px 18px 20px;border-bottom:1px solid #e4e7ec}
+    .padm-user-nome{font-size:16.5px;color:#1f2a51;line-height:1.45}
+    .padm-ico{width:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+    .padm-side-nav{padding:10px 0 6px;border-bottom:1px solid #e4e7ec}
+    .padm-nav{width:100%;display:flex;align-items:center;gap:14px;padding:13px 18px;background:none;border:none;cursor:pointer;text-align:left;font:inherit;font-size:16.5px;color:#1f2a51;transition:background .12s}
+    .padm-nav:hover{background:#f2f5f8}
+    .padm-nav.padm-nav-open{background:#eef4f9}
+    .padm-nav-lbl{flex:1;line-height:1.45}
+    .padm-nav-chev{width:12px;flex-shrink:0;display:flex;align-items:center;transition:transform .18s}
+    .padm-nav.padm-nav-open .padm-nav-chev{transform:rotate(180deg)}
+
+    .padm-sub{display:none;padding:2px 0 8px}
+    .padm-sub.padm-sub-open{display:block}
+    .padm-sub-item{width:100%;display:block;text-align:left;padding:9px 18px 9px 58px;background:none;border:none;cursor:pointer;font:inherit;font-size:14px;color:#586880;transition:background .12s,color .12s}
+    .padm-sub-item:hover{background:#f2f5f8;color:var(--azure)}
+    .padm-sub-item.padm-sub-ativo{color:var(--azure);font-weight:700;background:#eef4f9;box-shadow:inset 3px 0 0 var(--azure)}
+
+    .padm-side-sep{height:0}
+    .padm-side-foot{margin-top:auto;padding:20px 18px 22px;border-top:1px solid #e4e7ec;display:flex;flex-direction:column;gap:2px;font-size:15px;font-weight:700;color:#0f2a51;letter-spacing:.2px}
+
+    /* ---- Sidebar recolhida ---- */
+    .padm-side.padm-side-mini{width:76px}
+    .padm-side.padm-side-mini .padm-nav-lbl,
+    .padm-side.padm-side-mini .padm-nav-chev,
+    .padm-side.padm-side-mini .padm-logo-box,
+    .padm-side.padm-side-mini .padm-side-foot,
+    .padm-side.padm-side-mini .padm-sub{display:none}
+    .padm-side.padm-side-mini .padm-nav,
+    .padm-side.padm-side-mini .padm-user{justify-content:center;padding-left:0;padding-right:0}
+    .padm-side.padm-side-mini .padm-side-top{justify-content:center;padding-left:0;padding-right:0}
+
+    /* ---- Main ---- */
+    .padm-main{flex:1;min-width:0;padding:0 58px 70px}
+    #padm-view-home{padding-top:92px}
+    #padm-view-endosso{padding-top:38px}
+    .padm-title{font-family:'UnimedSlab',Georgia,serif;font-weight:bold;font-size:34px;line-height:1.3;color:var(--azure)}
+    .padm-subtitle{font-size:13.5px;color:#8a94a3;margin-top:6px;max-width:760px;line-height:1.55}
+    .padm-divider{border:none;border-top:0.8px solid rgba(0,0,0,0.1);margin:22px 0 30px}
+
+    .padm-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,342px));column-gap:104px;row-gap:36px;justify-content:start}
+    .padm-group-title{font-size:21px;font-weight:700;color:var(--azure);margin-bottom:16px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+    .padm-cards{display:flex;flex-direction:column;gap:18px}
+    .padm-card{display:flex;align-items:center;gap:0;width:100%;min-height:74px;background:#fff;border:1px solid #e4e7ec;border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left;font:inherit;transition:border-color .15s,box-shadow .15s}
+    .padm-card:hover{border-color:var(--azure);box-shadow:0 2px 10px rgba(0,157,219,.14)}
+    .padm-card-ico{width:60px;flex-shrink:0;align-self:stretch;display:flex;align-items:center;justify-content:center;border-right:1px solid #e4e7ec}
+    .padm-card-lbl{font-size:16.5px;color:#44546c;line-height:1.35;padding-left:20px}
+
+    .padm-crumb{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a94a3;margin-bottom:14px}
+    .padm-crumb a{color:var(--azure);cursor:pointer;font-weight:600}
+    .padm-crumb a:hover{text-decoration:underline}
+
+    .padm-end-wrap{max-width:1180px}
+    .padm-end-wrap .end-card{margin-bottom:0}
+
+    @media (max-width:1180px){
+      .padm-main{padding:0 26px 60px}
+      #padm-view-home{padding-top:44px}
+      .padm-groups{column-gap:40px}
+    }
+    </style>
 
     <!-- Modal: Carta de recusa / contraproposta / devolução (visão Corretor) -->
     <div class="ape-overlay" id="end-carta-modal-overlay" style="display:none" onclick="endCartaModalClose(event)">
@@ -4424,7 +4682,7 @@ function authLogout(){
       </div>
     </div>
 
-    <!-- Modal: Recusar endosso (visão Analista Técnico) -->
+    <!-- Modal: Recusar endosso (Portal Admin > Análise de Endosso) -->
     <div class="ape-overlay" id="end-recusa-modal-overlay" style="display:none" onclick="endRecusaModalClose(event)">
       <div class="ape-modal" style="max-width:560px" onclick="event.stopPropagation()">
         <div class="ape-modal-hdr">
@@ -4456,6 +4714,9 @@ function authLogout(){
     .end-profile-btn{padding:9px 16px;border:1px solid #d0d5dd;border-radius:20px;background:#fff;font-size:13px;font-weight:600;color:#586880;cursor:pointer;transition:all .15s}
     .end-profile-btn:hover{border-color:var(--azure);color:var(--azure)}
     .end-profile-btn.end-profile-active{background:#1f2a51;border-color:#1f2a51;color:#fff}
+    /* Atalho para o Portal Admin: nunca fica "ativo", pois sai desta página */
+    .end-profile-btn-link{display:inline-flex;align-items:center;gap:2px;border-style:dashed;color:#1f2a51}
+    .end-profile-btn-link:hover{background:#eef4f9;border-style:solid}
 
     .end-carta-banner{display:flex;align-items:center;gap:10px;background:#fff4e5;border:1px solid #ffd8a8;border-radius:4px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#8a5a00;font-weight:600}
     .end-carta-banner-btn{margin-left:auto;background:#e58a00;color:#fff;border:none;border-radius:3px;padding:7px 16px;font-size:12.5px;font-weight:700;cursor:pointer;flex-shrink:0}
@@ -5575,12 +5836,26 @@ function navigate(path) {
   window.location.hash = '#' + path;
 }
 
+// Endosso e Portal Admin são definidos em blocos <script> mais abaixo no
+// documento. Numa carga direta (#/vida/endosso, #/portal-admin) o handleRoute()
+// inicial roda antes desse parse, então o init é adiado para o DOMContentLoaded.
+function routeInit(fnName) {
+  if (typeof window[fnName] === 'function') { window[fnName](); return; }
+  document.addEventListener('DOMContentLoaded', function once() {
+    document.removeEventListener('DOMContentLoaded', once);
+    if (typeof window[fnName] === 'function') window[fnName]();
+  });
+}
+
 function handleRoute() {
   const hash = window.location.hash || '#/';
   const path = hash.replace('#','') || '/';
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.dp-cal').forEach(c => c.classList.remove('dp-open'));
+
+  // O Portal Admin tem chrome próprio (sidebar + rodapé), sem o header do Portal do Corretor
+  document.body.classList.toggle('padm-mode', path === '/portal-admin');
 
   const portalName = document.getElementById('portal-name');
   const breadcrumb = document.getElementById('header-breadcrumb');
@@ -5698,7 +5973,13 @@ function handleRoute() {
     portalName.textContent = 'Endosso (em validação)';
     setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Vida — Endosso (em validação)</span>');
     stopCarousel();
-    endInit();
+    routeInit('endInit');
+  } else if (path === '/portal-admin') {
+    document.getElementById('page-portal-admin').classList.add('active');
+    portalName.textContent = 'Portal Admin';
+    breadcrumb.style.display = 'none';
+    stopCarousel();
+    routeInit('padmInit');
   } else if (path === '/calcule-mais') {
     document.getElementById('page-calcule-mais').classList.add('active');
     portalName.textContent = 'Calcule +';
@@ -10586,6 +10867,7 @@ var END_CASE_SEQ = 9000;
 var END_ACTIVE_ANALISE = null;
 var END_ULTIMA_CARTA = null;
 var END_RETENCAO_ATIVO = null;
+var PADM_ABRIR_ENDOSSO = false; // deep-link: entrar no Portal Admin já no módulo Análise de Endosso
 
 var END_RETENCAO_CLIENTES = [
   {nome:'Beatriz Nogueira Dias', apolice:'AP-200257', capital:180000, premio:63.00, jaRecebeuDesconto:false},
@@ -10595,24 +10877,33 @@ var END_RETENCAO_CLIENTES = [
 
 // ---- Boot / navegação de perfis ----
 function endInit() {
-  endSetProfile(END_STATE.profile || 'corretor');
+  // Só existem dois perfis nesta página: Corretor e Célula de Retenção.
+  // A Mesa Técnica migrou para o Portal Admin > Análise de Endosso.
+  endSetProfile(END_STATE.profile === 'retencao' ? 'retencao' : 'corretor');
   endResetCorretorState();
   endRenderSteps();
   endUpdateCartaBanner();
 }
 
 function endSetProfile(p) {
+  if (p === 'analista') { endIrPortalAdmin(true); return; }
   END_STATE.profile = p;
   document.querySelectorAll('.end-profile-btn').forEach(function(b){ b.classList.toggle('end-profile-active', b.dataset.profile === p); });
   var vc = document.getElementById('end-view-corretor');
-  var va = document.getElementById('end-view-analista');
   var vr = document.getElementById('end-view-retencao');
   if (vc) vc.style.display = p === 'corretor' ? '' : 'none';
-  if (va) va.style.display = p === 'analista' ? '' : 'none';
   if (vr) vr.style.display = p === 'retencao' ? '' : 'none';
-  if (p === 'analista') endRenderAnalista();
   if (p === 'retencao') endRenderRetencao();
 }
+
+// ---- Atalho para o Portal Admin (onde vive a Análise de Endosso / Mesa Técnica) ----
+// Sem argumento: cai na tela "Acesso Rápido" do Portal Admin.
+// abrirEndosso = true: entra direto no módulo "Análise de Endosso".
+function endIrPortalAdmin(abrirEndosso) {
+  PADM_ABRIR_ENDOSSO = abrirEndosso === true;
+  navigate('/portal-admin');
+}
+function endIrParaMesaTecnica() { endIrPortalAdmin(true); }
 
 function endResetCorretorState() {
   var profileKeep = END_STATE.profile;
@@ -11209,7 +11500,7 @@ function endRenderFase5() {
     html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') +
       '<span><strong>Non-Clean Case — encaminhado para a Mesa Técnica.</strong><br>Protocolo #' + caseObj.id + '<br>Motivos: ' + motivos.join('; ') + '</span></div>' +
       '<div class="end-actions-row end-actions-between">' +
-        '<button class="end-btn end-btn-outline" onclick="endSetProfile(\'analista\')">Ver na Mesa Técnica (perfil Analista Técnico)</button>' +
+        '<button class="end-btn end-btn-outline" onclick="endIrParaMesaTecnica()">Abrir no Portal Admin &rsaquo; Análise de Endosso</button>' +
         '<button class="end-btn end-btn-primary" onclick="endReset()">Simular novo endosso</button>' +
       '</div>';
   }
@@ -11232,7 +11523,7 @@ function endRenderAnalistaQueue(el) {
   var html = '<div class="end-card-title">Mesa Técnica — Casos Non-Clean pendentes</div>' +
     '<p class="end-card-sub">Selecione um caso para análise e ajuste de margem, DA, agenciamento ou agravo.</p>';
   if (!pendentes.length) {
-    html += '<div class="end-empty-state">Nenhum caso pendente de análise no momento.<br>Simule um endosso non-clean pelo perfil Corretor para popular esta fila.</div>';
+    html += '<div class="end-empty-state">Nenhum caso pendente de análise no momento.<br>Simule um endosso non-clean no Portal do Corretor (Vida &gt; Endosso em validação) para popular esta fila.</div>';
   } else {
     pendentes.forEach(function(c) {
       html += '<div class="end-queue-item" data-case="' + c.id + '">' +
@@ -11505,6 +11796,81 @@ function endFinalizarRetencao() {
   END_RETENCAO_ATIVO = null;
   endRenderRetencao();
 }
+
+// ================= PORTAL ADMIN (réplica) =================
+// Réplica de homologacao-administrativo.segurosunimed.com.br. Hospeda o módulo
+// "Análise de Endosso", que é a Mesa Técnica antes embutida no perfil
+// "Analista Técnico" da página Vida > Endosso (em validação).
+
+function padmInit() {
+  // Reaproveita o logo do header em vez de duplicar o base64 da imagem
+  var box = document.getElementById('padm-logo');
+  var src = document.querySelector('.logo-link svg');
+  if (box && src && !box.firstChild) {
+    var clone = src.cloneNode(true);
+    clone.setAttribute('viewBox', '0 0 140 61');
+    clone.setAttribute('width', '112');
+    clone.setAttribute('height', '49');
+    box.appendChild(clone);
+  }
+  if (PADM_ABRIR_ENDOSSO) {
+    PADM_ABRIR_ENDOSSO = false;
+    padmAbrirEndosso();
+  } else {
+    padmVoltarHome();
+  }
+}
+
+function padmToggleSide() {
+  var side = document.getElementById('padm-side');
+  if (side) side.classList.toggle('padm-side-mini');
+}
+
+function padmToggleNav(key) {
+  var btn = document.querySelector('.padm-nav[data-nav="' + key + '"]');
+  var sub = document.getElementById('padm-sub-' + key);
+  if (!btn || !sub) return;
+  var abrir = !sub.classList.contains('padm-sub-open');
+  sub.classList.toggle('padm-sub-open', abrir);
+  btn.classList.toggle('padm-nav-open', abrir);
+}
+
+function padmModuloNaoMapeado(nome) {
+  apeShowError('"' + nome + '" não faz parte deste protótipo. Esta réplica do Portal Admin existe para hospedar o módulo "Análise de Endosso".');
+}
+
+function padmAbrirEndosso() {
+  var home = document.getElementById('padm-view-home');
+  var view = document.getElementById('padm-view-endosso');
+  if (!home || !view) return;
+  home.style.display = 'none';
+  view.style.display = '';
+
+  // deixa o menu lateral coerente com o módulo aberto
+  var sub = document.getElementById('padm-sub-atendimento');
+  var btn = document.querySelector('.padm-nav[data-nav="atendimento"]');
+  if (sub) sub.classList.add('padm-sub-open');
+  if (btn) btn.classList.add('padm-nav-open');
+  var item = document.getElementById('padm-sub-endosso');
+  if (item) item.classList.add('padm-sub-ativo');
+
+  endRenderAnalista();
+  window.scrollTo({top: 0});
+}
+
+function padmVoltarHome() {
+  var home = document.getElementById('padm-view-home');
+  var view = document.getElementById('padm-view-endosso');
+  if (!home || !view) return;
+  home.style.display = '';
+  view.style.display = 'none';
+  var item = document.getElementById('padm-sub-endosso');
+  if (item) item.classList.remove('padm-sub-ativo');
+  END_ACTIVE_ANALISE = null;
+  window.scrollTo({top: 0});
+}
+
+function padmSair() { navigate('/'); }
 </script>
 </body>
 </html>
