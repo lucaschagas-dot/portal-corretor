@@ -4479,7 +4479,7 @@ function authLogout(){
             </button>
             <div class="padm-sub" id="padm-sub-atendimento">
               <button class="padm-sub-item" onclick="padmModuloNaoMapeado('Sistema Calcule+')">Sistema Calcule+</button>
-              <button class="padm-sub-item" id="padm-sub-endosso" onclick="padmAbrirEndosso()">Análise de Endosso</button>
+              <button class="padm-sub-item" id="padm-sub-endosso" onclick="padmAbrirEndosso()">Análise de Endosso<span class="padm-sub-badge" id="padm-sub-badge-endosso"></span></button>
             </div>
           </div>
 
@@ -4565,6 +4565,7 @@ function authLogout(){
                       </svg>
                     </span>
                     <span class="padm-card-lbl">Análise de Endosso</span>
+                    <span class="padm-card-badge" id="padm-badge-endosso"></span>
                   </button>
                 </div>
               </div>
@@ -4580,7 +4581,7 @@ function authLogout(){
               <span>Análise de Endosso</span>
             </div>
             <h2 class="padm-title">Análise de Endosso</h2>
-            <p class="padm-subtitle">Mesa Técnica — análise dos endossos non-clean recebidos do Portal do Corretor (Vida &gt; Endosso).</p>
+            <p class="padm-subtitle">Registro de todos os endossos enviados no Portal do Corretor (Vida &gt; Endosso em validação) e mesa de análise dos casos non-clean.</p>
             <hr class="padm-divider">
             <div class="padm-end-wrap">
               <div class="end-card" id="end-analista-body"></div>
@@ -4656,6 +4657,11 @@ function authLogout(){
     .padm-card:hover{border-color:var(--azure);box-shadow:0 2px 10px rgba(0,157,219,.14)}
     .padm-card-ico{width:60px;flex-shrink:0;align-self:stretch;display:flex;align-items:center;justify-content:center;border-right:1px solid #e4e7ec}
     .padm-card-lbl{font-size:16.5px;color:#44546c;line-height:1.35;padding-left:20px}
+    /* contador de endossos aguardando análise */
+    .padm-card-badge{margin-left:auto;margin-right:4px;min-width:26px;height:26px;padding:0 8px;border-radius:13px;background:#e58a00;color:#fff;font-size:12.5px;font-weight:700;display:none;align-items:center;justify-content:center;flex-shrink:0;font-variant-numeric:tabular-nums}
+    .padm-card-badge.padm-badge-on{display:flex}
+    .padm-sub-badge{display:none;margin-left:8px;padding:1px 8px;border-radius:10px;background:#e58a00;color:#fff;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+    .padm-sub-badge.padm-badge-on{display:inline-block}
 
     .padm-crumb{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a94a3;margin-bottom:14px}
     .padm-crumb a{color:var(--azure);cursor:pointer;font-weight:600}
@@ -4802,6 +4808,32 @@ function authLogout(){
     .end-queue-meta{font-size:12px;color:#8a94a3;margin-top:2px}
     .end-queue-motivos{font-size:11.5px;color:#e58a00;margin-top:4px}
     .end-empty-state{text-align:center;padding:40px 20px;color:#a2aaad;font-size:14px;line-height:1.6}
+    .end-empty-inline{padding:24px 20px;font-size:13px}
+
+    /* ---- Registro de endossos (Análise de Endosso) ---- */
+    .end-pill{display:inline-block;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:12px;white-space:nowrap;vertical-align:middle}
+    .end-pill-warn{background:#fff4e5;color:#8a5a00;border:1px solid #ffd8a8}
+    .end-pill-ok{background:#e6f5ec;color:#0f5c30;border:1px solid #b7e0c6}
+    .end-pill-info{background:#e6f4fb;color:#0b6d92;border:1px solid #b3e0f2}
+    .end-pill-danger{background:#fdecec;color:#a11c1c;border:1px solid #f5c2c2}
+    .end-pill-neutral{background:#eef1f4;color:#586880;border:1px solid #dde2e8}
+
+    .end-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:0 0 6px}
+    .end-kpi{border:1px solid #e3e6ea;border-radius:4px;padding:12px 16px;background:#fafbfc;display:flex;flex-direction:column;gap:3px}
+    .end-kpi-num{font-size:26px;font-weight:700;color:#1f2a51;line-height:1.1;font-variant-numeric:tabular-nums}
+    .end-kpi-num.end-kpi-warn{color:#c97600}
+    .end-kpi-num.end-kpi-ok{color:var(--green)}
+    .end-kpi-lbl{font-size:11px;color:#8a94a3;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+
+    .end-sec-title{font-size:14px;font-weight:700;color:#1f2a51;margin:24px 0 12px;padding-bottom:7px;border-bottom:1px solid #eef1f4}
+    .end-tbl-wrap{overflow-x:auto}
+    .end-tbl{width:100%;border-collapse:collapse;font-size:13px}
+    .end-tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:#8a94a3;font-weight:700;padding:8px 10px;border-bottom:1px solid #e3e6ea;white-space:nowrap}
+    .end-tbl td{padding:10px;border-bottom:1px solid #f1f3f6;color:#44546c;vertical-align:middle}
+    .end-tbl tbody tr:last-child td{border-bottom:none}
+    .end-tbl tbody tr:hover{background:#fafbfc}
+    .end-tbl .end-td-num{font-variant-numeric:tabular-nums;white-space:nowrap}
+    .end-btn-sm{padding:6px 14px;font-size:12.5px}
 
     .end-retencao-card{border:1px solid #e3e6ea;border-radius:4px;padding:16px;margin-bottom:14px}
     .end-slider-row{display:flex;align-items:center;gap:14px}
@@ -10867,6 +10899,7 @@ var END_CASE_SEQ = 9000;
 var END_ACTIVE_ANALISE = null;
 var END_ULTIMA_CARTA = null;
 var END_RETENCAO_ATIVO = null;
+var END_ANALISE_MODO = 'edicao'; // 'edicao' = fila acionavel | 'consulta' = somente leitura
 var PADM_ABRIR_ENDOSSO = false; // deep-link: entrar no Portal Admin já no módulo Análise de Endosso
 
 var END_RETENCAO_CLIENTES = [
@@ -11463,18 +11496,43 @@ function endComputeMotivosFinal() {
   return motivos;
 }
 
-function endCriarCaso() {
+// Situacoes possiveis de um endosso dentro da Analise de Endosso
+var END_STATUS_INFO = {
+  pendente:        {lbl:'Aguardando análise',         cls:'end-pill-warn'},
+  implantado_auto: {lbl:'Implantado automaticamente', cls:'end-pill-ok'},
+  aprovado_ajuste: {lbl:'Contraproposta enviada',     cls:'end-pill-info'},
+  recusa_parcial:  {lbl:'Recusa parcial',             cls:'end-pill-warn'},
+  recusado:        {lbl:'Recusado',                   cls:'end-pill-danger'},
+  devolvido:       {lbl:'Devolvido para correção',    cls:'end-pill-neutral'},
+  implantado:      {lbl:'Implantado',                 cls:'end-pill-ok'}
+};
+function endStatusPill(st) {
+  var i = END_STATUS_INFO[st] || {lbl: st, cls: 'end-pill-neutral'};
+  return '<span class="end-pill ' + i.cls + '">' + i.lbl + '</span>';
+}
+function endFmtDataHora(d) {
+  function p(n) { return (n < 10 ? '0' : '') + n; }
+  return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
+// Todo endosso enviado na Fase 5 gera um caso registrado em END_QUEUE — inclusive
+// os clean case, que nao passam pela mesa mas precisam constar no registro.
+function endCriarCaso(status) {
   END_CASE_SEQ++;
+  var motivos = END_STATE.motivosFinal.slice();
   return {
     id: END_CASE_SEQ,
-    status: 'pendente',
+    status: status || 'pendente',
+    cleanCase: motivos.length === 0,
+    dataHora: endFmtDataHora(new Date()),
     cliente: Object.assign({}, END_STATE.cliente),
     coberturasVig: END_STATE.coberturasVig.map(function(c){ return Object.assign({}, c); }),
     coberturasNovo: END_STATE.coberturas.map(function(c){ return Object.assign({}, c); }),
     premioVig: END_STATE.cliente.premioVigente,
     premioNovo: END_STATE.premioNovo,
-    motivos: END_STATE.motivosFinal.slice(),
-    dpsTipo: END_STATE.dpsTipo
+    motivos: motivos,
+    dpsTipo: END_STATE.dpsTipo,
+    periodicidade: END_STATE.periodicidadeNova
   };
 }
 
@@ -11486,15 +11544,19 @@ function endRenderFase5() {
 
   var html = '<div class="end-card-title">Fase 5 — Implantação</div>';
   if (END_STATE.cleanCase) {
+    var caseOk = endCriarCaso('implantado_auto');
+    END_QUEUE.push(caseOk);
+    END_STATE.caseId = caseOk.id;
     html += '<div class="end-recibo">' + endAlertIco('ok') +
       '<div style="font-weight:700;color:#0f5c30;margin-top:6px">Clean Case — Endosso implantado automaticamente</div>' +
-      '<div class="end-recibo-num" id="end-protocolo-clean">Protocolo #' + (END_CASE_SEQ + 1) + '</div>' +
+      '<div class="end-recibo-num" id="end-protocolo-clean">Protocolo #' + caseOk.id + '</div>' +
       '<p style="font-size:13px;color:#44546c">Transmitido ao E-vida: parcelas em aberto canceladas e novos valores reemitidos. Novo prêmio: <strong>' + endFmtMoeda(END_STATE.premioNovo) + '/mês</strong>.</p>' +
+      '<p style="font-size:12px;color:#8a94a3;margin-bottom:14px">Registrado em Portal Admin &rsaquo; Análise de Endosso como implantação automática (sem passagem pela Mesa Técnica).</p>' +
+      '<button class="end-btn end-btn-outline" onclick="endIrParaMesaTecnica()">Ver na Análise de Endosso</button> ' +
       '<button class="end-btn end-btn-primary" onclick="endReset()">Simular novo endosso</button>' +
     '</div>';
-    END_CASE_SEQ++;
   } else {
-    var caseObj = endCriarCaso();
+    var caseObj = endCriarCaso('pendente');
     END_QUEUE.push(caseObj);
     END_STATE.caseId = caseObj.id;
     html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') +
@@ -11505,44 +11567,134 @@ function endRenderFase5() {
       '</div>';
   }
   el.innerHTML = html;
+  padmAtualizarBadge();
 }
 
-// ================= PERFIL: ANALISTA TÉCNICO (MESA TÉCNICA) =================
+// ================= ANÁLISE DE ENDOSSO — MESA TÉCNICA (PORTAL ADMIN) =================
 function endRenderAnalista() {
   var el = document.getElementById('end-analista-body');
   if (!el) return;
   if (!END_ACTIVE_ANALISE) {
     endRenderAnalistaQueue(el);
+  } else if (END_ANALISE_MODO === 'consulta') {
+    endRenderAnalistaDetalhe(el);
   } else {
     endRenderAnalistaCaso(el);
   }
+  padmAtualizarBadge();
 }
 
+// Registro completo: todo endosso enviado pelo corretor aparece aqui. Os non-clean
+// entram na fila acionavel; os clean case ficam como registro de implantacao
+// automatica; os ja decididos ficam consultaveis em modo somente leitura.
 function endRenderAnalistaQueue(el) {
   var pendentes = END_QUEUE.filter(function(c){ return c.status === 'pendente'; });
-  var html = '<div class="end-card-title">Mesa Técnica — Casos Non-Clean pendentes</div>' +
-    '<p class="end-card-sub">Selecione um caso para análise e ajuste de margem, DA, agenciamento ou agravo.</p>';
+  var automaticos = END_QUEUE.filter(function(c){ return c.status === 'implantado_auto'; });
+
+  var html = '<div class="end-card-title">Análise de Endosso &mdash; Mesa Técnica</div>' +
+    '<p class="end-card-sub">Todo endosso enviado no Portal do Corretor é registrado aqui. Os non-clean entram na fila de análise; os clean case constam como implantação automática do Joker.</p>' +
+    '<div class="end-kpis">' +
+      '<div class="end-kpi"><span class="end-kpi-num' + (pendentes.length ? ' end-kpi-warn' : '') + '" id="end-kpi-pendentes">' + pendentes.length + '</span><span class="end-kpi-lbl">Aguardando análise</span></div>' +
+      '<div class="end-kpi"><span class="end-kpi-num end-kpi-ok" id="end-kpi-automaticos">' + automaticos.length + '</span><span class="end-kpi-lbl">Implantados automaticamente</span></div>' +
+      '<div class="end-kpi"><span class="end-kpi-num" id="end-kpi-total">' + END_QUEUE.length + '</span><span class="end-kpi-lbl">Endossos recebidos</span></div>' +
+    '</div>';
+
+  html += '<div class="end-sec-title">Aguardando análise</div>';
   if (!pendentes.length) {
-    html += '<div class="end-empty-state">Nenhum caso pendente de análise no momento.<br>Simule um endosso non-clean no Portal do Corretor (Vida &gt; Endosso em validação) para popular esta fila.</div>';
+    html += '<div class="end-empty-state end-empty-inline" id="end-fila-vazia">Nenhum caso aguardando análise.<br>Endossos non-clean enviados no Portal do Corretor (Vida &gt; Endosso em validação) entram nesta fila.</div>';
   } else {
     pendentes.forEach(function(c) {
       html += '<div class="end-queue-item" data-case="' + c.id + '">' +
         '<div><strong>#' + c.id + ' &mdash; ' + c.cliente.nome + '</strong>' +
-          '<div class="end-queue-meta">Apólice ' + c.cliente.apolice + ' &middot; Prêmio novo: ' + endFmtMoeda(c.premioNovo) + '/mês</div>' +
+          '<div class="end-queue-meta">Apólice ' + c.cliente.apolice + ' &middot; Recebido em ' + c.dataHora + ' &middot; Prêmio novo: ' + endFmtMoeda(c.premioNovo) + '/mês</div>' +
           '<div class="end-queue-motivos">' + c.motivos.join(' &middot; ') + '</div>' +
         '</div>' +
         '<button class="end-btn end-btn-primary" onclick="endAbrirAnalise(' + c.id + ')">Analisar</button>' +
       '</div>';
     });
   }
+
+  html += '<div class="end-sec-title">Endossos recebidos</div>';
+  if (!END_QUEUE.length) {
+    html += '<div class="end-empty-state end-empty-inline" id="end-registro-vazio">Nenhum endosso recebido ainda.<br>Envie um endosso no Portal do Corretor (Vida &gt; Endosso em validação) para que ele apareça neste registro.</div>';
+  } else {
+    html += '<div class="end-tbl-wrap"><table class="end-tbl" id="end-tbl-registro"><thead><tr>' +
+      '<th>Protocolo</th><th>Recebido em</th><th>Segurado</th><th>Apólice</th>' +
+      '<th>Prêmio novo</th><th>Enquadramento</th><th>Situação</th><th></th>' +
+      '</tr></thead><tbody>';
+    END_QUEUE.slice().reverse().forEach(function(c) {
+      var acao = c.status === 'pendente'
+        ? '<button class="end-btn end-btn-primary end-btn-sm" onclick="endAbrirAnalise(' + c.id + ')">Analisar</button>'
+        : '<button class="end-btn end-btn-outline end-btn-sm" onclick="endAbrirDetalhe(' + c.id + ')">Ver</button>';
+      html += '<tr data-case="' + c.id + '">' +
+        '<td class="end-td-num">#' + c.id + '</td>' +
+        '<td class="end-td-num">' + c.dataHora + '</td>' +
+        '<td>' + c.cliente.nome + '</td>' +
+        '<td class="end-td-num">' + c.cliente.apolice + '</td>' +
+        '<td class="end-td-num">' + endFmtMoeda(c.premioNovo) + '</td>' +
+        '<td>' + (c.cleanCase ? 'Clean case' : 'Non-clean') + '</td>' +
+        '<td>' + endStatusPill(c.status) + '</td>' +
+        '<td style="text-align:right">' + acao + '</td>' +
+      '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
   el.innerHTML = html;
 }
 
 function endAbrirAnalise(id) {
   END_ACTIVE_ANALISE = END_QUEUE.find(function(c){ return c.id === id; });
+  END_ANALISE_MODO = 'edicao';
   endRenderAnalista();
 }
-function endVoltarFila() { END_ACTIVE_ANALISE = null; endRenderAnalista(); }
+function endAbrirDetalhe(id) {
+  END_ACTIVE_ANALISE = END_QUEUE.find(function(c){ return c.id === id; });
+  END_ANALISE_MODO = 'consulta';
+  endRenderAnalista();
+}
+function endVoltarFila() {
+  END_ACTIVE_ANALISE = null;
+  END_ANALISE_MODO = 'edicao';
+  endRenderAnalista();
+}
+
+// Consulta somente leitura de um endosso ja decidido (ou implantado automaticamente)
+function endRenderAnalistaDetalhe(el) {
+  var c = END_ACTIVE_ANALISE;
+  var coberturas = c.coberturasNovoClonado || c.coberturasNovo;
+  var premio = (c.premioNovoClonado != null) ? c.premioNovoClonado
+             : (c._premioAjustado != null ? c._premioAjustado : c.premioNovo);
+
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">' +
+      '<div class="end-card-title" style="margin-bottom:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">Endosso #' + c.id + endStatusPill(c.status) + '</div>' +
+      '<button class="end-btn end-btn-outline" onclick="endVoltarFila()">&lsaquo; Voltar aos endossos</button></div>' +
+    '<div class="end-grid4">' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Segurado</span><span class="end-cadbox-val">' + c.cliente.nome + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Apólice</span><span class="end-cadbox-val">' + c.cliente.apolice + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Recebido em</span><span class="end-cadbox-val">' + c.dataHora + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Enquadramento</span><span class="end-cadbox-val">' + (c.cleanCase ? 'Clean case' : 'Non-clean') + '</span></div>' +
+    '</div>';
+
+  if (c.motivos.length) {
+    html += '<div class="end-alert end-alert-warn" style="margin-top:12px">' + endAlertIco('warn') + '<span>' + c.motivos.join(' &middot; ') + '</span></div>';
+  } else {
+    html += '<div class="end-alert end-alert-ok" style="margin-top:12px">' + endAlertIco('ok') + '<span>Clean case &mdash; nenhum motivo de análise técnica. Implantado automaticamente pelo Joker, sem passar pela Mesa Técnica.</span></div>';
+  }
+
+  if (c._premioAjustado != null) {
+    html += '<div class="end-alert end-alert-info" style="margin-top:10px">' + endAlertIco('info') + '<span>Contraproposta da Mesa Técnica: <strong>' + endFmtMoeda(c._premioAjustado) + '/mês</strong> (base do motor: ' + endFmtMoeda(c.premioNovo) + ').</span></div>';
+  }
+  if (c.premioNovoClonado != null) {
+    html += '<div class="end-alert end-alert-info" style="margin-top:10px">' + endAlertIco('info') + '<span>Cotação clonada sem a cobertura recusada. Prêmio recalculado: <strong>' + endFmtMoeda(c.premioNovoClonado) + '/mês</strong>.</span></div>';
+  }
+
+  html += '<div style="margin-top:16px"><div style="font-weight:700;color:#44546c;margin-bottom:8px">Comparativo de coberturas</div>' +
+    '<div class="end-compare" id="end-detalhe-compare"></div></div>' +
+    '<div class="end-actions-row"><button class="end-btn end-btn-outline" onclick="endVoltarFila()">Voltar aos endossos</button></div>';
+
+  el.innerHTML = html;
+  endRenderCompare('end-detalhe-compare', c.coberturasVig, coberturas, c.premioVig, premio);
+}
 
 function endRenderAnalistaCaso(el) {
   var c = END_ACTIVE_ANALISE;
@@ -11813,12 +11965,26 @@ function padmInit() {
     clone.setAttribute('height', '49');
     box.appendChild(clone);
   }
+  padmAtualizarBadge();
   if (PADM_ABRIR_ENDOSSO) {
     PADM_ABRIR_ENDOSSO = false;
     padmAbrirEndosso();
   } else {
     padmVoltarHome();
   }
+}
+
+// Contador de endossos aguardando análise, no card e no item do menu
+function padmAtualizarBadge() {
+  var n = (typeof END_QUEUE === 'undefined') ? 0
+        : END_QUEUE.filter(function(c){ return c.status === 'pendente'; }).length;
+  ['padm-badge-endosso', 'padm-sub-badge-endosso'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = n;
+    el.classList.toggle('padm-badge-on', n > 0);
+    el.title = n === 1 ? '1 endosso aguardando análise' : n + ' endossos aguardando análise';
+  });
 }
 
 function padmToggleSide() {
