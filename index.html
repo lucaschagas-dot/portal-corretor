@@ -4863,6 +4863,21 @@ function authLogout(){
     .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
     .evp-hint strong{color:#009DDB}
 
+    /* comparativo Vigente x Com Endosso, no layout dos planos do Global Vida */
+    .end-cmp-grid{grid-template-columns:230px 1fr 1fr}
+    .end-cmp-val{font-size:13.5px;color:#44546c;font-variant-numeric:tabular-nums;padding:0 8px;text-align:center}
+    .end-cmp-novo{color:var(--azure);font-weight:700}
+    .end-cmp-nao{color:#b9c1cc}
+    .end-cmp-rem{color:#c1440e;font-size:12px;font-weight:700}
+    .end-cmp-tot .gv-cov-row,.end-cmp-tot{font-weight:700}
+    .end-prod-block{border:1px solid var(--border);border-radius:4px;background:#fff;padding:14px 16px 16px;margin-top:8px}
+    .end-prod-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+    .end-prod-tit{font-size:15px;font-weight:700;color:var(--azure)}
+    .end-prod-link{font-size:12px;color:#8a94a3;cursor:pointer;white-space:nowrap}
+    .end-prod-link:hover{color:var(--azure)}
+    .end-cond-link{display:inline-block;margin-top:12px;font-size:12px;color:var(--azure);
+      text-decoration:underline;font-style:italic;cursor:pointer}
+
     .end-apo-lista{display:flex;flex-direction:column;gap:10px;margin-top:10px}
     .end-apo-item{display:flex;align-items:flex-start;gap:14px;border:1.5px solid #d0d5dd;border-radius:5px;
       padding:14px 16px;background:#fff;cursor:pointer;text-align:left;font:inherit;width:100%;transition:border-color .12s,background .12s}
@@ -11189,6 +11204,7 @@ function endResetCorretorState() {
     dpsRespondida:false, _dpsRespostas:{}, assinaturaEnviada:false, assinaturaConcluida:false,
     caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista'
   };
+  END_STATE.faseMax = 1;
   for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i===1)?'block':'none'; }
   endRenderFase1();
 }
@@ -11227,9 +11243,15 @@ function endGoFase(n) {
     endRenderFase1Voltar();
   }
   END_STATE.fase = n;
-  for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i===n) ? 'block' : 'none'; }
+  // A tela se estende para baixo: as fases anteriores continuam visíveis (mesma
+  // dinâmica do AP Escolar e do Global Vida). Voltar recolhe o que vem depois,
+  // porque editar cobertura invalida a precificação já calculada.
+  var ate = (n < (END_STATE.faseMax || 1)) ? n : Math.max(END_STATE.faseMax || 1, n);
+  END_STATE.faseMax = ate;
+  for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i<=ate) ? 'block' : 'none'; }
   endRenderSteps();
-  window.scrollTo({top:0, behavior:'smooth'});
+  var alvo = document.getElementById('end-fase-'+n);
+  if (alvo) alvo.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ================= FASE 1 — VALIDAÇÃO (ELEGIBILIDADE) =================
@@ -11551,14 +11573,13 @@ function endValidaFase2() {
 function endRenderFase3() {
   var el = document.getElementById('end-fase-3');
   var premioNovo = endCalcPremio(END_STATE.coberturas);
-  var premioVig = END_STATE.cliente.premioVigente;
   END_STATE.premioNovo = premioNovo;
 
   el.innerHTML =
     '<div class="end-card-title">Fase 3 — Precificação (Comparação em tela)</div>' +
-    '<p class="end-card-sub">Visualização "antes e depois" entre a apólice vigente e a condição proposta.</p>' +
-    '<div class="end-compare" id="end-compare"></div>' +
-    '<div class="end-alert end-alert-info">' + endAlertIco('info') +
+    '<p class="end-card-sub">Comparativo entre a apólice vigente e a condição proposta pelo endosso.</p>' +
+    '<div id="end-cmp-plano"></div>' +
+    '<div class="end-alert end-alert-info" style="margin-top:16px">' + endAlertIco('info') +
       '<span>A alteração de prêmio é diluída nas parcelas futuras já em aberto no E-vida (substituição de parcelas), sem cobranças ou devoluções imediatas em boleto avulso.</span></div>' +
     '<div id="end-premio-min-area"></div>' +
     '<div class="end-actions-row end-actions-between">' +
@@ -11566,8 +11587,83 @@ function endRenderFase3() {
       '<button class="end-btn end-btn-primary" id="end-fase3-avancar" onclick="endGoFase(4)">Avançar para Assinatura (DPS) &rsaquo;</button>' +
     '</div>';
 
-  endRenderCompare('end-compare', END_STATE.coberturasVig, END_STATE.coberturas, premioVig, premioNovo);
+  endRenderComparePlano();
   endRenderPremioMinArea();
+}
+
+// Comparativo Vigente x Com Endosso no mesmo layout dos cards de plano do Global Vida
+function endRenderComparePlano() {
+  var alvo = document.getElementById('end-cmp-plano');
+  if (!alvo) return;
+  var cli = END_STATE.cliente;
+  var vig = END_STATE.coberturasVig, novo = END_STATE.coberturas;
+  var premioVig = cli.premioVigente, premioNovo = END_STATE.premioNovo;
+  var check = (typeof gvCheckSvg === 'function') ? gvCheckSvg() : '&#10003;';
+
+  function total(lista) {
+    return lista.filter(function(c){ return c.ativa; })
+                .reduce(function(a, c){ return a + (c.capital || 0); }, 0);
+  }
+  var totVig = total(vig), totNovo = total(novo);
+
+  var cells = '';
+  cells += '<div class="gv-plan-lbl-col"><span class="gv-plan-title-lbl">' + (cli.produto || 'Vida Individual') + '</span></div>';
+  cells += '<div class="gv-plan-hdr2"><div class="gv-plan-name2">Vigente</div>' +
+    '<div class="gv-plan-price2">' + endFmtMoeda(premioVig) + ' <small>/ mês</small></div>' +
+    '<div class="gv-plan-desc2">Capital total ' + endFmtMoeda(totVig) + '</div></div>';
+  cells += '<div class="gv-plan-hdr2 gv-sel-col"><div class="gv-plan-name2">Com Endosso ' + check + '</div>' +
+    '<div class="gv-plan-price2">' + endFmtMoeda(premioNovo) + ' <small>/ mês</small></div>' +
+    '<div class="gv-plan-desc2">Capital total ' + endFmtMoeda(totNovo) + '</div></div>';
+  cells += '<div class="gv-plan-blank"></div><div class="gv-plan-blank"></div><div class="gv-plan-blank gv-sel-col"></div>';
+
+  var linhas = novo.map(function(n) {
+    return { n: n, v: vig.find(function(x){ return x.cod === n.cod; }) };
+  }).filter(function(p) { return p.n.ativa || (p.v && p.v.ativa); });
+
+  linhas.forEach(function(p, i) {
+    var alt = (i % 2 === 1) ? ' gv-cov-alt' : '';
+    cells += '<div class="gv-cov-row' + alt + '">' + p.n.label + '</div>';
+    cells += '<div class="gv-check-cell end-cmp-val' + alt + '">' +
+      (p.v && p.v.ativa ? endFmtMoeda(p.v.capital) : '<span class="end-cmp-nao">&mdash;</span>') + '</div>';
+    var conteudo;
+    if (!p.n.ativa) {
+      conteudo = '<span class="end-cmp-rem">excluída</span>';
+    } else {
+      var mudou = !p.v || !p.v.ativa || p.v.capital !== p.n.capital;
+      conteudo = mudou
+        ? '<span class="end-cmp-novo">' + endFmtMoeda(p.n.capital) + '</span>'
+        : endFmtMoeda(p.n.capital);
+    }
+    cells += '<div class="gv-check-cell end-cmp-val gv-sel-col' + alt + '">' + conteudo + '</div>';
+  });
+
+  var altT = (linhas.length % 2 === 1) ? ' gv-cov-alt' : '';
+  cells += '<div class="gv-cov-row end-cmp-tot' + altT + '">Prêmio mensal</div>';
+  cells += '<div class="gv-check-cell end-cmp-val end-cmp-tot' + altT + '">' + endFmtMoeda(premioVig) + '</div>';
+  cells += '<div class="gv-check-cell end-cmp-val end-cmp-tot gv-sel-col' + altT + '"><span class="end-cmp-novo">' + endFmtMoeda(premioNovo) + '</span></div>';
+
+  cells += '<div class="gv-plan-blank"></div>';
+  cells += '<div class="gv-btn-cell"></div>';
+  cells += '<div class="gv-btn-cell gv-sel-col"><button class="gv-outras-btn" type="button" onclick="endGoFase(2)">Editar coberturas</button></div>';
+
+  alvo.innerHTML =
+    '<div class="end-prod-block">' +
+      '<div class="end-prod-hd">' +
+        '<span class="end-prod-tit">' + (cli.produto || 'Vida Individual') + '</span>' +
+        '<span class="end-prod-link" onclick="apeShowError(\'Características do produto não fazem parte deste protótipo.\')">Veja características do produto &rsaquo;</span>' +
+      '</div>' +
+      '<div class="ape-plan-card">' +
+        '<div class="ape-plan-hdr" onclick="gvPlanToggle(this)">' +
+          '<div class="ape-plan-title-block">' +
+            '<span class="ape-plan-title"><strong>' + cli.nome + '</strong> &ndash; Apólice ' + cli.apolice + '</span>' +
+            '<span class="ape-plan-cnpj">' + cli.tipoDoc + ' ' + cli.cpf + '</span>' +
+          '</div>' +
+          '<svg class="ape-plan-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</div>' +
+        '<div class="ape-plan-body"><div class="gv-plan-grid end-cmp-grid">' + cells + '</div></div>' +
+      '</div>' +
+      '<span class="end-cond-link" onclick="apeShowError(\'Condições gerais não fazem parte deste protótipo.\')">Clique aqui para acessar as condições gerais do produto</span>' +
+    '</div>';
 }
 
 function endRenderCompare(containerId, vigList, novoList, premioVig, premioNovo) {
