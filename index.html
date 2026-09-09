@@ -11039,31 +11039,31 @@ function endCoberturasBase() {
 // inadimplente) vive na apólice e NÃO é exibido na Fase 1 — o corretor só identifica
 // o segurado e escolhe a apólice. As regras seguem valendo nas fases seguintes.
 var END_CLIENTES = [
-  { nome:'Marcos Vinícius Almeida', doc:'123.456.789-00', tipoDoc:'CPF',
+  { nome:'Marcos Vinícius Almeida', doc:'123.456.789-00', tipoDoc:'CPF', sexo:'M',
     profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'24,1 (Normal)', vinculo:'CLT', idade:34,
     apolices:[
       {apolice:'AP-200134', produto:'Vida Individual', inicio:'01/03/2024', premioVigente:141.00, periodicidade:'Mensal', cenario:'clean'},
       {apolice:'AP-200356', produto:'Vida Individual — Plano Ampliado', inicio:'15/08/2025', premioVigente:198.40, periodicidade:'Mensal', cenario:'restritiva'}
     ]},
-  { nome:'Renata Souza Lima', doc:'234.567.890-11', tipoDoc:'CPF',
+  { nome:'Renata Souza Lima', doc:'234.567.890-11', tipoDoc:'CPF', sexo:'F',
     profissao:'Motorista de Aplicativo', renda:'R$ 3.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Autônomo', idade:41,
     apolices:[
       {apolice:'AP-200179', produto:'Vida Individual', inicio:'12/06/2023', premioVigente:141.00, periodicidade:'Mensal', cenario:'restritiva'},
       {apolice:'AP-200412', produto:'Vida Individual — Plano Essencial', inicio:'03/02/2026', premioVigente:96.20, periodicidade:'Mensal', cenario:'clean'}
     ]},
-  { nome:'Fernando Augusto Reis', doc:'345.678.901-22', tipoDoc:'CPF',
+  { nome:'Fernando Augusto Reis', doc:'345.678.901-22', tipoDoc:'CPF', sexo:'M',
     profissao:'Vigilante', renda:'R$ 2.800,00', imc:'29,8 (Sobrepeso)', vinculo:'CLT', idade:52,
     apolices:[
       {apolice:'AP-200231', produto:'Vida Individual', inicio:'20/09/2022', premioVigente:141.00, periodicidade:'Mensal', cenario:'naorenovar'},
       {apolice:'AP-200487', produto:'Vida Individual — Plano Essencial', inicio:'20/09/2025', premioVigente:118.70, periodicidade:'Mensal', cenario:'clean'}
     ]},
-  { nome:'Camila Ribeiro Teixeira', doc:'456.789.012-33', tipoDoc:'CPF',
+  { nome:'Camila Ribeiro Teixeira', doc:'456.789.012-33', tipoDoc:'CPF', sexo:'F',
     profissao:'Professora', renda:'R$ 4.500,00', imc:'22,9 (Normal)', vinculo:'CLT', idade:29,
     apolices:[
       {apolice:'AP-200205', produto:'Vida Individual', inicio:'05/05/2024', premioVigente:141.00, periodicidade:'Mensal', cenario:'inadimplente'},
       {apolice:'AP-200521', produto:'Vida Individual — Plano Ampliado', inicio:'05/05/2026', premioVigente:173.50, periodicidade:'Mensal', cenario:'clean'}
     ]},
-  { nome:'Escola Aprender Mais Ltda', doc:'12.345.678/0001-90', tipoDoc:'CNPJ',
+  { nome:'Escola Aprender Mais Ltda', doc:'12.345.678/0001-90', tipoDoc:'CNPJ', sexo:null,
     profissao:'Analista de Sistemas', renda:'R$ 6.200,00', imc:'25,0 (Normal)', vinculo:'Pessoa Jurídica', idade:38,
     apolices:[
       {apolice:'AP-200218', produto:'Vida em Grupo', inicio:'01/01/2025', premioVigente:210.00, periodicidade:'Mensal', cenario:'clean'},
@@ -11101,17 +11101,40 @@ var END_PROFISSOES = [
   {v:'seguranca', label:'Segurança Armado', agravada:true}
 ];
 
-var END_DPS_PERGUNTAS_SIMPLES = [
-  'Apresenta ou apresentou alguma doença que o tenha obrigado a usar medicamento de forma rotineira ou hospitalizar-se ou submeter-se a tratamentos especializados (radioterapia, quimioterapia) ou intervenções cirúrgicas (inclusive biopsia), ou ainda a afastar-se de suas atividades normais de trabalho? Está atualmente com sinais ou sintomas clínicos que estão sendo investigados?',
-  'Apresenta ou apresentou sinais ou sintomas que levassem a hipótese de diagnóstico de câncer?'
+// Lista mestre da DPS — fonte única usada tanto pela Simplificada quanto pela Completa.
+// nivel:'simples' -> a pergunta aparece nas duas (é o núcleo de saúde essencial).
+// sem nivel        -> aparece só na Completa (perguntas de hábito, ocupação e histórico).
+// feminino:true    -> só é exibida para seguradas do sexo feminino (gestação).
+var END_DPS_PERGUNTAS = [
+  {t:'Encontra-se atualmente impossibilitado de realizar suas atividades laborativas ou encontra-se aposentado por Invalidez? Se sim, especifique o motivo.', nivel:'simples'},
+  {t:'Apresenta ou apresentou alguma doença que o tenha obrigado a usar medicamento de forma rotineira ou hospitalizar-se ou submeter-se a tratamentos especializados (radioterapia, quimioterapia) ou intervenções cirúrgicas (inclusive biopsia), ou ainda a afastar-se de suas atividades normais de trabalho? Está atualmente com sinais ou sintomas clínicos que estão sendo investigados?', nivel:'simples'},
+  {t:'Apresenta ou apresentou sinais ou sintomas que levassem a hipótese de diagnóstico de câncer?', nivel:'simples'},
+  {t:'É portador de alguma moléstia ou já apresentou algum episódio de patologia potencialmente recorrente (ex.: cólica nefrética, tendinite, transtornos articulares, artrose, artrites, manguito rotador do ombro, lesão ligamentar, fraturas e hérnias de disco, entre outros)? Possui alguma suspeita diagnóstica ou encontra-se em fase de investigação? Esclareça e especifique qualquer item afirmativo.', nivel:'simples'},
+  {t:'Tem alguma deficiência de órgãos, membros ou sentidos (ex: visual, auditiva, motora ou insuficiência renal)? Cite-os indicando o grau de redução funcional e sua causa.', nivel:'simples'},
+  {t:'Possui outros seguros de vida em vigor, nesta ou em outra seguradora? Se sim, informe a seguradora e o capital segurado.'},
+  {t:'Já recebeu indenização de seguro por acidente ou doença (auxílio-doença, invalidez, DPVAT ou similar)? Se sim, especifique a data e o motivo.'},
+  {t:'É tripulante ou exerce atividade profissional a bordo de aeronave (piloto, comissário ou similar)?'},
+  {t:'Está gestante ou apresentou alguma intercorrência ou complicação em gestação anterior (ex.: diabetes gestacional, pré-eclâmpsia, aborto de repetição)?', feminino:true},
+  {t:'Tem ou já teve hipertensão arterial, diabetes ou alguma alteração significativa em exames laboratoriais ou de imagem realizados nos últimos 12 meses?'},
+  {t:'Realiza ou realizou algum tratamento médico contínuo ou foi submetido a alguma cirurgia? Se sim, especifique o procedimento e a data.'},
+  {t:'Pratica ou já praticou com regularidade algum esporte de risco (ex.: mergulho, paraquedismo, automobilismo, escalada, rapel, asa-delta, montanhismo)?'},
+  {t:'Pratica algum desses esportes de forma profissional ou em competições?'},
+  {t:'Já teve alguma proposta de seguro de vida recusada, adiada, ou aceita com agravo de prêmio ou exclusão de cobertura?'},
+  {t:'Além do que foi declarado acima, tem algo mais a declarar sobre seu estado de saúde atual ou histórico médico?', nivel:'simples'}
 ];
-var END_DPS_PERGUNTAS_COMPLETAS = [
-  'Encontra-se atualmente impossibilitado de realizar suas atividades laborativas ou encontra-se aposentado por Invalidez? Se sim, especifique o motivo.',
-  'Apresenta ou apresentou alguma doença que o tenha obrigado a usar medicamento de forma rotineira ou hospitalizar-se ou submeter-se a tratamentos especializados (radioterapia, quimioterapia) ou intervenções cirúrgicas (inclusive biopsia), ou ainda a afastar-se de suas atividades normais de trabalho? Está atualmente com sinais ou sintomas clínicos que estão sendo investigados?',
-  'Apresenta ou apresentou sinais ou sintomas que levassem a hipótese de diagnóstico de câncer?',
-  'É portador de alguma moléstia ou já apresentou algum episódio de patologia potencialmente recorrente (ex.: cólica nefrética, tendinite, transtornos articulares, artrose, artrites, manguito rotador do ombro, lesão ligamentar, fraturas e hérnias de disco, entre outros)? Possui alguma suspeita diagnóstica ou encontra-se em fase de investigação? Esclareça e especifique qualquer item afirmativo.',
-  'Tem alguma deficiência de órgãos, membros ou sentidos (ex: visual, auditiva, motora ou insuficiência renal)? Cite-os indicando o grau de redução funcional e sua causa.'
-];
+
+// Devolve as perguntas realmente aplicáveis ao segurado da vez, já filtradas pelo tipo de
+// DPS (Simplificada só traz o núcleo de saúde) e pelo sexo (gestação só para mulheres).
+// É a fonte única usada tanto para renderizar quanto para validar e salvar as respostas —
+// assim a numeração exibida bate sempre com o índice usado internamente.
+function endDpsPerguntasAtivas() {
+  var completa = END_STATE.dpsTipo === 'completa';
+  var sexo = END_STATE.cliente ? END_STATE.cliente.sexo : null;
+  return END_DPS_PERGUNTAS.filter(function(p) {
+    if (p.feminino && sexo !== 'F') return false;
+    return completa || p.nivel === 'simples';
+  });
+}
 
 var END_STEP_LABELS = ['Validação','Cotação','Precificação','Assinatura (DPS)','Implantação'];
 
@@ -11377,7 +11400,7 @@ function endAplicarApoliceSelecionada() {
   var cen = ap.cenario;
   END_STATE.cenarioKey = cen;
   END_STATE.cliente = {
-    key: cen, nome: base.nome, cpf: base.doc, tipoDoc: base.tipoDoc,
+    key: cen, nome: base.nome, cpf: base.doc, tipoDoc: base.tipoDoc, sexo: base.sexo,
     apolice: ap.apolice, produto: ap.produto,
     profissao: base.profissao, renda: base.renda, imc: base.imc,
     vinculo: base.vinculo, idade: base.idade,
@@ -11839,10 +11862,10 @@ function endRenderDpsForm() {
     endAtualizarFase4Botao();
     return;
   }
-  var perguntas = END_STATE.dpsTipo === 'completa' ? END_DPS_PERGUNTAS_COMPLETAS : END_DPS_PERGUNTAS_SIMPLES;
+  var perguntas = endDpsPerguntasAtivas();
   var html = perguntas.map(function(p, i) {
     var val = END_STATE._dpsRespostas[i] || '';
-    return '<div class="end-dps-q"><p class="end-dps-q-texto">' + (i + 1) + '. ' + p + '</p>' +
+    return '<div class="end-dps-q"><p class="end-dps-q-texto">' + (i + 1) + '. ' + p.t + '</p>' +
       '<div class="end-dps-q-radios-row">' +
         '<label><input type="radio" name="end-dps-q-' + i + '" value="sim" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='sim'?' checked':'') + '> Sim</label>' +
         '<label><input type="radio" name="end-dps-q-' + i + '" value="nao" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='nao'?' checked':'') + '> Não</label>' +
@@ -11858,7 +11881,7 @@ function endOnDpsResposta(i, radio) {
   END_STATE._dpsRespostas[i] = radio.value;
 }
 function endResponderDps() {
-  var perguntas = END_STATE.dpsTipo === 'completa' ? END_DPS_PERGUNTAS_COMPLETAS : END_DPS_PERGUNTAS_SIMPLES;
+  var perguntas = endDpsPerguntasAtivas();
   var respondidas = Object.keys(END_STATE._dpsRespostas || {}).length;
   if (respondidas < perguntas.length) {
     apeShowError('Responda todas as perguntas da DPS antes de confirmar.');
