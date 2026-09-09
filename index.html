@@ -1165,7 +1165,8 @@ var AUTH_ALLOWED = [
   'isabela.pazetto@segurosunimed.com.br',
   'flavia.berchielli@segurosunimed.com.br',
   'tatiane.leite.mind@segurosunimed.com.br',
-  'tamyris.cardozo@segurosunimed.com.br'
+  'tamyris.cardozo@segurosunimed.com.br',
+  'katiane.lupianhez@segurosunimed.com.br'
 ];
 
 var AUTH_KEY = 'portal_corretor_auth_email';
@@ -4367,7 +4368,76 @@ function authLogout(){
     <!-- validações do fluxo Calcule Mais + E-vida + Dru(z) + Joker.       -->
     <!-- ================================================================ -->
     <div id="page-vida-endosso" class="page">
-      <div class="end-wrap">
+      <div class="evp-shell">
+
+        <header class="evp-header">
+          <div class="evp-logo" id="evp-logo"></div>
+          <div class="evp-hd-right">
+            <div class="evp-canal"><span class="evp-canal-lbl">Canal</span><span class="evp-canal-val">Canal Padrão</span></div>
+            <button class="evp-hd-ico" title="Buscar" onclick="evpModuloNaoMapeado('Busca')"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="10.6" cy="10.6" r="6.6" fill="none" stroke="#58595B" stroke-width="2"/><line x1="15.6" y1="15.6" x2="21" y2="21" stroke="#58595B" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <button class="evp-hd-ico" title="Filtros" onclick="evpModuloNaoMapeado('Filtros')"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5z" fill="#1F3864"/></svg></button>
+            <span class="evp-avatar">TF</span>
+          </div>
+        </header>
+        <div class="evp-progress"><span class="evp-progress-a"></span><span class="evp-progress-b"></span></div>
+
+        <div class="evp-body">
+          <aside class="evp-rail" id="evp-rail">
+                        <button class="evp-rail-item evp-c-red" data-mi="0" title="Vida" onclick="evpModuloNaoMapeado('Vida')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 20.5S3.5 15 3.5 9.4A4.4 4.4 0 0112 7a4.4 4.4 0 018.5 2.4c0 5.6-8.5 11.1-8.5 11.1z" fill="#58595B"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-red" data-mi="1" title="Prestamista" onclick="evpModuloNaoMapeado('Prestamista')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 3l9 4.5V9H3V7.5L12 3z" fill="#58595B"/><rect x="5" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="10.9" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="16.8" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="3" y="18.6" width="18" height="2.2" fill="#58595B"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-amber" data-mi="2" title="Residencial" onclick="evpModuloNaoMapeado('Residencial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 3.4L2.8 11h2.6v9.4h5.2v-5.6h2.8v5.6h5.2V11h2.6L12 3.4z" fill="#58595B"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-amber" data-mi="3" title="Empresarial" onclick="evpModuloNaoMapeado('Empresarial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 20.6V9.4l5.6 3.4V9.4l5.6 3.4V9.4L20 12.8v7.8H3z" fill="#58595B"/><rect x="3" y="5.6" width="3.2" height="3.4" fill="#58595B"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-amber" data-mi="4" title="RCP Individual" onclick="evpModuloNaoMapeado('RCP Individual')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="9.6" cy="8.2" r="3.3" fill="#58595B"/><path d="M3.4 20.2a6.2 6.2 0 0112.4 0H3.4z" fill="#58595B"/><path d="M18.4 8.2l3.2 1.3v3c0 2.2-1.5 4-3.2 4.6-1.7-.6-3.2-2.4-3.2-4.6v-3l3.2-1.3z" fill="#58595B"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-amber" data-mi="5" title="RCP Instituições – PMI" onclick="evpModuloNaoMapeado('RCP Instituições – PMI')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="4" y="4.6" width="16" height="16" rx="1.4" fill="#58595B"/><rect x="6.6" y="7.2" width="3" height="3" fill="#fff"/><rect x="14.4" y="7.2" width="3" height="3" fill="#fff"/><rect x="6.6" y="12.2" width="3" height="3" fill="#fff"/><rect x="14.4" y="12.2" width="3" height="3" fill="#fff"/><rect x="10.4" y="16" width="3.2" height="4.6" fill="#fff"/></svg><span class="evp-plus">+</span></button>
+            <button class="evp-rail-item evp-c-navy" data-mi="6" title="Painel de Cotações" onclick="evpModuloNaoMapeado('Painel de Cotações')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="2.6" y="4.4" width="18.8" height="12.6" rx="1.4" fill="#58595B"/><rect x="8.6" y="18.4" width="6.8" height="1.9" rx=".9" fill="#58595B"/></svg></button>
+            <button class="evp-rail-item evp-c-navy" data-mi="7" title="Renovação RCP Individual" onclick="evpModuloNaoMapeado('Renovação RCP Individual')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg></button>
+            <button class="evp-rail-item evp-c-navy" data-mi="8" title="Renovação Residencial" onclick="evpModuloNaoMapeado('Renovação Residencial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg></button>
+            <button class="evp-rail-item evp-c-azure" data-mi="9" title="Endosso" onclick="evpAbrirEndosso()"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg></button>
+            <button class="evp-rail-item evp-c-navy" data-mi="10" title="Sobre" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg></button>
+          </aside>
+          <nav class="evp-menu" id="evp-menu">
+                        <button class="evp-menu-item evp-c-red" data-mi="0" onclick="evpModuloNaoMapeado('Vida')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 20.5S3.5 15 3.5 9.4A4.4 4.4 0 0112 7a4.4 4.4 0 018.5 2.4c0 5.6-8.5 11.1-8.5 11.1z" fill="#58595B"/></svg><span class="evp-menu-lbl">Vida</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-red" data-mi="1" onclick="evpModuloNaoMapeado('Prestamista')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 3l9 4.5V9H3V7.5L12 3z" fill="#58595B"/><rect x="5" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="10.9" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="16.8" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="3" y="18.6" width="18" height="2.2" fill="#58595B"/></svg><span class="evp-menu-lbl">Prestamista</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-amber" data-mi="2" onclick="evpModuloNaoMapeado('Residencial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 3.4L2.8 11h2.6v9.4h5.2v-5.6h2.8v5.6h5.2V11h2.6L12 3.4z" fill="#58595B"/></svg><span class="evp-menu-lbl">Residencial</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-amber" data-mi="3" onclick="evpModuloNaoMapeado('Empresarial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 20.6V9.4l5.6 3.4V9.4l5.6 3.4V9.4L20 12.8v7.8H3z" fill="#58595B"/><rect x="3" y="5.6" width="3.2" height="3.4" fill="#58595B"/></svg><span class="evp-menu-lbl">Empresarial</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-amber" data-mi="4" onclick="evpModuloNaoMapeado('RCP Individual')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="9.6" cy="8.2" r="3.3" fill="#58595B"/><path d="M3.4 20.2a6.2 6.2 0 0112.4 0H3.4z" fill="#58595B"/><path d="M18.4 8.2l3.2 1.3v3c0 2.2-1.5 4-3.2 4.6-1.7-.6-3.2-2.4-3.2-4.6v-3l3.2-1.3z" fill="#58595B"/></svg><span class="evp-menu-lbl">RCP Individual</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-amber" data-mi="5" onclick="evpModuloNaoMapeado('RCP Instituições – PMI')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="4" y="4.6" width="16" height="16" rx="1.4" fill="#58595B"/><rect x="6.6" y="7.2" width="3" height="3" fill="#fff"/><rect x="14.4" y="7.2" width="3" height="3" fill="#fff"/><rect x="6.6" y="12.2" width="3" height="3" fill="#fff"/><rect x="14.4" y="12.2" width="3" height="3" fill="#fff"/><rect x="10.4" y="16" width="3.2" height="4.6" fill="#fff"/></svg><span class="evp-menu-lbl">RCP Instituições – PMI</span><span class="evp-plus">+</span></button>
+            <button class="evp-menu-item evp-c-navy" data-mi="6" onclick="evpModuloNaoMapeado('Painel de Cotações')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="2.6" y="4.4" width="18.8" height="12.6" rx="1.4" fill="#58595B"/><rect x="8.6" y="18.4" width="6.8" height="1.9" rx=".9" fill="#58595B"/></svg><span class="evp-menu-lbl">Painel de Cotações</span></button>
+            <button class="evp-menu-item evp-c-navy" data-mi="7" onclick="evpModuloNaoMapeado('Renovação RCP Individual')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg><span class="evp-menu-lbl">Renovação RCP Individual</span></button>
+            <button class="evp-menu-item evp-c-navy" data-mi="8" onclick="evpModuloNaoMapeado('Renovação Residencial')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg><span class="evp-menu-lbl">Renovação Residencial</span></button>
+            <button class="evp-menu-item evp-c-azure" data-mi="9" onclick="evpAbrirEndosso()"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg><span class="evp-menu-lbl">Endosso</span></button>
+            <button class="evp-menu-item evp-c-navy" data-mi="10" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg><span class="evp-menu-lbl">Sobre</span></button>
+          </nav>
+          <div class="evp-menu-scrim" id="evp-menu-scrim" onclick="evpFecharMenu()"></div>
+
+          <div class="evp-main">
+
+            <div id="evp-view-home">
+              <div class="evp-cards">
+          <section class="evp-card evp-card-azure">
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Cotações</h3><span class="evp-card-cnt">0 (0 expiradas)</span></div>
+            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><circle cx="12" cy="12" r="8.6" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 7.4V12l3 1.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
+            <div class="evp-card-empty">Não foram encontrados resultados.</div>
+            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+          </section>
+          <section class="evp-card evp-card-navy">
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Propostas</h3><span class="evp-card-cnt">0 (0 expiradas)</span></div>
+            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><rect x="3.4" y="6.4" width="17.2" height="11.2" rx="1.6" fill="none" stroke="#fff" stroke-width="1.8"/><rect x="3.4" y="9.4" width="17.2" height="2" fill="#fff"/></svg></span><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M6 3.6h7l4.4 4.4v5.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 3.6v16.8h5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M19.4 14.2l1.4 1.4-4.8 4.8-1.9.5.5-1.9 4.8-4.8z" fill="#fff"/></svg></span><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><circle cx="12" cy="12" r="8.6" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 7.4V12l3 1.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
+            <div class="evp-card-empty">Não foram encontrados resultados.</div>
+            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+          </section>
+          <section class="evp-card evp-card-navy">
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Transmitidos</h3><span class="evp-card-cnt">0</span></div>
+            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"></span></div>
+            <div class="evp-card-empty">Não foram encontrados resultados.</div>
+            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+          </section>
+              </div>
+              <p class="evp-hint">Protótipo em validação — abra <strong>Endosso</strong> no menu lateral para iniciar o fluxo.</p>
+            </div>
+
+            <div id="evp-view-endosso" style="display:none">
+              <div class="end-wrap">
 
         <div class="end-topbar">
           <div>
@@ -4409,6 +4479,11 @@ function authLogout(){
           <div class="end-card" id="end-retencao-body"></div>
         </div>
 
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
 
@@ -4711,6 +4786,102 @@ function authLogout(){
     </div>
 
     <style>
+    /* ===== PORTAL DE ENDOSSO — shell próprio (réplica do portal de cotações) ===== */
+    body.evp-mode #site-header{display:none}
+    body.evp-mode #app-content{padding:0;overflow-x:hidden}
+    body.evp-mode .content-inner{max-width:none;padding:0}
+    body.evp-mode #auth-logout{left:auto;right:14px}
+
+    .evp-shell{display:flex;flex-direction:column;min-height:100vh;background:#EFEFEF;
+      font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+
+    .evp-header{display:flex;align-items:center;justify-content:space-between;gap:20px;
+      background:#fff;padding:14px 26px;flex-shrink:0}
+    .evp-logo{border:1px solid #1F3864;border-radius:4px;padding:3px 10px;display:flex;align-items:center;overflow:hidden}
+    .evp-hd-right{display:flex;align-items:center;gap:16px}
+    .evp-canal{border:1px solid #C9CDD2;border-radius:4px;padding:6px 16px;min-width:330px;display:flex;flex-direction:column;gap:1px}
+    .evp-canal-lbl{font-size:11.5px;color:#8A8F96}
+    .evp-canal-val{font-size:16px;font-weight:700;color:#1F3864}
+    .evp-hd-ico{background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center}
+    .evp-hd-ico:hover{opacity:.7}
+    .evp-avatar{width:42px;height:42px;border-radius:50%;border:1.6px solid #009DDB;color:#1F3864;
+      display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+
+    .evp-progress{display:flex;flex-shrink:0}
+    .evp-progress-a{height:6px;flex:0 0 50%;background:#4FA9DC}
+    .evp-progress-b{height:6px;flex:1;background:#152A4E}
+
+    .evp-body{flex:1;display:flex;position:relative;align-items:flex-start}
+
+    .evp-c-red{--acc:#E63329}
+    .evp-c-amber{--acc:#F5A623}
+    .evp-c-navy{--acc:#1F3864}
+    .evp-c-azure{--acc:#009DDB}
+
+    .evp-rail{width:88px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;
+      box-shadow:0 2px 8px rgba(0,0,0,.10);z-index:30}
+    .evp-rail-item{position:relative;height:61px;border:none;border-left:5px solid var(--acc);
+      border-bottom:1px solid #E4E6E9;background:#fff;cursor:pointer;display:flex;
+      align-items:center;justify-content:center;padding:0}
+    .evp-rail-item:hover{background:#F1F2F4}
+    .evp-plus{position:absolute;right:8px;bottom:4px;font-size:13px;color:#8A8F96;line-height:1}
+
+    .evp-menu{position:absolute;left:88px;top:0;width:368px;background:#fff;display:none;
+      flex-direction:column;box-shadow:3px 3px 14px rgba(0,0,0,.16);z-index:40}
+    .evp-rail:hover + .evp-menu,.evp-menu:hover{display:flex}
+    .evp-menu-item{position:relative;display:flex;align-items:center;gap:18px;padding:0 22px;height:61px;
+      border:none;border-left:5px solid var(--acc);border-bottom:1px solid #E4E6E9;background:#fff;
+      cursor:pointer;text-align:left;font:inherit}
+    .evp-menu-item:hover{background:#E9EAEC}
+    .evp-menu-lbl{flex:1;font-size:16.5px;color:#3C3C3C}
+    .evp-menu-item.evp-menu-ativo{background:#E9EAEC}
+    .evp-menu-item.evp-menu-ativo .evp-menu-lbl{color:#009DDB;font-weight:700}
+    .evp-menu-scrim{display:none}
+
+    .evp-main{flex:1;min-width:0;padding:22px 26px 60px}
+
+    .evp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+    .evp-card{background:#fff;border-left:5px solid #1F3864;border-radius:3px;
+      box-shadow:0 1px 6px rgba(0,0,0,.12);padding:14px 16px 12px}
+    .evp-card-azure{border-left-color:#009DDB}
+    .evp-card-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+    .evp-card-tit{font-family:'UnimedSlab',Georgia,serif;font-size:19px;font-weight:700;color:#009DDB}
+    .evp-card-cnt{font-size:14px;color:#3C3C3C}
+    .evp-card-chips{display:flex;align-items:center;gap:12px;margin:12px 0 14px}
+    .evp-chip{width:44px;height:44px;border-radius:50%;background:#B4B8BC;color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+    .evp-cardicos{margin-left:auto;display:flex;gap:10px}
+    .evp-cardico{width:44px;height:44px;border-radius:50%;background:#B4B8BC;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .evp-card-empty{background:#B4B8BC;color:#fff;border-radius:3px;text-align:center;
+      padding:18px 10px;font-size:15px}
+    .evp-card-ft{display:flex;align-items:center;justify-content:center;gap:26px;
+      margin-top:12px;font-size:13.5px;color:#6B7076}
+    .evp-pag{display:flex;align-items:center;gap:14px;color:#8A8F96;font-size:15px}
+    .evp-pag i{font-style:normal}
+
+    .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
+    .evp-hint strong{color:#009DDB}
+
+    .end-apo-lista{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .end-apo-item{display:flex;align-items:flex-start;gap:14px;border:1.5px solid #d0d5dd;border-radius:5px;
+      padding:14px 16px;background:#fff;cursor:pointer;text-align:left;font:inherit;width:100%;transition:border-color .12s,background .12s}
+    .end-apo-item:hover{border-color:var(--azure);background:#fafdff}
+    .end-apo-item.end-apo-sel{border-color:var(--azure);border-width:2px;background:#f2fafd;padding:13px 15px}
+    .end-apo-radio{width:19px;height:19px;border-radius:50%;border:2px solid #b9c1cc;flex-shrink:0;margin-top:2px;
+      display:flex;align-items:center;justify-content:center}
+    .end-apo-item.end-apo-sel .end-apo-radio{border-color:var(--azure)}
+    .end-apo-item.end-apo-sel .end-apo-radio::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--azure)}
+    .end-apo-num{font-size:15px;font-weight:700;color:#1f2a51}
+    .end-apo-meta{font-size:12.5px;color:#8a94a3;margin-top:3px}
+    .end-apo-premio{margin-left:auto;text-align:right;flex-shrink:0}
+    .end-apo-premio-v{font-size:15px;font-weight:700;color:var(--azure)}
+    .end-apo-premio-l{font-size:11px;color:#8a94a3}
+
+    #evp-view-endosso .end-wrap{padding:0;max-width:none}
+
+    @media (max-width:1100px){ .evp-canal{min-width:180px} .evp-main{padding:18px 16px 50px} }
+
     .end-wrap{padding:24px 32px 60px;max-width:1400px;margin:0 auto}
     .end-topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:20px;flex-wrap:wrap}
     .end-title{font-size:22px;font-weight:700;color:var(--azure);font-family:'UnimedSlab',Georgia,serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -5888,6 +6059,8 @@ function handleRoute() {
 
   // O Portal Admin tem chrome próprio (sidebar + rodapé), sem o header do Portal do Corretor
   document.body.classList.toggle('padm-mode', path === '/portal-admin');
+  // O Endosso roda dentro da réplica do portal de cotações, com header próprio
+  document.body.classList.toggle('evp-mode', path === '/vida/endosso');
 
   const portalName = document.getElementById('portal-name');
   const breadcrumb = document.getElementById('header-breadcrumb');
@@ -6003,7 +6176,7 @@ function handleRoute() {
   } else if (path === '/vida/endosso') {
     document.getElementById('page-vida-endosso').classList.add('active');
     portalName.textContent = 'Endosso (em validação)';
-    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Vida — Endosso (em validação)</span>');
+    breadcrumb.style.display = 'none';
     stopCarousel();
     routeInit('endInit');
   } else if (path === '/portal-admin') {
@@ -10834,32 +11007,55 @@ function endCoberturasBase() {
   ];
 }
 
-var END_SCENARIOS = {
-  clean: {
-    key:'clean', nome:'Marcos Vinícius Almeida', cpf:'123.456.789-00', apolice:'AP-200134',
-    profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'24,1 (Normal)', vinculo:'CLT',
-    idade:34, restritiva:false, naoRenovar:false, inadimplente:false, sinistroAtivo:false,
-    premioVigente:141.00, periodicidade:'Mensal'
-  },
-  restritiva: {
-    key:'restritiva', nome:'Renata Souza Lima', cpf:'234.567.890-11', apolice:'AP-200179',
-    profissao:'Motorista de Aplicativo', renda:'R$ 3.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Autônomo',
-    idade:41, restritiva:true, naoRenovar:false, inadimplente:false, sinistroAtivo:false,
-    premioVigente:141.00, periodicidade:'Mensal'
-  },
-  naorenovar: {
-    key:'naorenovar', nome:'Fernando Augusto Reis', cpf:'345.678.901-22', apolice:'AP-200231',
-    profissao:'Vigilante', renda:'R$ 2.800,00', imc:'29,8 (Sobrepeso)', vinculo:'CLT',
-    idade:52, restritiva:false, naoRenovar:true, inadimplente:false, sinistroAtivo:true,
-    premioVigente:141.00, periodicidade:'Mensal'
-  },
-  inadimplente: {
-    key:'inadimplente', nome:'Camila Ribeiro Teixeira', cpf:'456.789.012-33', apolice:'AP-200205',
-    profissao:'Professora', renda:'R$ 4.500,00', imc:'22,9 (Normal)', vinculo:'CLT',
-    idade:29, restritiva:false, naoRenovar:false, inadimplente:true, sinistroAtivo:false,
-    premioVigente:141.00, periodicidade:'Mensal'
+// Cada segurado tem 2 apólices. O enquadramento (clean / restritiva / não renovar /
+// inadimplente) vive na apólice e NÃO é exibido na Fase 1 — o corretor só identifica
+// o segurado e escolhe a apólice. As regras seguem valendo nas fases seguintes.
+var END_CLIENTES = [
+  { nome:'Marcos Vinícius Almeida', doc:'123.456.789-00', tipoDoc:'CPF',
+    profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'24,1 (Normal)', vinculo:'CLT', idade:34,
+    apolices:[
+      {apolice:'AP-200134', produto:'Vida Individual', inicio:'01/03/2024', premioVigente:141.00, periodicidade:'Mensal', cenario:'clean'},
+      {apolice:'AP-200356', produto:'Vida Individual — Plano Ampliado', inicio:'15/08/2025', premioVigente:198.40, periodicidade:'Mensal', cenario:'restritiva'}
+    ]},
+  { nome:'Renata Souza Lima', doc:'234.567.890-11', tipoDoc:'CPF',
+    profissao:'Motorista de Aplicativo', renda:'R$ 3.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Autônomo', idade:41,
+    apolices:[
+      {apolice:'AP-200179', produto:'Vida Individual', inicio:'12/06/2023', premioVigente:141.00, periodicidade:'Mensal', cenario:'restritiva'},
+      {apolice:'AP-200412', produto:'Vida Individual — Plano Essencial', inicio:'03/02/2026', premioVigente:96.20, periodicidade:'Mensal', cenario:'clean'}
+    ]},
+  { nome:'Fernando Augusto Reis', doc:'345.678.901-22', tipoDoc:'CPF',
+    profissao:'Vigilante', renda:'R$ 2.800,00', imc:'29,8 (Sobrepeso)', vinculo:'CLT', idade:52,
+    apolices:[
+      {apolice:'AP-200231', produto:'Vida Individual', inicio:'20/09/2022', premioVigente:141.00, periodicidade:'Mensal', cenario:'naorenovar'},
+      {apolice:'AP-200487', produto:'Vida Individual — Plano Essencial', inicio:'20/09/2025', premioVigente:118.70, periodicidade:'Mensal', cenario:'clean'}
+    ]},
+  { nome:'Camila Ribeiro Teixeira', doc:'456.789.012-33', tipoDoc:'CPF',
+    profissao:'Professora', renda:'R$ 4.500,00', imc:'22,9 (Normal)', vinculo:'CLT', idade:29,
+    apolices:[
+      {apolice:'AP-200205', produto:'Vida Individual', inicio:'05/05/2024', premioVigente:141.00, periodicidade:'Mensal', cenario:'inadimplente'},
+      {apolice:'AP-200521', produto:'Vida Individual — Plano Ampliado', inicio:'05/05/2026', premioVigente:173.50, periodicidade:'Mensal', cenario:'clean'}
+    ]},
+  { nome:'Escola Aprender Mais Ltda', doc:'12.345.678/0001-90', tipoDoc:'CNPJ',
+    profissao:'Analista de Sistemas', renda:'R$ 6.200,00', imc:'25,0 (Normal)', vinculo:'Pessoa Jurídica', idade:38,
+    apolices:[
+      {apolice:'AP-200218', produto:'Vida em Grupo', inicio:'01/01/2025', premioVigente:210.00, periodicidade:'Mensal', cenario:'clean'},
+      {apolice:'AP-200644', produto:'Vida em Grupo — Renovação', inicio:'01/01/2026', premioVigente:245.80, periodicidade:'Mensal', cenario:'naorenovar'}
+    ]}
+];
+
+function endBuscarCliente(termo) {
+  var t = (termo || '').trim().toUpperCase();
+  if (!t) return null;
+  var dig = t.replace(/\D/g, '');
+  for (var i = 0; i < END_CLIENTES.length; i++) {
+    var c = END_CLIENTES[i];
+    if (dig && c.doc.replace(/\D/g, '') === dig) return c;
+    for (var j = 0; j < c.apolices.length; j++) {
+      if (c.apolices[j].apolice.toUpperCase() === t) return c;
+    }
   }
-};
+  return null;
+}
 
 var END_RATES = {morte:0.35, ipa:0.12, ipam:0.10, ifpd:0.28, dcm:0.20, dcf:0.20, serit:0.15, dgcombo:0.30};
 function endCalcPremio(coberturas) {
@@ -10909,14 +11105,60 @@ var END_RETENCAO_CLIENTES = [
 ];
 
 // ---- Boot / navegação de perfis ----
-function endInit() {
-  // Só existem dois perfis nesta página: Corretor e Célula de Retenção.
-  // A Mesa Técnica migrou para o Portal Admin > Análise de Endosso.
+function endInit() { evpInit(); }
+
+// ================= SHELL DO PORTAL DE ENDOSSO =================
+// Réplica do portal de cotações: header próprio, trilho de ícones e menu lateral.
+// O item "Endosso" do menu abre o fluxo de 5 fases.
+function evpInit() {
+  var box = document.getElementById('evp-logo');
+  var src = document.querySelector('.logo-link svg');
+  if (box && src && !box.firstChild) {
+    var clone = src.cloneNode(true);
+    clone.setAttribute('viewBox', '0 0 140 61');
+    clone.setAttribute('width', '118');
+    clone.setAttribute('height', '51');
+    box.appendChild(clone);
+  }
+  // volta direto ao fluxo se já havia um endosso em andamento (ex.: retorno do Portal Admin)
+  if (END_STATE && END_STATE.cliente) evpAbrirEndosso(true);
+  else evpVoltarHome();
+}
+
+function evpMarcarMenu(ativo) {
+  document.querySelectorAll('.evp-menu-item').forEach(function(b) {
+    b.classList.toggle('evp-menu-ativo', ativo && b.textContent.trim() === ativo);
+  });
+}
+
+function evpAbrirEndosso(preservar) {
+  var home = document.getElementById('evp-view-home');
+  var view = document.getElementById('evp-view-endosso');
+  if (!home || !view) return;
+  home.style.display = 'none';
+  view.style.display = '';
+  evpMarcarMenu('Endosso');
   endSetProfile(END_STATE.profile === 'retencao' ? 'retencao' : 'corretor');
-  endResetCorretorState();
+  if (preservar !== true) endResetCorretorState();
   endRenderSteps();
   endUpdateCartaBanner();
+  window.scrollTo({top: 0});
 }
+
+function evpVoltarHome() {
+  var home = document.getElementById('evp-view-home');
+  var view = document.getElementById('evp-view-endosso');
+  if (!home || !view) return;
+  home.style.display = '';
+  view.style.display = 'none';
+  evpMarcarMenu(null);
+  window.scrollTo({top: 0});
+}
+
+function evpModuloNaoMapeado(nome) {
+  apeShowError('"' + nome + '" não faz parte deste protótipo. Esta réplica do portal existe para hospedar o fluxo de Endosso.');
+}
+function evpFecharMenu() {}
 
 function endSetProfile(p) {
   if (p === 'analista') { endIrPortalAdmin(true); return; }
@@ -10995,20 +11237,11 @@ function endRenderFase1() {
   var el = document.getElementById('end-fase-1');
   if (!el) return;
   el.innerHTML =
-    '<div class="end-card-title">Fase 1 — Validação (Elegibilidade)</div>' +
-    '<p class="end-card-sub">Consulta simulada à API do E-vida para checar restrições cadastrais e financeiras antes de liberar a edição de coberturas.</p>' +
+    '<div class="end-card-title">Fase 1 — Identificação do segurado</div>' +
+    '<p class="end-card-sub">Informe o CPF/CNPJ do segurado ou o número da apólice e selecione a apólice que receberá o endosso.</p>' +
     '<div class="end-grid3">' +
-      '<div class="vcalc-f"><span class="vcalc-f-lbl">CPF do Segurado ou Nº da Apólice</span>' +
-        '<input type="text" id="end-busca" placeholder="Ex: 123.456.789-00 ou AP-200134">' +
-      '</div>' +
-      '<div class="vcalc-f"><span class="vcalc-f-lbl">Cenário de simulação (uso interno de validação)</span>' +
-        '<select id="end-cenario">' +
-          '<option value="">Selecione</option>' +
-          '<option value="clean">Caso limpo — sem restrições</option>' +
-          '<option value="restritiva">CPF em Lista Restritiva</option>' +
-          '<option value="naorenovar">Apólice flegada para Não Renovar</option>' +
-          '<option value="inadimplente">Segurado inadimplente</option>' +
-        '</select>' +
+      '<div class="vcalc-f" style="grid-column:span 2"><span class="vcalc-f-lbl">CPF/CNPJ do Segurado ou Nº da Apólice</span>' +
+        '<input type="text" id="end-busca" placeholder="Ex: 123.456.789-00 ou AP-200134" onkeydown="if(event.key===\'Enter\')endConsultar()">' +
       '</div>' +
       '<div style="display:flex;align-items:flex-end">' +
         '<button class="end-btn end-btn-primary" style="width:100%" id="end-consultar-btn" onclick="endConsultar()">Consultar</button>' +
@@ -11017,67 +11250,123 @@ function endRenderFase1() {
     '<div id="end-fase1-msg" style="display:none"></div>' +
     '<div id="end-fase1-resultado"></div>' +
     '<div class="end-actions-row" id="end-fase1-actions" style="display:none;justify-content:flex-end">' +
-      '<button class="end-btn end-btn-primary" id="end-fase1-avancar" onclick="endGoFase(2)">Avançar para Cotação &rsaquo;</button>' +
+      '<button class="end-btn end-btn-primary" id="end-fase1-avancar" onclick="endFase1Avancar()">Avançar para Cotação &rsaquo;</button>' +
     '</div>';
 }
 
 function endRenderFase1Voltar() {
   endRenderFase1();
-  if (END_STATE.cliente) {
-    document.getElementById('end-busca').value = END_STATE.cliente.apolice;
-    document.getElementById('end-cenario').value = END_STATE.cenarioKey;
+  if (END_STATE._clienteBase) {
+    document.getElementById('end-busca').value = END_STATE._clienteBase.doc;
     endRenderFase1Resultado();
   }
 }
 
+function endFase1Msg(tipo, texto) {
+  var m = document.getElementById('end-fase1-msg');
+  m.className = 'end-alert end-alert-' + tipo;
+  m.style.display = 'flex';
+  m.innerHTML = endAlertIco(tipo) + '<span>' + texto + '</span>';
+}
+
 function endConsultar() {
-  var cenario = document.getElementById('end-cenario').value;
   var busca = document.getElementById('end-busca').value.trim();
-  var msgEl = document.getElementById('end-fase1-msg');
-  if (!busca || !cenario) {
-    msgEl.className = 'end-alert end-alert-err';
-    msgEl.style.display = 'flex';
-    msgEl.innerHTML = endAlertIco('err') + '<span>Informe o CPF do segurado (ou nº da apólice) e selecione um cenário de simulação para consultar.</span>';
+  var res = document.getElementById('end-fase1-resultado');
+  var actions = document.getElementById('end-fase1-actions');
+  if (!busca) {
+    endFase1Msg('err', 'Informe o CPF/CNPJ do segurado ou o número da apólice para consultar.');
+    res.innerHTML = ''; actions.style.display = 'none';
     return;
   }
-  msgEl.style.display = 'none';
-  var cli = END_SCENARIOS[cenario];
-  END_STATE.cenarioKey = cenario;
-  END_STATE.cliente = Object.assign({}, cli);
-  END_STATE.coberturasVig = endCoberturasBase();
-  END_STATE.coberturas = endCoberturasBase();
-  END_STATE.modoRestrito = !!(cli.restritiva || cli.naoRenovar);
-  END_STATE.cadastroConfirmado = false;
-  END_STATE._profissaoSel = 'analista';
-  END_STATE.motivoNaoClean = [];
-  END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false; END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
-  END_STATE.assinaturaEnviada = false; END_STATE.assinaturaConcluida = false;
-  END_STATE.resseguroAprovado = false;
+  var cli = endBuscarCliente(busca);
+  if (!cli) {
+    endFase1Msg('err', 'Nenhum segurado encontrado para o dado informado. Confira o CPF/CNPJ ou o número da apólice.');
+    res.innerHTML = ''; actions.style.display = 'none';
+    END_STATE._clienteBase = null; END_STATE._apoliceSel = null;
+    return;
+  }
+  document.getElementById('end-fase1-msg').style.display = 'none';
+  END_STATE._clienteBase = cli;
+  END_STATE._apoliceSel = null;
+  endRenderFase1Resultado();
+}
+
+function endSelecionarApolice(i) {
+  END_STATE._apoliceSel = i;
   endRenderFase1Resultado();
 }
 
 function endRenderFase1Resultado() {
-  var cli = END_STATE.cliente;
+  var base = END_STATE._clienteBase;
   var res = document.getElementById('end-fase1-resultado');
   var actions = document.getElementById('end-fase1-actions');
-  var avancar = document.getElementById('end-fase1-avancar');
-  var html = '<div class="end-cadbox" style="margin-top:14px"><span class="end-cadbox-lbl">Segurado</span><span class="end-cadbox-val">' + cli.nome + ' — ' + cli.cpf + ' (' + cli.apolice + ')</span></div>';
+  if (!base) { res.innerHTML = ''; actions.style.display = 'none'; return; }
 
-  if (cli.inadimplente) {
-    html += '<div class="end-alert end-alert-err">' + endAlertIco('err') + '<span><strong>Seguro com parcelas em aberto!</strong> Necessário quitá-las para seguir com qualquer endosso!</span></div>';
-    avancar.disabled = true;
-  } else if (cli.restritiva) {
-    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span><strong>CPF em Lista Restritiva.</strong> Novos aumentos de capital e novas coberturas estão bloqueados. Você poderá seguir apenas com redução de capital ou exclusão de coberturas vigentes.</span></div>';
-    avancar.disabled = false;
-  } else if (cli.naoRenovar) {
-    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span><strong>Aumento de capital não permitido.</strong> Para maiores informações, procure seu Escritório Regional. Esta apólice está flegada para não renovação — você poderá seguir apenas com redução de capital ou exclusão de coberturas.</span></div>';
-    avancar.disabled = false;
-  } else {
-    html += '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>Consulta realizada com sucesso. Cliente sem restrições — edição completa das coberturas liberada.</span></div>';
-    avancar.disabled = false;
-  }
+  var html = '<div class="end-grid2" style="margin-top:14px">' +
+    '<div class="end-cadbox"><span class="end-cadbox-lbl">Segurado</span><span class="end-cadbox-val">' + base.nome + '</span></div>' +
+    '<div class="end-cadbox"><span class="end-cadbox-lbl">' + base.tipoDoc + '</span><span class="end-cadbox-val">' + base.doc + '</span></div>' +
+    '</div>';
+
+  html += '<div class="end-sec-title">Apólices do segurado &mdash; selecione qual receberá o endosso</div>' +
+          '<div class="end-apo-lista">';
+  base.apolices.forEach(function(ap, i) {
+    var sel = (END_STATE._apoliceSel === i);
+    html += '<button type="button" class="end-apo-item' + (sel ? ' end-apo-sel' : '') + '" data-apo="' + i + '" onclick="endSelecionarApolice(' + i + ')">' +
+      '<span class="end-apo-radio"></span>' +
+      '<span><span class="end-apo-num">' + ap.apolice + '</span>' +
+        '<span class="end-apo-meta" style="display:block">' + ap.produto + ' &middot; Início de vigência ' + ap.inicio + '</span></span>' +
+      '<span class="end-apo-premio"><span class="end-apo-premio-v" style="display:block">' + endFmtMoeda(ap.premioVigente) + '</span>' +
+        '<span class="end-apo-premio-l">prêmio vigente / ' + ap.periodicidade.toLowerCase() + '</span></span>' +
+    '</button>';
+  });
+  html += '</div>';
+
   res.innerHTML = html;
   actions.style.display = 'flex';
+  document.getElementById('end-fase1-avancar').disabled = (END_STATE._apoliceSel === null || END_STATE._apoliceSel === undefined);
+}
+
+// Monta END_STATE.cliente a partir do segurado + apólice escolhida.
+// O enquadramento da apólice define as regras das fases seguintes, sem ser exibido aqui.
+function endAplicarApoliceSelecionada() {
+  var base = END_STATE._clienteBase;
+  var ap = base.apolices[END_STATE._apoliceSel];
+  var cen = ap.cenario;
+  END_STATE.cenarioKey = cen;
+  END_STATE.cliente = {
+    key: cen, nome: base.nome, cpf: base.doc, tipoDoc: base.tipoDoc,
+    apolice: ap.apolice, produto: ap.produto,
+    profissao: base.profissao, renda: base.renda, imc: base.imc,
+    vinculo: base.vinculo, idade: base.idade,
+    restritiva: cen === 'restritiva', naoRenovar: cen === 'naorenovar',
+    inadimplente: cen === 'inadimplente', sinistroAtivo: cen === 'naorenovar',
+    premioVigente: ap.premioVigente, periodicidade: ap.periodicidade
+  };
+  END_STATE.coberturasVig = endCoberturasBase();
+  END_STATE.coberturas = endCoberturasBase();
+  END_STATE.modoRestrito = !!(END_STATE.cliente.restritiva || END_STATE.cliente.naoRenovar);
+  END_STATE.cadastroConfirmado = false;
+  END_STATE._profissaoSel = 'analista';
+  END_STATE.motivoNaoClean = [];
+  END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false;
+  END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
+  END_STATE.assinaturaEnviada = false; END_STATE.assinaturaConcluida = false;
+  END_STATE.resseguroAprovado = false;
+}
+
+function endFase1Avancar() {
+  if (END_STATE._apoliceSel === null || END_STATE._apoliceSel === undefined) {
+    endFase1Msg('err', 'Selecione uma das apólices para avançar.');
+    return;
+  }
+  endAplicarApoliceSelecionada();
+  // Impedimento financeiro: única condição que barra o avanço, informada no momento da ação
+  if (END_STATE.cliente.inadimplente) {
+    endFase1Msg('err', '<strong>Apólice ' + END_STATE.cliente.apolice + ' com parcelas em aberto.</strong> É necessário quitá-las antes de seguir com o endosso.');
+    return;
+  }
+  document.getElementById('end-fase1-msg').style.display = 'none';
+  endGoFase(2);
 }
 
 // ================= FASE 2 — COTAÇÃO (TELA ÚNICA DE EDIÇÃO) =================
