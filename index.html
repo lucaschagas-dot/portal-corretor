@@ -4893,7 +4893,8 @@ function authLogout(){
     .end-apo-premio-v{font-size:15px;font-weight:700;color:var(--azure)}
     .end-apo-premio-l{font-size:11px;color:#8a94a3}
 
-    #evp-view-endosso .end-wrap{padding:0;max-width:none}
+    /* Mesma largura de conteúdo do Global Vida (.content-inner{max-width:1120px}) */
+    #evp-view-endosso .end-wrap{padding:0;max-width:1120px}
 
     @media (max-width:1100px){ .evp-canal{min-width:180px} .evp-main{padding:18px 16px 50px} }
 
@@ -4970,9 +4971,21 @@ function authLogout(){
     .end-compare-total{display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#1f2a51;padding-top:10px;margin-top:6px;border-top:1px solid #e3e6ea}
     .end-compare-total .end-novo-val{color:var(--azure)}
 
-    .end-dps-q{border:1px solid #e3e6ea;border-radius:3px;padding:12px 14px;margin-bottom:8px;font-size:13.5px;color:#44546c;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .end-dps-q-radios{display:flex;gap:16px;flex-shrink:0}
-    .end-dps-q-radios label{display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer}
+    /* Declaração Pessoal de Saúde — cabeçalho colapsável + escolha de responsável */
+    .end-dps-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #eef1f4}
+    .end-dps-hdr-title{font-size:18px;font-weight:700;color:#1f2a51;font-family:'UnimedSlab',Georgia,serif}
+    .end-dps-ask{font-size:13px;color:#8a94a3;margin-bottom:12px;line-height:1.5}
+    .end-dps-modo-row{display:flex;gap:26px;margin-bottom:14px}
+    .end-dps-modo-opt{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#44546c;cursor:pointer}
+    .end-dps-modo-opt input{cursor:pointer}
+    .end-dps-desc{font-size:12.5px;color:#8a94a3;margin-bottom:16px;line-height:1.5}
+
+    .end-dps-q{padding:14px 0;border-bottom:1px solid #eef1f4}
+    .end-dps-q:last-child{border-bottom:none}
+    .end-dps-q-texto{font-size:13.5px;font-weight:700;color:#1f2a51;line-height:1.55;margin:0 0 10px}
+    .end-dps-q-radios-row{display:flex;align-items:center;gap:22px}
+    .end-dps-q-radios-row label{display:flex;align-items:center;gap:6px;font-size:13px;color:#44546c;cursor:pointer}
+    .end-dps-req{margin-left:auto;color:#c1440e;font-size:14px;line-height:1}
 
     .end-btn{padding:10px 22px;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
     .end-btn-primary{background:var(--azure);color:#fff}
@@ -11089,17 +11102,16 @@ var END_PROFISSOES = [
 ];
 
 var END_DPS_PERGUNTAS_SIMPLES = [
-  'Você possui ou já possuiu alguma doença cardíaca, diabetes ou hipertensão?',
-  'Você pratica esportes radicais ou de risco (mergulho, paraquedismo, etc)?',
-  'Você é fumante ou ex-fumante nos últimos 12 meses?'
+  'Apresenta ou apresentou alguma doença que o tenha obrigado a usar medicamento de forma rotineira ou hospitalizar-se ou submeter-se a tratamentos especializados (radioterapia, quimioterapia) ou intervenções cirúrgicas (inclusive biopsia), ou ainda a afastar-se de suas atividades normais de trabalho? Está atualmente com sinais ou sintomas clínicos que estão sendo investigados?',
+  'Apresenta ou apresentou sinais ou sintomas que levassem a hipótese de diagnóstico de câncer?'
 ];
-var END_DPS_PERGUNTAS_COMPLETAS = END_DPS_PERGUNTAS_SIMPLES.concat([
-  'Você já foi submetido a alguma cirurgia nos últimos 5 anos?',
-  'Há histórico familiar de doenças graves (câncer, cardiopatias) em parentes de 1º grau?',
-  'Você está em acompanhamento médico contínuo para alguma condição crônica?',
-  'Você já teve algum pedido de seguro de vida recusado ou agravado anteriormente?',
-  'Sua ocupação envolve exposição a risco físico elevado no dia a dia?'
-]);
+var END_DPS_PERGUNTAS_COMPLETAS = [
+  'Encontra-se atualmente impossibilitado de realizar suas atividades laborativas ou encontra-se aposentado por Invalidez? Se sim, especifique o motivo.',
+  'Apresenta ou apresentou alguma doença que o tenha obrigado a usar medicamento de forma rotineira ou hospitalizar-se ou submeter-se a tratamentos especializados (radioterapia, quimioterapia) ou intervenções cirúrgicas (inclusive biopsia), ou ainda a afastar-se de suas atividades normais de trabalho? Está atualmente com sinais ou sintomas clínicos que estão sendo investigados?',
+  'Apresenta ou apresentou sinais ou sintomas que levassem a hipótese de diagnóstico de câncer?',
+  'É portador de alguma moléstia ou já apresentou algum episódio de patologia potencialmente recorrente (ex.: cólica nefrética, tendinite, transtornos articulares, artrose, artrites, manguito rotador do ombro, lesão ligamentar, fraturas e hérnias de disco, entre outros)? Possui alguma suspeita diagnóstica ou encontra-se em fase de investigação? Esclareça e especifique qualquer item afirmativo.',
+  'Tem alguma deficiência de órgãos, membros ou sentidos (ex: visual, auditiva, motora ou insuficiência renal)? Cite-os indicando o grau de redução funcional e sua causa.'
+];
 
 var END_STEP_LABELS = ['Validação','Cotação','Precificação','Assinatura (DPS)','Implantação'];
 
@@ -11201,7 +11213,8 @@ function endResetCorretorState() {
     profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[],
     cadastroConfirmado:false, modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
     premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'', dpsReaproveitada:false,
-    dpsRespondida:false, _dpsRespostas:{}, assinaturaEnviada:false, assinaturaConcluida:false,
+    dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
+    dpsProponenteEnviado:false, dpsProponenteConcluido:false,
     caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista'
   };
   END_STATE.faseMax = 1;
@@ -11237,18 +11250,26 @@ function endGoFase(n) {
     if (!endValidaFase3()) return;
     endRenderFase4();
   } else if (n === 5) {
-    if (!endValidaFase4()) { apeShowError('Conclua a assinatura digital antes de avançar para a implantação.'); return; }
+    if (!endValidaFase4()) { apeShowError('Conclua a Declaração Pessoal de Saúde antes de enviar para análise.'); return; }
     endRenderFase5();
   } else if (n === 1) {
     endRenderFase1Voltar();
   }
   END_STATE.fase = n;
-  // A tela se estende para baixo: as fases anteriores continuam visíveis (mesma
-  // dinâmica do AP Escolar e do Global Vida). Voltar recolhe o que vem depois,
-  // porque editar cobertura invalida a precificação já calculada.
-  var ate = (n < (END_STATE.faseMax || 1)) ? n : Math.max(END_STATE.faseMax || 1, n);
-  END_STATE.faseMax = ate;
-  for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i<=ate) ? 'block' : 'none'; }
+  if (n <= 3) {
+    // Validação, Cotação e Precificação se estendem para baixo: as fases anteriores
+    // continuam visíveis (mesma dinâmica do AP Escolar e do Global Vida). Voltar
+    // recolhe o que vem depois, porque editar cobertura invalida a precificação já
+    // calculada. faseMax não é tocado ao ir para a Fase 4/5 — assim, ao voltar da
+    // DPS para a Fase 3, a tela expandida (1-2-3) é restaurada como estava.
+    var ate = (n < (END_STATE.faseMax || 1)) ? n : Math.max(END_STATE.faseMax || 1, n);
+    END_STATE.faseMax = ate;
+    for (var i=1;i<=5;i++) { var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i<=ate) ? 'block' : 'none'; }
+  } else {
+    // Declaração Pessoal de Saúde (4) e Implantação (5) são a próxima "página" do
+    // fluxo: substituem a tela em vez de continuar a expansão da Precificação.
+    for (var j=1;j<=5;j++) { var ej = document.getElementById('end-fase-'+j); if (ej) ej.style.display = (j===n) ? 'block' : 'none'; }
+  }
   endRenderSteps();
   var alvo = document.getElementById('end-fase-'+n);
   if (alvo) alvo.scrollIntoView({behavior:'smooth', block:'start'});
@@ -11259,7 +11280,7 @@ function endRenderFase1() {
   var el = document.getElementById('end-fase-1');
   if (!el) return;
   el.innerHTML =
-    '<div class="end-card-title">Fase 1 — Identificação do segurado</div>' +
+    '<div class="end-card-title">Identificação do segurado</div>' +
     '<p class="end-card-sub">Informe o CPF/CNPJ do segurado ou o número da apólice e selecione a apólice que receberá o endosso.</p>' +
     '<div class="end-grid3">' +
       '<div class="vcalc-f" style="grid-column:span 2"><span class="vcalc-f-lbl">CPF/CNPJ do Segurado ou Nº da Apólice</span>' +
@@ -11372,7 +11393,8 @@ function endAplicarApoliceSelecionada() {
   END_STATE.motivoNaoClean = [];
   END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false;
   END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
-  END_STATE.assinaturaEnviada = false; END_STATE.assinaturaConcluida = false;
+  END_STATE.dpsModo = 'preencher';
+  END_STATE.dpsProponenteEnviado = false; END_STATE.dpsProponenteConcluido = false;
   END_STATE.resseguroAprovado = false;
 }
 
@@ -11401,7 +11423,7 @@ function endRenderFase2() {
     : '';
 
   el.innerHTML =
-    '<div class="end-card-title">Fase 2 — Cotação (Tela única de edição)</div>' +
+    '<div class="end-card-title">Cotação (Tela única de edição)</div>' +
     '<p class="end-card-sub">Dados cadastrais atuais obtidos do E-vida e grid dinâmico de coberturas vigentes.</p>' +
     restritoNota +
     '<div class="end-grid4">' +
@@ -11576,7 +11598,7 @@ function endRenderFase3() {
   END_STATE.premioNovo = premioNovo;
 
   el.innerHTML =
-    '<div class="end-card-title">Fase 3 — Precificação (Comparação em tela)</div>' +
+    '<div class="end-card-title">Precificação (Comparação em tela)</div>' +
     '<p class="end-card-sub">Comparativo entre a apólice vigente e a condição proposta pelo endosso.</p>' +
     '<div id="end-cmp-plano"></div>' +
     '<div class="end-alert end-alert-info" style="margin-top:16px">' + endAlertIco('info') +
@@ -11726,6 +11748,9 @@ function endComputeDpsTipo() {
   return 'simplificada';
 }
 
+// A Declaração Pessoal de Saúde vive na sua própria "página" do fluxo: ao entrar aqui
+// (vindo da Fase 3), as fases 1-2-3 saem de tela — ver endGoFase — em vez de continuar
+// a expansão para baixo usada até a Precificação.
 function endRenderFase4() {
   var el = document.getElementById('end-fase-4');
   var novoTipo = endComputeDpsTipo();
@@ -11733,21 +11758,38 @@ function endRenderFase4() {
     END_STATE.dpsRespondida = false;
     END_STATE.dpsReaproveitada = false;
     END_STATE._dpsRespostas = {};
-    END_STATE.assinaturaEnviada = false;
-    END_STATE.assinaturaConcluida = false;
+    END_STATE.dpsProponenteEnviado = false;
+    END_STATE.dpsProponenteConcluido = false;
+    END_STATE.resseguroAprovado = false;
   }
   END_STATE.dpsTipo = novoTipo;
+  if (!END_STATE.dpsModo) END_STATE.dpsModo = 'preencher';
 
   el.innerHTML =
-    '<div class="end-card-title">Fase 4 — Efetivação e Assinatura</div>' +
-    '<p class="end-card-sub">Direcionamento de DPS conforme a hierarquia do Gerenciador de Fontes.</p>' +
+    '<div class="end-dps-hdr"><span class="end-dps-hdr-title">Declaração Pessoal de Saúde</span>' +
+      '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+    '<p class="end-dps-ask">Corretor, deseja preencher a Declaração Pessoal de Saúde ou enviar ao proponente para preenchimento?</p>' +
+    '<div class="end-dps-modo-row">' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="preencher" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='preencher'?' checked':'') + '> Preencher</label>' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="proponente" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='proponente'?' checked':'') + '> Enviar ao proponente</label>' +
+    '</div>' +
     '<div id="end-dps-area"></div>' +
-    '<div id="end-assinatura-area"></div>' +
+    '<div id="end-resseguro-aviso"></div>' +
     '<div class="end-actions-row end-actions-between">' +
       '<button class="end-btn end-btn-outline" onclick="endGoFase(3)">&lsaquo; Voltar</button>' +
-      '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Avançar para Implantação &rsaquo;</button>' +
+      '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Enviar para análise &rsaquo;</button>' +
     '</div>';
 
+  endRenderDpsArea();
+}
+
+function endOnDpsModoChange(radio) {
+  END_STATE.dpsModo = radio.value;
+  END_STATE.dpsRespondida = false;
+  END_STATE.dpsReaproveitada = false;
+  END_STATE._dpsRespostas = {};
+  END_STATE.dpsProponenteEnviado = false;
+  END_STATE.dpsProponenteConcluido = false;
   endRenderDpsArea();
 }
 
@@ -11762,11 +11804,20 @@ function endRenderDpsArea() {
   if (tipo === 'isenta') {
     END_STATE.dpsRespondida = true;
     area.innerHTML = html;
-    endRenderAssinaturaArea();
+    endAtualizarFase4Botao();
     return;
   }
 
-  html += '<label class="prop-check-item" style="margin:10px 0"><input type="checkbox" id="end-dps-reaproveita" onchange="endOnDpsReaproveitaChange(this)"' + (END_STATE.dpsReaproveitada?' checked':'') + '> Cliente já respondeu este modelo de DPS há menos de 30 dias, sem novas patologias declaradas (reaproveitar histórico)</label>';
+  if (END_STATE.dpsModo === 'proponente') {
+    html += '<p class="end-dps-desc">Um link será enviado ao proponente para que ele preencha esta Declaração Pessoal de Saúde e assine eletronicamente a proposta de contratação.</p>';
+    html += '<div id="end-dps-proponente-area"></div>';
+    area.innerHTML = html;
+    endRenderDpsProponenteArea();
+    return;
+  }
+
+  html += '<p class="end-dps-desc">Preencha esta Declaração Pessoal de Saúde e transmita eletronicamente a proposta de contratação assinada pelo proponente.</p>';
+  html += '<label class="prop-check-item" style="margin:0 0 14px"><input type="checkbox" id="end-dps-reaproveita" onchange="endOnDpsReaproveitaChange(this)"' + (END_STATE.dpsReaproveitada?' checked':'') + '> Cliente já respondeu este modelo de DPS há menos de 30 dias, sem novas patologias declaradas (reaproveitar histórico)</label>';
   html += '<div id="end-dps-form"></div>';
   area.innerHTML = html;
   endRenderDpsForm();
@@ -11777,7 +11828,7 @@ function endOnDpsReaproveitaChange(chk) {
   if (chk.checked) END_STATE.dpsRespondida = true;
   else END_STATE.dpsRespondida = false;
   endRenderDpsForm();
-  endRenderAssinaturaArea();
+  endAtualizarFase4Botao();
 }
 
 function endRenderDpsForm() {
@@ -11785,20 +11836,23 @@ function endRenderDpsForm() {
   if (!wrap) return;
   if (END_STATE.dpsReaproveitada) {
     wrap.innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS reaproveitada do histórico recente. Preenchimento dispensado.</span></div>';
-    endRenderAssinaturaArea();
+    endAtualizarFase4Botao();
     return;
   }
   var perguntas = END_STATE.dpsTipo === 'completa' ? END_DPS_PERGUNTAS_COMPLETAS : END_DPS_PERGUNTAS_SIMPLES;
   var html = perguntas.map(function(p, i) {
     var val = END_STATE._dpsRespostas[i] || '';
-    return '<div class="end-dps-q"><span>' + p + '</span><div class="end-dps-q-radios">' +
-      '<label><input type="radio" name="end-dps-q-' + i + '" value="nao" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='nao'?' checked':'') + '> Não</label>' +
-      '<label><input type="radio" name="end-dps-q-' + i + '" value="sim" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='sim'?' checked':'') + '> Sim</label>' +
-    '</div></div>';
+    return '<div class="end-dps-q"><p class="end-dps-q-texto">' + (i + 1) + '. ' + p + '</p>' +
+      '<div class="end-dps-q-radios-row">' +
+        '<label><input type="radio" name="end-dps-q-' + i + '" value="sim" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='sim'?' checked':'') + '> Sim</label>' +
+        '<label><input type="radio" name="end-dps-q-' + i + '" value="nao" onchange="endOnDpsResposta(' + i + ',this)"' + (val==='nao'?' checked':'') + '> Não</label>' +
+        '<span class="end-dps-req">*</span>' +
+      '</div></div>';
   }).join('');
-  html += '<button class="end-btn end-btn-primary" style="margin-top:10px" onclick="endResponderDps()">Confirmar respostas da DPS</button>';
-  html += '<div id="end-dps-confirmado"></div>';
+  html += '<button class="end-btn end-btn-primary" style="margin-top:14px" onclick="endResponderDps()">Confirmar respostas da DPS</button>';
+  html += '<div id="end-dps-confirmado">' + (END_STATE.dpsRespondida ? '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS respondida e registrada.</span></div>' : '') + '</div>';
   wrap.innerHTML = html;
+  endAtualizarFase4Botao();
 }
 function endOnDpsResposta(i, radio) {
   END_STATE._dpsRespostas[i] = radio.value;
@@ -11812,44 +11866,60 @@ function endResponderDps() {
   }
   END_STATE.dpsRespondida = true;
   document.getElementById('end-dps-confirmado').innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS respondida e registrada.</span></div>';
-  endRenderAssinaturaArea();
+  endAtualizarFase4Botao();
 }
 
-function endRenderAssinaturaArea() {
-  var area = document.getElementById('end-assinatura-area');
-  var btnAvancar = document.getElementById('end-fase4-avancar');
+// ---- Modo "Enviar ao proponente": ele preenche a DPS e assina pelo link, sem a
+// participação do corretor no preenchimento em si. ----
+function endRenderDpsProponenteArea() {
+  var area = document.getElementById('end-dps-proponente-area');
   if (!area) return;
-  if (!END_STATE.dpsRespondida) { area.innerHTML=''; if (btnAvancar) btnAvancar.disabled = true; return; }
-
-  var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
-  var precisaResseguro = totalCapital > 5000000;
-
-  var html = '<div class="end-card-title" style="font-size:15px;margin-top:18px">Assinatura Digital</div>';
-  if (precisaResseguro && !END_STATE.resseguroAprovado) {
-    html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Capital segurado total (' + endFmtMoeda(totalCapital) + ') ultrapassa os limites da política de subscrição. Um e-mail foi enviado para a alçada de resseguro. ' +
-      '<button class="end-btn end-btn-outline" style="margin-left:8px;padding:6px 12px;font-size:12px" onclick="endAbrirResseguroModal()">Ver e-mail simulado</button></span></div>';
-  }
-
-  if (!END_STATE.assinaturaEnviada) {
-    html += '<button class="end-btn end-btn-primary" id="end-btn-enviar-assinatura" onclick="endEnviarAssinatura()"' + ((precisaResseguro && !END_STATE.resseguroAprovado) ? ' disabled' : '') + '>Enviar link de assinatura (Docusign / Área Logada)</button>';
-  } else if (!END_STATE.assinaturaConcluida) {
-    html += '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Link de assinatura enviado ao segurado. Aguardando confirmação.</span></div>' +
-      '<button class="end-btn end-btn-success" onclick="endClienteAssinou()">Simular: cliente validou a DPS e assinou</button>';
+  var html;
+  if (!END_STATE.dpsProponenteEnviado) {
+    html = '<button class="end-btn end-btn-primary" onclick="endEnviarDpsProponente()">Enviar link ao proponente</button>';
+  } else if (!END_STATE.dpsProponenteConcluido) {
+    html = '<div class="end-alert end-alert-info">' + endAlertIco('info') + '<span>Link enviado ao proponente. Aguardando preenchimento da DPS e assinatura.</span></div>' +
+      '<button class="end-btn end-btn-success" onclick="endProponenteConcluiu()">Simular: proponente preencheu a DPS e assinou</button>';
   } else {
-    html += '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>Proposta de alteração assinada digitalmente pelo segurado.</span></div>';
+    html = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS preenchida e proposta de contratação assinada eletronicamente pelo proponente.</span></div>';
   }
   area.innerHTML = html;
-  if (btnAvancar) btnAvancar.disabled = !END_STATE.assinaturaConcluida;
+  endAtualizarFase4Botao();
 }
-function endEnviarAssinatura() {
-  END_STATE.assinaturaEnviada = true;
-  endRenderAssinaturaArea();
+function endEnviarDpsProponente() {
+  END_STATE.dpsProponenteEnviado = true;
+  endRenderDpsProponenteArea();
 }
-function endClienteAssinou() {
-  END_STATE.assinaturaConcluida = true;
-  endRenderAssinaturaArea();
+function endProponenteConcluiu() {
+  END_STATE.dpsProponenteConcluido = true;
+  END_STATE.dpsRespondida = true;
+  endRenderDpsProponenteArea();
 }
-function endValidaFase4() { return END_STATE.assinaturaConcluida; }
+
+// ---- Alçada de resseguro (capital alto) + habilitação do botão de avançar ----
+function endFase4PrecisaResseguro() {
+  var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+  return totalCapital > 5000000;
+}
+function endAtualizarFase4Botao() {
+  var btn = document.getElementById('end-fase4-avancar');
+  var resArea = document.getElementById('end-resseguro-aviso');
+  var precisaResseguro = endFase4PrecisaResseguro();
+  if (resArea) {
+    if (END_STATE.dpsRespondida && precisaResseguro && !END_STATE.resseguroAprovado) {
+      var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
+      resArea.innerHTML = '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Capital segurado total (' + endFmtMoeda(totalCapital) + ') ultrapassa os limites da política de subscrição. Um e-mail foi enviado para a alçada de resseguro. ' +
+        '<button class="end-btn end-btn-outline" style="margin-left:8px;padding:6px 12px;font-size:12px" onclick="endAbrirResseguroModal()">Ver e-mail simulado</button></span></div>';
+    } else {
+      resArea.innerHTML = '';
+    }
+  }
+  if (btn) btn.disabled = !(END_STATE.dpsRespondida && (!precisaResseguro || END_STATE.resseguroAprovado));
+}
+function endValidaFase4() {
+  if (!END_STATE.dpsRespondida) return false;
+  return !endFase4PrecisaResseguro() || END_STATE.resseguroAprovado;
+}
 
 function endAbrirResseguroModal() {
   var totalCapital = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
@@ -11867,7 +11937,7 @@ function endResseguroModalClose(evt) {
 function endAprovarResseguro() {
   END_STATE.resseguroAprovado = true;
   endResseguroModalClose();
-  endRenderAssinaturaArea();
+  endAtualizarFase4Botao();
 }
 
 // ================= FASE 5 — IMPLANTAÇÃO =================
@@ -11927,7 +11997,7 @@ function endRenderFase5() {
   END_STATE.motivosFinal = motivos;
   END_STATE.cleanCase = motivos.length === 0;
 
-  var html = '<div class="end-card-title">Fase 5 — Implantação</div>';
+  var html = '<div class="end-card-title">Implantação</div>';
   if (END_STATE.cleanCase) {
     var caseOk = endCriarCaso('implantado_auto');
     END_QUEUE.push(caseOk);
