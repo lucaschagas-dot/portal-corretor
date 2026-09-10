@@ -4415,22 +4415,19 @@ function authLogout(){
             <div id="evp-view-home">
               <div class="evp-cards">
           <section class="evp-card evp-card-azure">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Cotações</h3><span class="evp-card-cnt">0 (0 expiradas)</span></div>
-            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><circle cx="12" cy="12" r="8.6" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 7.4V12l3 1.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
-            <div class="evp-card-empty">Não foram encontrados resultados.</div>
-            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Aguardando assinatura</h3><span class="evp-card-cnt" id="evp-cnt-aguardando_assinatura">0</span></div>
+            <p class="evp-card-desc">Endossos em que o cliente ainda não assinou a Declaração Pessoal de Saúde.</p>
+            <div class="evp-card-body" id="evp-list-aguardando_assinatura"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
           </section>
           <section class="evp-card evp-card-navy">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Propostas</h3><span class="evp-card-cnt">0 (0 expiradas)</span></div>
-            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><rect x="3.4" y="6.4" width="17.2" height="11.2" rx="1.6" fill="none" stroke="#fff" stroke-width="1.8"/><rect x="3.4" y="9.4" width="17.2" height="2" fill="#fff"/></svg></span><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M6 3.6h7l4.4 4.4v5.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 3.6v16.8h5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M19.4 14.2l1.4 1.4-4.8 4.8-1.9.5.5-1.9 4.8-4.8z" fill="#fff"/></svg></span><span class="evp-cardico"><svg viewBox="0 0 24 24" width="17" height="17"><circle cx="12" cy="12" r="8.6" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12 7.4V12l3 1.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
-            <div class="evp-card-empty">Não foram encontrados resultados.</div>
-            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Assinado</h3><span class="evp-card-cnt" id="evp-cnt-assinado">0</span></div>
+            <p class="evp-card-desc">Cliente assinou a DPS, mas o corretor ainda não enviou o endosso para análise.</p>
+            <div class="evp-card-body" id="evp-list-assinado"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
           </section>
           <section class="evp-card evp-card-navy">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Transmitidos</h3><span class="evp-card-cnt">0</span></div>
-            <div class="evp-card-chips"><span class="evp-chip">PF</span><span class="evp-chip">PJ</span><span class="evp-cardicos"></span></div>
-            <div class="evp-card-empty">Não foram encontrados resultados.</div>
-            <div class="evp-card-ft"><span>0 de 0</span><span class="evp-pag">&#124;&lsaquo;<i>&lsaquo;</i><i>&rsaquo;</i>&rsaquo;&#124;</span></div>
+            <div class="evp-card-hd"><h3 class="evp-card-tit">Análise Técnica</h3><span class="evp-card-cnt" id="evp-cnt-analise_tecnica">0</span></div>
+            <p class="evp-card-desc">Cliente assinou e o endosso já foi enviado para análise.</p>
+            <div class="evp-card-body" id="evp-list-analise_tecnica"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
           </section>
               </div>
               <p class="evp-hint">Protótipo em validação — abra <strong>Endosso</strong> no menu lateral para iniciar o fluxo.</p>
@@ -4859,6 +4856,18 @@ function authLogout(){
       margin-top:12px;font-size:13.5px;color:#6B7076}
     .evp-pag{display:flex;align-items:center;gap:14px;color:#8A8F96;font-size:15px}
     .evp-pag i{font-style:normal}
+
+    .evp-card-desc{font-size:12.5px;color:#8A8F96;margin:6px 0 14px;line-height:1.4}
+    .evp-card-body{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto}
+    .evp-case-item{border:1px solid #E4E6E9;border-radius:4px;padding:10px 12px;cursor:pointer;
+      background:#fff;transition:border-color .12s,background .12s}
+    .evp-case-item:hover{border-color:var(--azure,#009DDB);background:#fafdff}
+    .evp-case-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+      font-size:12px;color:#8A8F96}
+    .evp-case-id{font-weight:700;color:#8A8F96}
+    .evp-case-nome{font-size:14.5px;font-weight:700;color:#009DDB;margin-top:2px}
+    .evp-case-sub{font-size:12.5px;color:#586880;margin-top:2px}
+    .evp-case-premio{font-size:12.5px;color:#44546c;margin-top:4px}
 
     .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
     .evp-hint strong{color:#009DDB}
@@ -11170,8 +11179,9 @@ function evpInit() {
     clone.setAttribute('height', '51');
     box.appendChild(clone);
   }
-  // volta direto ao fluxo se já havia um endosso em andamento (ex.: retorno do Portal Admin)
-  if (END_STATE && END_STATE.cliente) evpAbrirEndosso(true);
+  // volta direto ao fluxo se já havia um endosso em andamento (ex.: retorno do Portal Admin).
+  // um endosso já enviado para análise (fase 5) não tem mais o que retomar — cai no home.
+  if (END_STATE && END_STATE.cliente && END_STATE.fase < 5) evpAbrirEndosso(true);
   else evpVoltarHome();
 }
 
@@ -11202,7 +11212,35 @@ function evpVoltarHome() {
   home.style.display = '';
   view.style.display = 'none';
   evpMarcarMenu(null);
+  evpAtualizarHomeCards();
   window.scrollTo({top: 0});
+}
+
+// ---- Home do módulo Endosso: 3 colunas com os casos de END_QUEUE por status ----
+var EVP_BOARD_COLS = ['aguardando_assinatura', 'assinado', 'analise_tecnica'];
+function evpAtualizarHomeCards() {
+  if (typeof END_QUEUE === 'undefined') return;
+  EVP_BOARD_COLS.forEach(function(col) {
+    var listEl = document.getElementById('evp-list-' + col);
+    var cntEl = document.getElementById('evp-cnt-' + col);
+    if (!listEl) return;
+    var casos = END_QUEUE.filter(function(c) { return c.boardStatus === col; });
+    if (cntEl) cntEl.textContent = casos.length;
+    if (!casos.length) {
+      listEl.innerHTML = '<div class="evp-card-empty">Não foram encontrados resultados.</div>';
+      return;
+    }
+    listEl.innerHTML = casos.slice().reverse().map(function(c) {
+      var handler = col === 'analise_tecnica' ? 'endIrParaMesaTecnica()' :
+        'apeShowError(\'Retomar um caso específico a partir deste painel não faz parte deste protótipo.\')';
+      return '<div class="evp-case-item" onclick="' + handler + '">' +
+        '<div class="evp-case-top"><span class="evp-case-id">#' + c.id + '</span><span>' + c.dataHora + '</span></div>' +
+        '<div class="evp-case-nome">' + c.cliente.nome + '</div>' +
+        '<div class="evp-case-sub">' + (c.cliente.produto || 'Vida Individual') + ' &middot; Apólice ' + c.cliente.apolice + '</div>' +
+        '<div class="evp-case-premio">Novo prêmio: ' + endFmtMoeda(c.premioNovo) + '/' + (c.periodicidade || 'Mensal').toLowerCase() + '</div>' +
+      '</div>';
+    }).join('');
+  });
 }
 
 function evpModuloNaoMapeado(nome) {
@@ -11234,7 +11272,7 @@ function endResetCorretorState() {
   var profileKeep = END_STATE.profile;
   END_STATE = {
     profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[],
-    cadastroConfirmado:false, modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
+    modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
     premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'', dpsReaproveitada:false,
     dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
     dpsProponenteEnviado:false, dpsProponenteConcluido:false,
@@ -11275,6 +11313,11 @@ function endGoFase(n) {
   } else if (n === 5) {
     if (!endValidaFase4()) { apeShowError('Conclua a Declaração Pessoal de Saúde antes de enviar para análise.'); return; }
     endRenderFase5();
+    END_STATE.fase = n;
+    // Endosso enviado para análise: o fluxo terminou, o corretor cai no painel do
+    // módulo, com o caso já listado na coluna "Análise Técnica".
+    evpVoltarHome();
+    return;
   } else if (n === 1) {
     endRenderFase1Voltar();
   }
@@ -11411,7 +11454,6 @@ function endAplicarApoliceSelecionada() {
   END_STATE.coberturasVig = endCoberturasBase();
   END_STATE.coberturas = endCoberturasBase();
   END_STATE.modoRestrito = !!(END_STATE.cliente.restritiva || END_STATE.cliente.naoRenovar);
-  END_STATE.cadastroConfirmado = false;
   END_STATE._profissaoSel = 'analista';
   END_STATE.motivoNaoClean = [];
   END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false;
@@ -11459,7 +11501,6 @@ function endRenderFase2() {
       '<div class="end-cadbox"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + cli.imc + '</span></div>' +
       '<div class="end-cadbox"><span class="end-cadbox-lbl">Vínculo Empregatício</span><span class="end-cadbox-val">' + cli.vinculo + '</span></div>' +
     '</div>' +
-    '<label class="prop-check-item" style="margin-top:14px"><input type="checkbox" id="end-cadastro-ok" onchange="endOnCadastroOkChange(this)"' + (END_STATE.cadastroConfirmado?' checked':'') + '> Confirmo que os dados cadastrais acima estão atualizados</label>' +
     '<div id="end-profissao-alerta"></div>' +
     '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
     '<div class="end-actions-row end-actions-between">' +
@@ -11468,7 +11509,6 @@ function endRenderFase2() {
     '</div>';
 
   endRenderCovTable();
-  endUpdateFase2AvancarState();
   endOnProfissaoChange(document.getElementById('end-profissao'), true);
 }
 
@@ -11484,14 +11524,6 @@ function endOnProfissaoChange(sel, silencioso) {
   } else {
     alertaEl.innerHTML = '';
   }
-}
-function endOnCadastroOkChange(chk) {
-  END_STATE.cadastroConfirmado = chk.checked;
-  endUpdateFase2AvancarState();
-}
-function endUpdateFase2AvancarState() {
-  var btn = document.getElementById('end-fase2-avancar');
-  if (btn) btn.disabled = !END_STATE.cadastroConfirmado;
 }
 
 function endRenderCovTable() {
@@ -11556,7 +11588,6 @@ function endOnCoberturaToggle(chk) {
   }
   endRecalcIpa();
   endRenderCovTable();
-  endUpdateFase2AvancarState();
 }
 
 function endOnCapitalInput(inp) {
@@ -11594,10 +11625,6 @@ function endRecalcIpa() {
 }
 
 function endValidaFase2() {
-  if (!END_STATE.cadastroConfirmado) {
-    apeShowError('Confirme que os dados cadastrais estão atualizados antes de avançar.');
-    return false;
-  }
   if (END_STATE.modoRestrito) {
     END_STATE.coberturas.forEach(function(c) {
       var vig = END_STATE.coberturasVig.find(function(v){ return v.cod === c.cod; });
@@ -11787,6 +11814,7 @@ function endRenderFase4() {
   }
   END_STATE.dpsTipo = novoTipo;
   if (!END_STATE.dpsModo) END_STATE.dpsModo = 'preencher';
+  endGarantirCaso();
 
   el.innerHTML =
     '<div class="end-dps-hdr"><span class="end-dps-hdr-title">Declaração Pessoal de Saúde</span>' +
@@ -11938,6 +11966,10 @@ function endAtualizarFase4Botao() {
     }
   }
   if (btn) btn.disabled = !(END_STATE.dpsRespondida && (!precisaResseguro || END_STATE.resseguroAprovado));
+  if (END_STATE.dpsRespondida) {
+    var caso = END_QUEUE.find(function(c) { return c.id === END_STATE.caseId; });
+    if (caso && caso.boardStatus === 'aguardando_assinatura') { caso.boardStatus = 'assinado'; evpAtualizarHomeCards(); }
+  }
 }
 function endValidaFase4() {
   if (!END_STATE.dpsRespondida) return false;
@@ -11993,25 +12025,52 @@ function endFmtDataHora(d) {
   return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 
-// Todo endosso enviado na Fase 5 gera um caso registrado em END_QUEUE — inclusive
-// os clean case, que nao passam pela mesa mas precisam constar no registro.
-function endCriarCaso(status) {
+// Um caso é aberto em END_QUEUE assim que o corretor entra na Declaração Pessoal de
+// Saúde (Fase 4) — é o que alimenta a coluna "Aguardando assinatura" do painel do
+// módulo Endosso. Reentrar na Fase 4 do mesmo fluxo reaproveita o caso já aberto.
+function endGarantirCaso() {
+  if (END_STATE.caseId) {
+    var existente = END_QUEUE.find(function(c) { return c.id === END_STATE.caseId; });
+    if (existente) return existente;
+  }
   END_CASE_SEQ++;
-  var motivos = END_STATE.motivosFinal.slice();
-  return {
+  var caso = {
     id: END_CASE_SEQ,
-    status: status || 'pendente',
-    cleanCase: motivos.length === 0,
+    boardStatus: 'aguardando_assinatura',
+    status: null,
+    cleanCase: null,
     dataHora: endFmtDataHora(new Date()),
     cliente: Object.assign({}, END_STATE.cliente),
-    coberturasVig: END_STATE.coberturasVig.map(function(c){ return Object.assign({}, c); }),
-    coberturasNovo: END_STATE.coberturas.map(function(c){ return Object.assign({}, c); }),
     premioVig: END_STATE.cliente.premioVigente,
     premioNovo: END_STATE.premioNovo,
-    motivos: motivos,
     dpsTipo: END_STATE.dpsTipo,
     periodicidade: END_STATE.periodicidadeNova
   };
+  END_QUEUE.push(caso);
+  END_STATE.caseId = caso.id;
+  evpAtualizarHomeCards();
+  return caso;
+}
+
+// Todo endosso enviado na Fase 5 promove o caso aberto na Fase 4 para a Análise de
+// Endosso (Mesa Técnica) — inclusive os clean case, que nao passam pela mesa mas
+// precisam constar no registro e na coluna "Análise Técnica" do painel do módulo.
+function endCriarCaso(status) {
+  var motivos = END_STATE.motivosFinal.slice();
+  var caso = endGarantirCaso();
+  caso.status = status || 'pendente';
+  caso.boardStatus = 'analise_tecnica';
+  caso.cleanCase = motivos.length === 0;
+  caso.dataHora = endFmtDataHora(new Date());
+  caso.cliente = Object.assign({}, END_STATE.cliente);
+  caso.coberturasVig = END_STATE.coberturasVig.map(function(c){ return Object.assign({}, c); });
+  caso.coberturasNovo = END_STATE.coberturas.map(function(c){ return Object.assign({}, c); });
+  caso.premioVig = END_STATE.cliente.premioVigente;
+  caso.premioNovo = END_STATE.premioNovo;
+  caso.motivos = motivos;
+  caso.dpsTipo = END_STATE.dpsTipo;
+  caso.periodicidade = END_STATE.periodicidadeNova;
+  return caso;
 }
 
 function endRenderFase5() {
@@ -12023,8 +12082,6 @@ function endRenderFase5() {
   var html = '<div class="end-card-title">Implantação</div>';
   if (END_STATE.cleanCase) {
     var caseOk = endCriarCaso('implantado_auto');
-    END_QUEUE.push(caseOk);
-    END_STATE.caseId = caseOk.id;
     html += '<div class="end-recibo">' + endAlertIco('ok') +
       '<div style="font-weight:700;color:#0f5c30;margin-top:6px">Clean Case — Endosso implantado automaticamente</div>' +
       '<div class="end-recibo-num" id="end-protocolo-clean">Protocolo #' + caseOk.id + '</div>' +
@@ -12035,8 +12092,6 @@ function endRenderFase5() {
     '</div>';
   } else {
     var caseObj = endCriarCaso('pendente');
-    END_QUEUE.push(caseObj);
-    END_STATE.caseId = caseObj.id;
     html += '<div class="end-alert end-alert-warn">' + endAlertIco('warn') +
       '<span><strong>Non-Clean Case — encaminhado para a Mesa Técnica.</strong><br>Protocolo #' + caseObj.id + '<br>Motivos: ' + motivos.join('; ') + '</span></div>' +
       '<div class="end-actions-row end-actions-between">' +
@@ -12046,6 +12101,7 @@ function endRenderFase5() {
   }
   el.innerHTML = html;
   padmAtualizarBadge();
+  evpAtualizarHomeCards();
 }
 
 // ================= ANÁLISE DE ENDOSSO — MESA TÉCNICA (PORTAL ADMIN) =================
@@ -12066,15 +12122,19 @@ function endRenderAnalista() {
 // entram na fila acionavel; os clean case ficam como registro de implantacao
 // automatica; os ja decididos ficam consultaveis em modo somente leitura.
 function endRenderAnalistaQueue(el) {
-  var pendentes = END_QUEUE.filter(function(c){ return c.status === 'pendente'; });
-  var automaticos = END_QUEUE.filter(function(c){ return c.status === 'implantado_auto'; });
+  // A fila/registro da Mesa Técnica só recebe casos já efetivamente enviados para
+  // análise (Fase 5) — os que ainda estão só "Aguardando assinatura"/"Assinado" no
+  // painel do módulo Endosso ainda não têm motivos/situação apurados.
+  var enviados = END_QUEUE.filter(function(c){ return c.boardStatus === 'analise_tecnica'; });
+  var pendentes = enviados.filter(function(c){ return c.status === 'pendente'; });
+  var automaticos = enviados.filter(function(c){ return c.status === 'implantado_auto'; });
 
   var html = '<div class="end-card-title">Análise de Endosso &mdash; Mesa Técnica</div>' +
     '<p class="end-card-sub">Todo endosso enviado no Portal do Corretor é registrado aqui. Os non-clean entram na fila de análise; os clean case constam como implantação automática do Joker.</p>' +
     '<div class="end-kpis">' +
       '<div class="end-kpi"><span class="end-kpi-num' + (pendentes.length ? ' end-kpi-warn' : '') + '" id="end-kpi-pendentes">' + pendentes.length + '</span><span class="end-kpi-lbl">Aguardando análise</span></div>' +
       '<div class="end-kpi"><span class="end-kpi-num end-kpi-ok" id="end-kpi-automaticos">' + automaticos.length + '</span><span class="end-kpi-lbl">Implantados automaticamente</span></div>' +
-      '<div class="end-kpi"><span class="end-kpi-num" id="end-kpi-total">' + END_QUEUE.length + '</span><span class="end-kpi-lbl">Endossos recebidos</span></div>' +
+      '<div class="end-kpi"><span class="end-kpi-num" id="end-kpi-total">' + enviados.length + '</span><span class="end-kpi-lbl">Endossos recebidos</span></div>' +
     '</div>';
 
   html += '<div class="end-sec-title">Aguardando análise</div>';
@@ -12093,14 +12153,14 @@ function endRenderAnalistaQueue(el) {
   }
 
   html += '<div class="end-sec-title">Endossos recebidos</div>';
-  if (!END_QUEUE.length) {
+  if (!enviados.length) {
     html += '<div class="end-empty-state end-empty-inline" id="end-registro-vazio">Nenhum endosso recebido ainda.<br>Envie um endosso no Portal do Corretor (Vida &gt; Endosso em validação) para que ele apareça neste registro.</div>';
   } else {
     html += '<div class="end-tbl-wrap"><table class="end-tbl" id="end-tbl-registro"><thead><tr>' +
       '<th>Protocolo</th><th>Recebido em</th><th>Segurado</th><th>Apólice</th>' +
       '<th>Prêmio novo</th><th>Enquadramento</th><th>Situação</th><th></th>' +
       '</tr></thead><tbody>';
-    END_QUEUE.slice().reverse().forEach(function(c) {
+    enviados.slice().reverse().forEach(function(c) {
       var acao = c.status === 'pendente'
         ? '<button class="end-btn end-btn-primary end-btn-sm" onclick="endAbrirAnalise(' + c.id + ')">Analisar</button>'
         : '<button class="end-btn end-btn-outline end-btn-sm" onclick="endAbrirDetalhe(' + c.id + ')">Ver</button>';
