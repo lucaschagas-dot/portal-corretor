@@ -4371,7 +4371,7 @@ function authLogout(){
       <div class="evp-shell">
 
         <header class="evp-header">
-          <div class="evp-logo" id="evp-logo"></div>
+          <div class="evp-logo" id="evp-logo" onclick="navigate('/')" title="Portal do Corretor"></div>
           <div class="evp-hd-right">
             <div class="evp-canal"><span class="evp-canal-lbl">Canal</span><span class="evp-canal-val">Canal Padrão</span></div>
             <button class="evp-hd-ico" title="Buscar" onclick="evpModuloNaoMapeado('Busca')"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="10.6" cy="10.6" r="6.6" fill="none" stroke="#58595B" stroke-width="2"/><line x1="15.6" y1="15.6" x2="21" y2="21" stroke="#58595B" stroke-width="2" stroke-linecap="round"/></svg></button>
@@ -4503,7 +4503,7 @@ function authLogout(){
                 <line x1="4.5" y1="13.5" x2="15.5" y2="13.5" stroke="#1f2a51" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </button>
-            <div class="padm-logo-box" id="padm-logo"></div>
+            <div class="padm-logo-box" id="padm-logo" onclick="navigate('/')" title="Portal do Corretor"></div>
           </div>
 
           <div class="padm-user">
@@ -4680,7 +4680,7 @@ function authLogout(){
     .padm-side-top{display:flex;align-items:center;gap:14px;padding:18px 16px 16px}
     .padm-burger{width:38px;height:38px;flex-shrink:0;border:1.4px solid #1f2a51;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
     .padm-burger:hover{background:#f2f5f8}
-    .padm-logo-box{border:1px solid #d8dde5;border-radius:5px;padding:2px 6px;display:flex;align-items:center;overflow:hidden}
+    .padm-logo-box{border:1px solid #d8dde5;border-radius:5px;padding:2px 6px;display:flex;align-items:center;overflow:hidden;cursor:pointer}
 
     .padm-user{display:flex;align-items:flex-start;gap:14px;padding:14px 18px 20px;border-bottom:1px solid #e4e7ec}
     .padm-user-nome{font-size:16.5px;color:#1f2a51;line-height:1.45}
@@ -4794,7 +4794,7 @@ function authLogout(){
 
     .evp-header{display:flex;align-items:center;justify-content:space-between;gap:20px;
       background:#fff;padding:14px 26px;flex-shrink:0}
-    .evp-logo{border:1px solid #1F3864;border-radius:4px;padding:3px 10px;display:flex;align-items:center;overflow:hidden}
+    .evp-logo{border:1px solid #1F3864;border-radius:4px;padding:3px 10px;display:flex;align-items:center;overflow:hidden;cursor:pointer}
     .evp-hd-right{display:flex;align-items:center;gap:16px}
     .evp-canal{border:1px solid #C9CDD2;border-radius:4px;padding:6px 16px;min-width:330px;display:flex;flex-direction:column;gap:1px}
     .evp-canal-lbl{font-size:11.5px;color:#8A8F96}
@@ -11179,10 +11179,7 @@ function evpInit() {
     clone.setAttribute('height', '51');
     box.appendChild(clone);
   }
-  // volta direto ao fluxo se já havia um endosso em andamento (ex.: retorno do Portal Admin).
-  // um endosso já enviado para análise (fase 5) não tem mais o que retomar — cai no home.
-  if (END_STATE && END_STATE.cliente && END_STATE.fase < 5) evpAbrirEndosso(true);
-  else evpVoltarHome();
+  evpVoltarHome();
 }
 
 function evpMarcarMenu(ativo) {
