@@ -4460,7 +4460,7 @@ function authLogout(){
 
           <div class="end-card" id="end-fase-1"></div>
           <div class="end-card" id="end-fase-3" style="display:none"></div>
-          <div class="end-card" id="end-fase-4" style="display:none"></div>
+          <div id="end-fase-4" style="display:none"></div>
           <div class="end-card" id="end-fase-5" style="display:none"></div>
 
         </div>
@@ -4974,7 +4974,11 @@ function authLogout(){
     .end-compare-total .end-novo-val{color:var(--azure)}
 
     /* Declaração Pessoal de Saúde — cabeçalho colapsável + escolha de responsável */
-    .end-dps-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #eef1f4}
+    .end-dps-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #eef1f4;cursor:pointer}
+    .end-sec-fechada .end-sec-body{display:none}
+    .end-sec-fechada .end-dps-hdr{margin-bottom:0;padding-bottom:0;border-bottom:none}
+    .end-sec-chev{transition:transform .18s}
+    .end-sec-fechada .end-sec-chev{transform:rotate(-90deg)}
     .end-dps-hdr-title{font-size:18px;font-weight:700;color:#1f2a51;font-family:'UnimedSlab',Georgia,serif}
     .end-dps-ask{font-size:13px;color:#8a94a3;margin-bottom:12px;line-height:1.5}
     .end-dps-modo-row{display:flex;gap:26px;margin-bottom:14px}
@@ -11838,24 +11842,24 @@ function endRenderFase4() {
   endGarantirCaso();
 
   el.innerHTML =
-    '<div class="end-dps-hdr"><span class="end-dps-hdr-title">Declaração Pessoal de Saúde</span>' +
-      '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
-    '<p class="end-dps-ask">Corretor, deseja preencher a Declaração Pessoal de Saúde ou enviar ao proponente para preenchimento?</p>' +
-    '<div class="end-dps-modo-row">' +
-      '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="preencher" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='preencher'?' checked':'') + '> Preencher</label>' +
-      '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="proponente" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='proponente'?' checked':'') + '> Enviar ao proponente</label>' +
-    '</div>' +
-    '<div class="end-sec-title">Dados do endosso</div>' +
-    '<div class="end-grid2">' +
-      '<div class="vcalc-f"><span class="vcalc-f-lbl">Data de vig&ecirc;ncia desejada <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
-        '<input type="date" id="end-data-vigencia" min="' + endHojeISO() + '" value="' + (END_STATE.dataVigencia || '') + '" oninput="endOnDadosEndossoInput()">' +
+    endSecao('end-sec-motivo', 'Motivo do endosso',
+      '<div class="vcalc-f"><span class="vcalc-f-lbl">Motivo do endosso <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
+        '<textarea id="end-motivo-endosso" rows="3" placeholder="Descreva o motivo da solicita&ccedil;&atilde;o deste endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
+      '</div>') +
+    endSecao('end-sec-vigencia', 'Vig&ecirc;ncia',
+      '<div class="end-grid2">' +
+        '<div class="vcalc-f"><span class="vcalc-f-lbl">Data de vig&ecirc;ncia desejada <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
+          '<input type="date" id="end-data-vigencia" min="' + endHojeISO() + '" value="' + (END_STATE.dataVigencia || '') + '" oninput="endOnDadosEndossoInput()">' +
+        '</div>' +
+      '</div>') +
+    endSecao('end-sec-dps', 'Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de',
+      '<p class="end-dps-ask">Corretor, deseja preencher a Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de ou enviar ao proponente para preenchimento?</p>' +
+      '<div class="end-dps-modo-row">' +
+        '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="preencher" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='preencher'?' checked':'') + '> Preencher</label>' +
+        '<label class="end-dps-modo-opt"><input type="radio" name="end-dps-modo" value="proponente" onchange="endOnDpsModoChange(this)"' + (END_STATE.dpsModo==='proponente'?' checked':'') + '> Enviar ao proponente</label>' +
       '</div>' +
-    '</div>' +
-    '<div class="vcalc-f" style="margin-top:12px"><span class="vcalc-f-lbl">Motivo do endosso <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
-      '<textarea id="end-motivo-endosso" rows="3" placeholder="Descreva o motivo da solicita&ccedil;&atilde;o deste endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
-    '</div>' +
-    '<div id="end-dps-area"></div>' +
-    '<div id="end-resseguro-aviso"></div>' +
+      '<div id="end-dps-area"></div>' +
+      '<div id="end-resseguro-aviso"></div>') +
     '<div class="end-actions-row end-actions-between">' +
       '<button class="end-btn end-btn-outline" onclick="endGoFase(3)">&lsaquo; Voltar</button>' +
       '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Enviar para análise &rsaquo;</button>' +
@@ -11877,6 +11881,21 @@ function endOnDadosEndossoInput() {
 }
 function endDadosEndossoOk() {
   return !!(END_STATE.motivoEndosso && END_STATE.dataVigencia);
+}
+
+// Cada bloco da etapa de DPS é um card com cabeçalho clicável que recolhe o corpo.
+function endSecao(id, titulo, corpo) {
+  return '<div class="end-card end-sec" id="' + id + '">' +
+    '<div class="end-dps-hdr" onclick="endToggleSecao(\'' + id + '\')">' +
+      '<span class="end-dps-hdr-title">' + titulo + '</span>' +
+      '<svg class="end-sec-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    '</div>' +
+    '<div class="end-sec-body">' + corpo + '</div>' +
+  '</div>';
+}
+function endToggleSecao(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('end-sec-fechada');
 }
 
 function endOnDpsModoChange(radio) {
