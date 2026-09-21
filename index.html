@@ -11960,7 +11960,7 @@ function endRenderDpsArea() {
   }
 
   if (END_STATE.dpsModo === 'proponente') {
-    html += '<p class="end-dps-desc">Um link será enviado ao proponente para que ele preencha esta Declaração Pessoal de Saúde e assine eletronicamente a proposta de contratação.</p>';
+    html += '<p class="end-dps-desc">Assinatura Digital (Antes de transmitir é necessário assinar a proposta)</p>';
     html += '<div id="end-dps-proponente-area"></div>';
     area.innerHTML = html;
     endRenderDpsProponenteArea();
@@ -12000,23 +12000,27 @@ function endRenderDpsForm() {
         '<span class="end-dps-req">*</span>' +
       '</div></div>';
   }).join('');
-  html += '<button class="end-btn end-btn-primary" style="margin-top:14px" onclick="endResponderDps()">Confirmar respostas da DPS</button>';
-  html += '<div id="end-dps-confirmado">' + (END_STATE.dpsRespondida ? '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS respondida e registrada.</span></div>' : '') + '</div>';
+  html += '<button class="end-btn end-btn-success" style="margin-top:14px" onclick="endAbrirAssinaturaModal()">Assinatura Digital</button>';
+  html += '<div id="end-dps-confirmado">' + endDpsConfirmadoHtml() + '</div>';
   wrap.innerHTML = html;
   endAtualizarFase4Botao();
 }
 function endOnDpsResposta(i, radio) {
   END_STATE._dpsRespostas[i] = radio.value;
 }
-function endResponderDps() {
-  var perguntas = endDpsPerguntasAtivas();
-  var respondidas = Object.keys(END_STATE._dpsRespostas || {}).length;
-  if (respondidas < perguntas.length) {
-    apeShowError('Responda todas as perguntas da DPS antes de confirmar.');
-    return;
-  }
+function endDpsConfirmadoHtml() {
+  if (!END_STATE.dpsRespondida) return '';
+  var txt = END_STATE.emailProponente
+    ? 'Proposta assinada eletronicamente. Link enviado para <strong>' + END_STATE.emailProponente + '</strong>.'
+    : 'DPS respondida e registrada.';
+  return '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>' + txt + '</span></div>';
+}
+
+// Modo "Preencher": enviar o link de assinatura ja conclui a etapa.
+function endAssinarDpsPreenchida() {
   END_STATE.dpsRespondida = true;
-  document.getElementById('end-dps-confirmado').innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS respondida e registrada.</span></div>';
+  var el = document.getElementById('end-dps-confirmado');
+  if (el) el.innerHTML = endDpsConfirmadoHtml();
   endAtualizarFase4Botao();
 }
 
@@ -12061,7 +12065,8 @@ function endConfirmarAssinatura() {
   }
   END_STATE.emailProponente = email;
   endAssinaturaModalClose();
-  endEnviarDpsProponente();
+  if (END_STATE.dpsModo === 'proponente') endEnviarDpsProponente();
+  else endAssinarDpsPreenchida();
 }
 
 function endEnviarDpsProponente() {
