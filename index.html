@@ -4401,7 +4401,8 @@ function authLogout(){
             <button class="evp-rail-item evp-c-navy" data-mi="7" title="Renovação RCP Individual" onclick="evpModuloNaoMapeado('Renovação RCP Individual')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg></button>
             <button class="evp-rail-item evp-c-navy" data-mi="8" title="Renovação Residencial" onclick="evpModuloNaoMapeado('Renovação Residencial')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg></button>
             <button class="evp-rail-item evp-c-azure" data-mi="9" title="Endosso" onclick="evpAbrirEndosso()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg></button>
-            <button class="evp-rail-item evp-c-navy" data-mi="10" title="Sobre" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg></button>
+            <button class="evp-rail-item evp-c-azure" data-mi="10" title="Painel de Análise Endosso" onclick="evpAbrirPainel()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3" y="3" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="12.8" y="3" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="3" y="12.8" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="12.8" y="12.8" width="8.2" height="8.2" rx="1" fill="#58595B"/></svg></button>
+            <button class="evp-rail-item evp-c-navy" data-mi="11" title="Sobre" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg></button>
           </aside>
           <nav class="evp-menu" id="evp-menu">
                         <button class="evp-menu-item evp-c-red" data-mi="0" onclick="evpModuloNaoMapeado('Vida')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M12 20.5S3.5 15 3.5 9.4A4.4 4.4 0 0112 7a4.4 4.4 0 018.5 2.4c0 5.6-8.5 11.1-8.5 11.1z" fill="#58595B"/></svg><span class="evp-menu-lbl">Vida</span><span class="evp-plus">+</span></button>
@@ -4414,7 +4415,8 @@ function authLogout(){
             <button class="evp-menu-item evp-c-navy" data-mi="7" onclick="evpModuloNaoMapeado('Renovação RCP Individual')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg><span class="evp-menu-lbl">Renovação RCP Individual</span></button>
             <button class="evp-menu-item evp-c-navy" data-mi="8" onclick="evpModuloNaoMapeado('Renovação Residencial')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3.4" y="3.4" width="12" height="14.4" rx="1.6" fill="#58595B"/><rect x="7.6" y="7.6" width="12" height="14.4" rx="1.6" fill="#fff" stroke="#58595B" stroke-width="1.9"/></svg><span class="evp-menu-lbl">Renovação Residencial</span></button>
             <button class="evp-menu-item evp-c-azure" data-mi="9" onclick="evpAbrirEndosso()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg><span class="evp-menu-lbl">Endosso</span></button>
-            <button class="evp-menu-item evp-c-navy" data-mi="10" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg><span class="evp-menu-lbl">Sobre</span></button>
+            <button class="evp-menu-item evp-c-azure" data-mi="10" onclick="evpAbrirPainel()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><rect x="3" y="3" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="12.8" y="3" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="3" y="12.8" width="8.2" height="8.2" rx="1" fill="#58595B"/><rect x="12.8" y="12.8" width="8.2" height="8.2" rx="1" fill="#58595B"/></svg><span class="evp-menu-lbl">Painel de Análise Endosso</span></button>
+            <button class="evp-menu-item evp-c-navy" data-mi="11" onclick="evpModuloNaoMapeado('Sobre')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="#58595B"/><rect x="11" y="10.3" width="2" height="7" rx="1" fill="#fff"/><circle cx="12" cy="7.4" r="1.3" fill="#fff"/></svg><span class="evp-menu-lbl">Sobre</span></button>
           </nav>
           <div class="evp-menu-scrim" id="evp-menu-scrim" onclick="evpFecharMenu()"></div>
 
@@ -4439,6 +4441,108 @@ function authLogout(){
           </section>
               </div>
               <p class="evp-hint">Protótipo em validação — abra <strong>Endosso</strong> no menu lateral para iniciar o fluxo.</p>
+            </div>
+
+            <!-- ===== Painel de Análise de Endosso ===== -->
+            <div id="evp-view-painel" style="display:none">
+              <div class="evp-pan-top">
+                <div class="evp-pan-grupo">
+                  <div class="evp-pan-grupo-hd">Status da Análise</div>
+                  <div class="evp-pan-grupo-bd">
+                    <span class="evp-pan-cnt evp-pan-cnt-cinza"    id="evp-pan-cnt-rascunho" title="Rascunho">0</span>
+                    <span class="evp-pan-cnt evp-pan-cnt-amarelo"  id="evp-pan-cnt-analise"  title="Em análise">0</span>
+                    <span class="evp-pan-cnt evp-pan-cnt-verde"    id="evp-pan-cnt-aprovado" title="Aprovados">0</span>
+                    <span class="evp-pan-cnt evp-pan-cnt-vermelho" id="evp-pan-cnt-pendente" title="Pendentes">0</span>
+                  </div>
+                </div>
+                <div class="evp-pan-grupo">
+                  <div class="evp-pan-grupo-hd">Alçada</div>
+                  <div class="evp-pan-grupo-bd">
+                    <span class="evp-pan-cnt evp-pan-cnt-cinza" id="evp-pan-cnt-alcada" title="Acima da alçada do analista">0</span>
+                  </div>
+                </div>
+              </div>
+              <p class="evp-pan-legenda">Rascunho &middot; Em análise &middot; Aprovados &middot; Pendentes</p>
+
+              <div class="evp-pan-grid" id="evp-pan-grid"></div>
+
+              <div class="evp-pan-pag">
+                <span>&laquo;</span><span>&lsaquo;</span><b>1</b>
+                <span id="evp-pan-total">de 1</span><span>&rsaquo;</span><span>&raquo;</span>
+              </div>
+            </div>
+
+            <!-- ===== Análise de um endosso (abre ao clicar num card do painel) ===== -->
+            <div id="evp-view-analise" style="display:none">
+              <div class="evp-an-bar">
+                <button class="evp-an-voltar" onclick="evpAbrirPainel()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Painel</button>
+                <h2 class="evp-an-tit" id="evp-an-tit">&mdash;</h2>
+                <span class="evp-an-num" id="evp-an-num">&mdash;</span>
+                <span class="evp-an-tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Análise 1</span>
+                <span class="evp-an-tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Estudo 1</span>
+                <div class="evp-an-doc">
+                  <select class="evp-an-sel" id="evp-an-doc-sel" onchange="evpAnDocumento(this)">
+                    <option value="" selected>Selecione o documento</option>
+                    <option>Proposta de endosso</option>
+                    <option>Declaração Pessoal de Saúde</option>
+                    <option>Apólice vigente</option>
+                  </select>
+                  <button class="evp-an-print" onclick="evpAnImprimir()" title="Imprimir"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 9V3h10v6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="4" y="9" width="16" height="7" rx="1.4" stroke="currentColor" stroke-width="1.8"/><path d="M7 16h10v5H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+                </div>
+              </div>
+
+              <section class="evp-an-card">
+                <h3 class="evp-an-sec">Dados do endosso</h3>
+                <div class="evp-an-dl" id="evp-an-dados"></div>
+              </section>
+
+              <section class="evp-an-card">
+                <h3 class="evp-an-sec">Grupo(s)</h3>
+                <div class="evp-an-abas">
+                  <button class="evp-an-aba evp-an-aba-ativa" id="evp-an-aba-vigente" onclick="evpAnAba('vigente')">Apólice vigente (as is)</button>
+                  <button class="evp-an-aba" id="evp-an-aba-proposto" onclick="evpAnAba('proposto')">Proposta de endosso (to be)</button>
+                </div>
+                <div id="evp-an-grupo"></div>
+              </section>
+
+              <div class="evp-an-acoes">
+                <button class="end-btn end-btn-outline" onclick="evpAnNaoMapeado('Ajustes da cotação')">Ajustes da cotação</button>
+                <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
+                <button class="end-btn end-btn-primary" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
+              </div>
+            </div>
+
+            <!-- ===== Modal "Plano Ideal": edição das coberturas da proposta de endosso ===== -->
+            <div class="ape-overlay" id="evp-plano-overlay" style="display:none">
+              <div class="ape-modal pi-modal">
+                <div class="pi-hdr">
+                  <span class="pi-tit">Plano Ideal</span>
+                  <button class="pi-close" onclick="evpPlanoFechar()" aria-label="Fechar">&times;</button>
+                </div>
+                <div class="pi-body">
+                  <div class="pi-sec" id="pi-sec-cob">
+                    <div class="pi-rail"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.2c-4.7 0-8.5 3.6-8.8 8.2h17.6c-.3-4.6-4.1-8.2-8.8-8.2z" fill="currentColor"/><path d="M12 3.2V1.6M12 11.4v7.2a2.2 2.2 0 01-4.4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+                    <div class="pi-sec-main">
+                      <div class="pi-sec-hd" onclick="evpPlanoToggleSec('pi-sec-cob')">
+                        <span>Coberturas</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </div>
+                      <div class="pi-rows" id="pi-rows"></div>
+                    </div>
+                  </div>
+                  <div class="pi-sec pi-sec-fechada" id="pi-sec-ass">
+                    <div class="pi-rail"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.6 3.4a5.2 5.2 0 00-6 6.8l-6 6a1.8 1.8 0 002.6 2.6l6-6a5.2 5.2 0 006.8-6l-3 3-2.4-2.4 3-3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+                    <div class="pi-sec-main">
+                      <div class="pi-sec-hd" onclick="evpPlanoToggleSec('pi-sec-ass')">
+                        <span>Assistências</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </div>
+                      <div class="pi-rows" id="pi-rows-ass"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pi-ft"><button class="pi-btn" onclick="evpPlanoFechar()">Fechar</button></div>
+              </div>
             </div>
 
             <div id="evp-view-endosso" style="display:none">
@@ -4909,6 +5013,160 @@ function authLogout(){
     .evp-case-nome{font-size:14.5px;font-weight:700;color:#009DDB;margin-top:2px}
     .evp-case-sub{font-size:12.5px;color:#586880;margin-top:2px}
     .evp-case-premio{font-size:12.5px;color:#44546c;margin-top:4px}
+
+    /* ===== Painel de Análise de Endosso (réplica do Painel de Análises Vida) ===== */
+    .evp-pan-top{display:flex;align-items:flex-start;gap:26px;flex-wrap:wrap;margin-bottom:8px}
+    .evp-pan-grupo{border-radius:3px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.12)}
+    .evp-pan-grupo-hd{background:#0F84C4;color:#fff;font-size:14px;font-weight:700;
+      text-align:center;padding:6px 26px;letter-spacing:.2px}
+    .evp-pan-grupo-bd{display:flex;background:#fff}
+    .evp-pan-cnt{flex:1;min-width:78px;padding:9px 12px;text-align:center;font-size:19px;font-weight:700;
+      font-style:italic;color:#fff;font-variant-numeric:tabular-nums;cursor:default}
+    .evp-pan-cnt-cinza{background:#B4B8BC}
+    .evp-pan-cnt-amarelo{background:#D6B300}
+    .evp-pan-cnt-verde{background:#118C4F}
+    .evp-pan-cnt-vermelho{background:#E03A32}
+    .evp-pan-legenda{font-size:12px;color:#8A8F96;margin:0 0 22px}
+
+    .evp-pan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px}
+    .evp-pan-card{position:relative;text-align:left;font:inherit;width:100%;cursor:pointer;
+      background:#fff;border:none;border-left:4px solid #E63329;border-radius:2px;
+      box-shadow:0 1px 5px rgba(0,0,0,.16);padding:13px 15px 11px;
+      transition:box-shadow .12s,transform .12s}
+    .evp-pan-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.2);transform:translateY(-1px)}
+    .evp-pan-card-e{position:absolute;top:11px;right:12px;width:19px;height:19px;
+      border:1px solid #1F3864;border-radius:2px;color:#1F3864;font-size:11px;font-weight:700;
+      display:flex;align-items:center;justify-content:center}
+    .evp-pan-card-hd{display:flex;align-items:flex-start;gap:9px;padding-right:24px}
+    .evp-pan-num{font-size:14px;font-weight:700;color:#3C3C3C;flex-shrink:0;
+      font-variant-numeric:tabular-nums}
+    .evp-pan-nome{font-size:14px;font-weight:700;color:#009DDB;line-height:1.25}
+    .evp-pan-prod{font-size:12.5px;color:#9AA0A6;margin-top:3px}
+    .evp-pan-status{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:12.5px;
+      font-weight:700;color:#3C3C3C}
+    .evp-pan-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .evp-pan-dot-amarelo{background:#D6B300}
+    .evp-pan-dot-verde{background:#118C4F}
+    .evp-pan-dot-vermelho{background:#E03A32}
+    .evp-pan-dot-cinza{background:#B4B8BC}
+    .evp-pan-data{font-weight:400;color:#9AA0A6;font-size:11.5px}
+    .evp-pan-pessoa{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:13px;color:#3C3C3C}
+    .evp-pan-pessoa svg{flex-shrink:0}
+    .evp-pan-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .evp-pan-tag{background:#E9EFF5;color:#44546C;border-radius:11px;padding:2px 11px;font-size:11.5px}
+    .evp-pan-er{margin-top:10px;font-size:12.5px;color:#3C3C3C;white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis}
+    .evp-pan-ft{display:flex;justify-content:space-between;gap:14px;margin-top:9px;
+      padding-top:8px;border-top:1px solid #EDEFF1;font-size:12.5px}
+    .evp-pan-ft-col{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .evp-pan-ft-col:last-child{text-align:right}
+    .evp-pan-ft-tipo{color:#9AA0A6}
+    .evp-pan-ft b{color:#3C3C3C}
+    .evp-pan-ft span{color:#9AA0A6;font-variant-numeric:tabular-nums}
+    .evp-pan-pag{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:26px;
+      color:#8A8F96;font-size:14px}
+    .evp-pan-pag b{border:1px solid #D7DBDF;border-radius:2px;padding:2px 10px;color:#3C3C3C;font-weight:400}
+
+    /* ===== Tela de análise de um endosso (abre ao clicar no card) ===== */
+    .evp-an-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;
+      padding-bottom:12px;border-bottom:1px solid #E4E6E9}
+    .evp-an-voltar{background:none;border:none;font:inherit;font-size:13px;color:#586880;
+      cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:3px}
+    .evp-an-voltar:hover{background:#EEF1F4;color:#009DDB}
+    .evp-an-tit{font-family:'UnimedSlab',Georgia,serif;font-size:20px;font-weight:700;color:#009DDB}
+    .evp-an-num{background:#0F84C4;color:#fff;font-size:14px;font-weight:700;border-radius:2px;
+      padding:4px 12px;font-variant-numeric:tabular-nums}
+    .evp-an-tab{display:flex;align-items:center;gap:6px;font-size:13.5px;color:#44546C}
+    .evp-an-doc{margin-left:auto;display:flex;align-items:center;gap:10px}
+    .evp-an-sel{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
+      font-size:12.5px;color:#586880;padding:7px 10px;min-width:210px}
+    .evp-an-print{border:1px solid #D7DBDF;border-radius:2px;background:#fff;cursor:pointer;
+      padding:6px 9px;display:flex;color:#586880}
+    .evp-an-print:hover{border-color:#009DDB;color:#009DDB}
+
+    .evp-an-card{background:#fff;border-left:4px solid #E63329;border-radius:2px;
+      box-shadow:0 1px 5px rgba(0,0,0,.13);padding:16px 20px 18px;margin-bottom:20px}
+    .evp-an-sec{font-size:16px;font-weight:700;color:#009DDB;
+      font-family:'UnimedSlab',Georgia,serif;margin-bottom:12px}
+    .evp-an-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px 22px}
+    .evp-an-dl div{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .evp-an-dl span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
+    .evp-an-dl strong{font-size:14px;color:#3C3C3C;font-weight:700;overflow-wrap:anywhere}
+
+    .evp-an-abas{display:flex;gap:4px;border-bottom:2px solid #E4E6E9;margin-bottom:16px}
+    .evp-an-aba{background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;
+      font:inherit;font-size:13.5px;font-weight:600;color:#8A8F96;cursor:pointer;padding:9px 16px}
+    .evp-an-aba:hover{color:#009DDB}
+    .evp-an-aba-ativa{color:#009DDB;border-bottom-color:#009DDB}
+    .evp-an-grupo-hd{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:14px}
+    .evp-an-gi{display:flex;flex-direction:column;gap:2px}
+    .evp-an-gi span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
+    .evp-an-gi strong{font-size:14px;color:#3C3C3C}
+    .evp-an-editar{margin-left:auto}
+    .evp-an-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+    .evp-an-tbl th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;
+      color:#44546C;border-bottom:1px solid #D7DBDF;padding:8px 10px;font-weight:700}
+    .evp-an-tbl td{border-bottom:1px solid #EDEFF1;padding:9px 10px;color:#3C3C3C;
+      font-variant-numeric:tabular-nums}
+    .evp-an-tbl th:not(:first-child),.evp-an-tbl td:not(:first-child){text-align:right}
+    .evp-an-tbl tfoot td{font-weight:700;border-bottom:none;border-top:2px solid #D7DBDF}
+    .evp-an-tbl td.evp-an-off{color:#B9C1CC}
+    .evp-an-tbl td.evp-an-novo{color:#009DDB;font-weight:700}
+    .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
+    .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+    /* ===== Modal "Plano Ideal" — edição de coberturas ===== */
+    .pi-modal{max-width:1180px}
+    .pi-hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;
+      border-left:4px solid #E63329;padding:16px 20px 14px}
+    .pi-tit{font-family:'UnimedSlab',Georgia,serif;font-size:19px;font-weight:700;color:#009DDB}
+    .pi-close{background:none;border:none;font-size:20px;color:#A2AAAD;cursor:pointer;
+      width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .pi-close:hover{background:#F4F6F8;color:#586880}
+    .pi-body{padding:0 20px 8px;overflow-y:auto;flex:1}
+    .pi-sec{display:flex;gap:0;border:1px solid #E4E6E9;border-radius:2px;margin-bottom:14px;background:#fff}
+    .pi-rail{flex:0 0 66px;display:flex;align-items:center;justify-content:center;
+      border-right:2px solid #0F84C4;color:#0F84C4}
+    .pi-sec-main{flex:1;min-width:0}
+    .pi-sec-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 16px;cursor:pointer;font-size:14px;font-weight:700;color:#009DDB}
+    .pi-sec-hd svg{transition:transform .18s;flex-shrink:0}
+    .pi-sec-fechada .pi-rows{display:none}
+    .pi-sec-fechada .pi-sec-hd svg{transform:rotate(-90deg)}
+    .pi-rows{padding:0 16px 14px}
+    .pi-row{border-radius:2px}
+    .pi-row:nth-child(odd){background:#F5F6F7}
+    .pi-row-hd{display:flex;align-items:center;gap:10px;padding:9px 12px}
+    .pi-i{width:16px;height:16px;flex-shrink:0;color:#0F84C4;display:flex}
+    .pi-exp{width:16px;height:16px;flex-shrink:0;border:1px solid #6B7076;background:#fff;
+      color:#3C3C3C;font-size:13px;line-height:1;cursor:pointer;display:flex;
+      align-items:center;justify-content:center;padding:0;border-radius:1px}
+    .pi-exp-vazio{width:16px;flex-shrink:0}
+    .pi-ck{width:15px;height:15px;flex-shrink:0;accent-color:#0F84C4;cursor:pointer}
+    .pi-lbl{font-size:13.5px;color:#3C3C3C}
+    .pi-gear{margin-left:auto;color:#8A8F96;display:flex;flex-shrink:0}
+    .pi-par{display:none;padding:0 12px 14px}
+    .pi-row-aberta .pi-par{display:block}
+    .pi-fs{border:1px solid #D7DBDF;border-radius:2px;padding:6px 14px 14px;margin:0}
+    .pi-fs legend{font-size:12.5px;color:#3C3C3C;padding:0 6px}
+    .pi-fs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+    .pi-f{border:1px solid #D7DBDF;border-radius:2px;background:#fff;padding:5px 9px 4px;
+      display:flex;flex-direction:column;gap:1px;min-width:0}
+    .pi-f label{font-size:10.5px;color:#9AA0A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pi-f input{border:none;outline:none;font:inherit;font-size:13px;font-weight:700;color:#3C3C3C;
+      background:transparent;width:100%;min-width:0;font-variant-numeric:tabular-nums}
+    .pi-f input:read-only{color:#9AA0A6;font-weight:400}
+    .pi-f-edit{border-color:#0F84C4}
+    .pi-ft{display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid #E4E6E9}
+    .pi-btn{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;font-size:13.5px;
+      color:#3C3C3C;cursor:pointer;padding:8px 30px}
+    .pi-btn:hover{border-color:#009DDB;color:#009DDB}
+
+    @media (max-width:760px){
+      .pi-rail{flex-basis:44px}
+      .evp-an-doc{margin-left:0;width:100%}
+      .evp-an-editar{margin-left:0}
+    }
 
     .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
     .evp-hint strong{color:#009DDB}
@@ -11899,6 +12157,7 @@ function evpAbrirEndosso(preservar) {
   var home = document.getElementById('evp-view-home');
   var view = document.getElementById('evp-view-endosso');
   if (!home || !view) return;
+  evpEsconder(['evp-view-painel', 'evp-view-analise']);
   home.style.display = 'none';
   view.style.display = '';
   evpMarcarMenu('Endosso');
@@ -11908,14 +12167,23 @@ function evpAbrirEndosso(preservar) {
   window.scrollTo({top: 0});
 }
 
+function evpEsconder(ids) {
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+
 function evpVoltarHome() {
   var home = document.getElementById('evp-view-home');
   var view = document.getElementById('evp-view-endosso');
   if (!home || !view) return;
+  evpEsconder(['evp-view-painel', 'evp-view-analise']);
   home.style.display = '';
   view.style.display = 'none';
   evpMarcarMenu(null);
   endCovModalClose();
+  evpPlanoFechar();
   evpAtualizarHomeCards();
   window.scrollTo({top: 0});
 }
@@ -11945,6 +12213,461 @@ function evpAtualizarHomeCards() {
       '</div>';
     }).join('');
   });
+}
+
+// =====================================================================
+// PAINEL DE ANÁLISE DE ENDOSSO
+// Réplica do "Painel de Análises (Vida)" do portal, com os dados do
+// Endosso. Cinco casos de exemplo ficam sempre no painel; cada endosso
+// criado no fluxo entra como mais um card, do mais novo para o mais
+// antigo.
+// =====================================================================
+
+// Taxa por mil de capital, usada para calcular o prêmio de cada cobertura.
+var EVP_TAXAS = {morte:0.32, ipa:0.12, ipam:0.08, ifpd:0.45, dcm:0.28, dcf:0.31, serit:0.22, dgcombo:0.54};
+
+var EVP_STATUS_INFO = {
+  rascunho: {rot:'Rascunho',   cor:'cinza'},
+  analise:  {rot:'Em análise', cor:'amarelo'},
+  aprovado: {rot:'Aprovado',   cor:'verde'},
+  pendente: {rot:'Pendente',   cor:'vermelho'}
+};
+
+// Casos fixos do painel. capVig/capNovo trazem o capital de cada cobertura
+// antes e depois do endosso; as demais coberturas ficam desligadas.
+var EVP_PAINEL_EXEMPLOS = [
+  {num:'293804/2', segurado:'ADRIANA CAMPOS MENEZES', doc:'123.456.789-01', apolice:'AP-204518',
+   produto:'Vida Individual', tipo:'Aumento de capital', status:'analise', data:'17/09/2026',
+   analista:'Fernando Rogerio Pessoa', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
+   tags:['Motivo','Justificativas','Observação'], badgeE:true, vidas:1,
+   corretor:'Lucas Chagas', vigencia:'01/11/2026',
+   motivo:'Cliente pediu aumento do capital de Morte após a compra do imóvel.',
+   capVig:{morte:300000, ipa:300000}, capNovo:{morte:500000, ipa:300000}},
+
+  {num:'307221/2', segurado:'MARCOS VINÍCIUS ALMEIDA', doc:'234.567.890-12', apolice:'AP-211744',
+   produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'analise', data:'22/09/2026',
+   analista:'Maria Veronica Araujo dos Santos Cruz', er:'40 – ER SÃO PAULO II – DIANE DA ROCHA ABREU',
+   tags:['Motivo','Observação'], badgeE:false, vidas:1,
+   corretor:'Camila Gomes', vigencia:'01/11/2026',
+   motivo:'Inclusão de IFPD solicitada pelo segurado após mudança de profissão.',
+   capVig:{morte:250000, ipa:250000}, capNovo:{morte:250000, ipa:250000, ifpd:250000}},
+
+  {num:'302336/4', segurado:'RENATA SOUZA LIMA', doc:'345.678.901-23', apolice:'AP-207903',
+   produto:'Vida Individual', tipo:'Redução de capital', status:'aprovado', data:'11/09/2026',
+   analista:'Danilo Jesus de Souza', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
+   tags:['Observação'], badgeE:true, vidas:1,
+   corretor:'Hugo Tosetto', vigencia:'01/10/2026',
+   motivo:'Redução de capital por readequação orçamentária do cliente.',
+   capVig:{morte:400000, ipa:400000, dcf:120000}, capNovo:{morte:220000, ipa:220000}},
+
+  {num:'318992/1', segurado:'PAULO HENRIQUE ROCHA', doc:'456.789.012-34', apolice:'AP-219087',
+   produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'pendente', data:'24/09/2026',
+   analista:'Fernando Rogerio Pessoa', er:'112 – ER SÃO PAULO XVII – APARECIDA SOARES DE CASTRO',
+   tags:['Motivo','Justificativas'], badgeE:false, vidas:1,
+   corretor:'Lucas Chagas', vigencia:'15/11/2026',
+   motivo:'Inclusão de DG Combos; aguardando laudo médico complementar.',
+   capVig:{morte:300000, ipa:300000}, capNovo:{morte:300000, ipa:300000, dgcombo:150000}},
+
+  {num:'322190/1', segurado:'CAMILA RIBEIRO TEIXEIRA', doc:'567.890.123-45', apolice:'AP-222641',
+   produto:'Vida Individual', tipo:'Aumento de capital', status:'rascunho', data:'26/09/2026',
+   analista:'Maria Veronica Araujo dos Santos Cruz', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
+   tags:['Observação'], badgeE:false, vidas:1,
+   corretor:'Camila Gomes', vigencia:'01/12/2026',
+   motivo:'Aumento de capital de Morte e inclusão de IPAM.',
+   capVig:{morte:180000, ipa:180000}, capNovo:{morte:350000, ipa:350000, ipam:100000}}
+];
+
+var evpAnCasoAtual = null;   // caso aberto na tela de análise
+var evpAnAbaAtual = 'vigente';
+
+// ---------------------------------------------------------------- helpers
+
+// Monta a lista completa de coberturas a partir de um mapa {cod: capital}.
+function evpCobDe(mapa) {
+  return endCoberturasBase().map(function (c) {
+    var cap = mapa[c.cod];
+    var o = Object.assign({}, c);
+    o.capital = cap || 0;
+    o.ativa = !!cap;
+    return o;
+  });
+}
+
+// "Morte" -> "(M)";  "IPA — Invalidez..." -> "(IPA)"
+function evpCobSigla(c) {
+  if (c.cod === 'morte') return '(M)';
+  var corte = c.label.indexOf(' — ');
+  return corte > 0 ? '(' + c.label.slice(0, corte) + ')' : '(' + c.cod.toUpperCase() + ')';
+}
+function evpCobNome(c) {
+  if (c.cod === 'morte') return 'Morte';
+  var corte = c.label.indexOf(' — ');
+  return corte > 0 ? c.label.slice(corte + 3) : c.label;
+}
+function evpCobRotulo(c) { return evpCobSigla(c) + ' – ' + evpCobNome(c); }
+
+function evpPremioCob(c) {
+  if (!c.ativa || !c.capital) return 0;
+  var bruto = (c.capital / 1000) * (EVP_TAXAS[c.cod] || 0.3);
+  var ajuste = 1 + ((c.agravo || 0) / 100);
+  return Math.round(bruto * ajuste * 100) / 100;
+}
+function evpPremioTotal(cobs) {
+  return Math.round(cobs.reduce(function (s, c) { return s + evpPremioCob(c); }, 0) * 100) / 100;
+}
+function evpNum(v, casas) {
+  return (v || 0).toLocaleString('pt-BR', {minimumFractionDigits: casas, maximumFractionDigits: casas});
+}
+
+// Converte um caso do fluxo (END_QUEUE) para o formato dos cards do painel.
+function evpCasoParaCard(c) {
+  var mapaStatus = {aguardando_assinatura: 'rascunho', assinado: 'analise', analise_tecnica: 'analise'};
+  return {
+    num: String(330000 + c.id) + '/1',
+    segurado: (c.cliente.nome || '').toUpperCase(),
+    doc: c.cliente.doc || '',
+    apolice: c.cliente.apolice || '',
+    produto: c.cliente.produto || 'Vida Individual',
+    tipo: 'Endosso simulado no protótipo',
+    status: c.status === 'implantado_auto' ? 'aprovado' : (mapaStatus[c.boardStatus] || 'analise'),
+    data: (c.dataHora || '').split(' ')[0],
+    analista: 'Mesa Técnica — Vida',
+    er: 'Protótipo PQA-447 — caso criado nesta sessão',
+    tags: (c.motivos && c.motivos.length) ? ['Motivo', 'Justificativas'] : ['Observação'],
+    badgeE: true,
+    vidas: 1,
+    corretor: 'Lucas Chagas',
+    vigencia: c.dataVigencia ? evpDataBr(c.dataVigencia) : '—',
+    motivo: c.motivoEndosso || 'Não informado.',
+    cobVig: (c.coberturasVig || []).map(function (x) { return Object.assign({}, x); }),
+    cobNovo: (c.coberturasNovo || []).map(function (x) { return Object.assign({}, x); }),
+    doFluxo: true,
+    caseId: c.id
+  };
+}
+function evpDataBr(iso) {
+  var p = String(iso || '').split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : String(iso || '');
+}
+
+// Lista completa: os 5 exemplos + os casos criados no fluxo (mais novos primeiro).
+function evpPainelCasos() {
+  var exemplos = EVP_PAINEL_EXEMPLOS.map(function (e) {
+    var o = Object.assign({}, e);
+    if (!o.cobVig) o.cobVig = evpCobDe(e.capVig);
+    if (!o.cobNovo) o.cobNovo = evpCobDe(e.capNovo);
+    return o;
+  });
+  var doFluxo = [];
+  if (typeof END_QUEUE !== 'undefined') {
+    doFluxo = END_QUEUE.filter(function (c) { return c.cliente && c.cliente.nome; })
+      .map(evpCasoParaCard).reverse();
+  }
+  return doFluxo.concat(exemplos);
+}
+
+// Guarda as coberturas editadas por caso, para o modal não perder o ajuste.
+var EVP_PAINEL_EDITADO = {};
+
+// ---------------------------------------------------------------- painel
+
+function evpAbrirPainel() {
+  ['evp-view-home', 'evp-view-endosso', 'evp-view-analise'].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  var p = document.getElementById('evp-view-painel');
+  if (p) p.style.display = '';
+  evpMarcarMenu('Painel de Análise Endosso');
+  endCovModalClose();
+  evpPlanoFechar();
+  evpRenderPainel();
+  window.scrollTo({top: 0});
+}
+
+function evpRenderPainel() {
+  var casos = evpPainelCasos();
+  var cont = {rascunho: 0, analise: 0, aprovado: 0, pendente: 0};
+  casos.forEach(function (c) { if (cont[c.status] !== undefined) cont[c.status]++; });
+  Object.keys(cont).forEach(function (k) {
+    var el = document.getElementById('evp-pan-cnt-' + k);
+    if (el) el.textContent = cont[k];
+  });
+  var tot = document.getElementById('evp-pan-total');
+  if (tot) tot.textContent = 'de ' + casos.length;
+
+  var grid = document.getElementById('evp-pan-grid');
+  if (!grid) return;
+  grid.innerHTML = casos.map(function (c, i) {
+    var st = EVP_STATUS_INFO[c.status] || EVP_STATUS_INFO.analise;
+    var cobs = EVP_PAINEL_EDITADO[c.num] || c.cobNovo;
+    var premio = evpPremioTotal(cobs);
+    var capital = cobs.reduce(function (s, x) { return s + (x.ativa ? x.capital : 0); }, 0);
+    var taxa = capital ? (premio / capital) * 1000 : 0;
+    return '<button class="evp-pan-card" onclick="evpAbrirAnalise(' + i + ')">' +
+      (c.badgeE ? '<span class="evp-pan-card-e">E</span>' : '') +
+      '<div class="evp-pan-card-hd"><span class="evp-pan-num">' + c.num + '</span>' +
+        '<span class="evp-pan-nome">' + c.segurado + '</span></div>' +
+      '<div class="evp-pan-prod">' + c.produto + ' &ndash; Endosso</div>' +
+      '<div class="evp-pan-status"><span class="evp-pan-dot evp-pan-dot-' + st.cor + '"></span>' +
+        st.rot + ' <span class="evp-pan-data">' + c.data + '</span></div>' +
+      '<div class="evp-pan-pessoa"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+        '<circle cx="12" cy="8" r="3.6" fill="#0F84C4"/><path d="M4.8 20.4a7.2 7.2 0 0114.4 0z" fill="#0F84C4"/></svg>' +
+        c.analista + '</div>' +
+      '<div class="evp-pan-tags">' + c.tags.map(function (t) {
+        return '<span class="evp-pan-tag">' + t + '</span>'; }).join('') + '</div>' +
+      '<div class="evp-pan-er" title="' + c.er + '">' + c.er + '</div>' +
+      '<div class="evp-pan-ft">' +
+        '<div class="evp-pan-ft-col"><span class="evp-pan-ft-tipo">' + c.tipo + '</span>' +
+          '<span><b>Taxa:</b> ' + evpNum(taxa, 4) + '</span></div>' +
+        '<div class="evp-pan-ft-col"><span><b>Vidas:</b> ' + c.vidas + '</span>' +
+          '<span><b>Prêmio:</b> ' + endFmtMoeda(premio) + '</span></div>' +
+      '</div></button>';
+  }).join('');
+}
+
+// ---------------------------------------------------------------- análise
+
+function evpAbrirAnalise(i) {
+  var casos = evpPainelCasos();
+  var c = casos[i];
+  if (!c) return;
+  evpAnCasoAtual = c;
+  evpAnAbaAtual = 'vigente';
+
+  ['evp-view-home', 'evp-view-endosso', 'evp-view-painel'].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('evp-view-analise').style.display = '';
+  evpMarcarMenu('Painel de Análise Endosso');
+
+  document.getElementById('evp-an-tit').textContent = c.produto + ' — Endosso';
+  document.getElementById('evp-an-num').textContent = c.num;
+  document.getElementById('evp-an-doc-sel').value = '';
+
+  var st = EVP_STATUS_INFO[c.status] || EVP_STATUS_INFO.analise;
+  document.getElementById('evp-an-dados').innerHTML = [
+    ['Segurado', c.segurado], ['CPF/CNPJ', c.doc], ['Apólice', c.apolice],
+    ['Produto', c.produto], ['Tipo de endosso', c.tipo], ['Situação', st.rot],
+    ['Corretor', c.corretor], ['Analista', c.analista],
+    ['Data da solicitação', c.data], ['Vigência desejada', c.vigencia],
+    ['Sucursal / ER', c.er], ['Motivo do endosso', c.motivo]
+  ].map(function (p) {
+    return '<div><span>' + p[0] + '</span><strong>' + (p[1] || '—') + '</strong></div>';
+  }).join('');
+
+  evpAnAba('vigente');
+  window.scrollTo({top: 0});
+}
+
+function evpAnAba(qual) {
+  evpAnAbaAtual = qual;
+  ['vigente', 'proposto'].forEach(function (a) {
+    var b = document.getElementById('evp-an-aba-' + a);
+    if (b) b.classList.toggle('evp-an-aba-ativa', a === qual);
+  });
+  evpAnRenderGrupo();
+}
+
+function evpAnCobsProposto() {
+  var c = evpAnCasoAtual;
+  if (!c) return [];
+  return EVP_PAINEL_EDITADO[c.num] || c.cobNovo;
+}
+
+function evpAnRenderGrupo() {
+  var c = evpAnCasoAtual;
+  var alvo = document.getElementById('evp-an-grupo');
+  if (!c || !alvo) return;
+  var proposto = evpAnAbaAtual === 'proposto';
+  var cobs = proposto ? evpAnCobsProposto() : c.cobVig;
+  var ref = proposto ? c.cobVig : evpAnCobsProposto();   // a outra aba, para marcar o que mudou
+  var total = evpPremioTotal(cobs);
+  var totalOutro = evpPremioTotal(ref);
+
+  var linhas = cobs.map(function (x) {
+    var antes = ref.find(function (y) { return y.cod === x.cod; }) || {ativa: false, capital: 0};
+    var mudou = proposto && (x.ativa !== antes.ativa || x.capital !== antes.capital);
+    if (!x.ativa && !antes.ativa) return '';
+    if (!x.ativa) {
+      return '<tr><td class="evp-an-off">' + evpCobRotulo(x) + '</td>' +
+        '<td class="evp-an-off" colspan="3">Não contratada' +
+        (proposto && antes.ativa ? ' &mdash; retirada neste endosso' : '') + '</td></tr>';
+    }
+    return '<tr><td' + (mudou ? ' class="evp-an-novo"' : '') + '>' + evpCobRotulo(x) + '</td>' +
+      '<td' + (mudou ? ' class="evp-an-novo"' : '') + '>' + endFmtMoeda(x.capital) + '</td>' +
+      '<td>' + evpNum(EVP_TAXAS[x.cod] || 0.3, 4) + '</td>' +
+      '<td>' + endFmtMoeda(evpPremioCob(x)) + '</td></tr>';
+  }).join('');
+
+  var dif = Math.round((total - totalOutro) * 100) / 100;
+  var nota = proposto
+    ? (dif === 0 ? 'O prêmio não muda com este endosso.'
+       : 'Diferença em relação à apólice vigente: <strong>' +
+         (dif > 0 ? '+' : '') + endFmtMoeda(dif) + '</strong> por mês.')
+    : 'Coberturas e prêmio como estão hoje na apólice, antes do endosso.';
+
+  alvo.innerHTML =
+    '<div class="evp-an-grupo-hd">' +
+      '<div class="evp-an-gi"><span>Grupo segurável</span><strong>01 &mdash; Titular</strong></div>' +
+      '<div class="evp-an-gi"><span>Plano</span><strong>' + c.produto + ' &mdash; Multiproteção</strong></div>' +
+      '<div class="evp-an-gi"><span>Vidas</span><strong>' + c.vidas + '</strong></div>' +
+      '<div class="evp-an-gi"><span>Prêmio</span><strong>' + endFmtMoeda(total) + ' / mensal</strong></div>' +
+      (proposto ? '<button class="end-btn end-btn-outline evp-an-editar" onclick="evpPlanoAbrir()">Editar Coberturas</button>' : '') +
+    '</div>' +
+    '<table class="evp-an-tbl"><thead><tr>' +
+      '<th>Cobertura</th><th>Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
+    '</tr></thead><tbody>' + linhas + '</tbody>' +
+    '<tfoot><tr><td>Total</td><td></td><td></td><td>' + endFmtMoeda(total) + '</td></tr></tfoot></table>' +
+    '<p class="evp-an-nota">' + nota + '</p>';
+}
+
+function evpAnNaoMapeado(nome) {
+  apeShowError('"' + nome + '" ainda não faz parte deste protótipo.');
+}
+function evpAnDocumento(sel) {
+  if (!sel.value) return;
+  apeShowError('A visualização de "' + sel.value + '" ainda não faz parte deste protótipo.');
+  sel.value = '';
+}
+function evpAnImprimir() {
+  apeShowError('A impressão da análise ainda não faz parte deste protótipo.');
+}
+function evpAnDecidir(acao) {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  c.status = acao === 'autorizar' ? 'aprovado' : 'pendente';
+  var ex = EVP_PAINEL_EXEMPLOS.find(function (e) { return e.num === c.num; });
+  if (ex) ex.status = c.status;
+  apeShowError(acao === 'autorizar'
+    ? 'Endosso ' + c.num + ' autorizado. No portal real, a autorização segue para implantação no E-vida.'
+    : 'Endosso ' + c.num + ' devolvido como pendente ao corretor.');
+  evpAbrirPainel();
+}
+
+// ------------------------------------------------- modal "Plano Ideal"
+
+var EVP_PLANO_CAMPOS = [
+  {k:'taxaPura',   rot:'Taxa Pura',                 ro:true},
+  {k:'taxaCom',    rot:'Taxa Comercial',            ro:true},
+  {k:'premio',     rot:'Prêmio (R$)',               ro:true},
+  {k:'capMedio',   rot:'Capital Médio (R$)',        ro:true},
+  {k:'capMax',     rot:'Capital Máximo (R$)',       ro:true},
+  {k:'montante',   rot:'Montante de Capital (R$)',  ro:false},
+  {k:'percBasica', rot:'Percentual da Básica',      ro:true},
+  {k:'capPercap',  rot:'Capital Máximo Percapita',  ro:true},
+  {k:'agravo',     rot:'Desconto/Agravo (%)',       ro:false}
+];
+
+function evpPlanoAbrir() {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  if (!EVP_PAINEL_EDITADO[c.num]) {
+    EVP_PAINEL_EDITADO[c.num] = c.cobNovo.map(function (x) { return Object.assign({}, x); });
+  }
+  evpPlanoRender();
+  document.getElementById('evp-plano-overlay').style.display = 'flex';
+}
+
+function evpPlanoFechar() {
+  var ov = document.getElementById('evp-plano-overlay');
+  if (ov) ov.style.display = 'none';
+  if (evpAnCasoAtual) { evpAnRenderGrupo(); }
+}
+
+function evpPlanoToggleSec(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('pi-sec-fechada');
+}
+
+function evpPlanoRender() {
+  var cobs = evpAnCobsProposto();
+  var alvo = document.getElementById('pi-rows');
+  if (!alvo) return;
+  alvo.innerHTML = cobs.map(function (x) {
+    var capital = x.ativa ? x.capital : 0;
+    var taxa = EVP_TAXAS[x.cod] || 0.3;
+    var premio = evpPremioCob(x);
+    var vals = {
+      taxaPura: evpNum(taxa * 0.82, 4),
+      taxaCom: evpNum(taxa, 4),
+      premio: evpNum(premio, 2),
+      capMedio: evpNum(capital, 2),
+      capMax: evpNum(capital, 2),
+      montante: evpNum(capital, 2),
+      percBasica: x.percentual ? evpNum(x.percentual, 2) : '',
+      capPercap: evpNum(capital, 2),
+      agravo: evpNum(x.agravo || 0, 2)
+    };
+    return '<div class="pi-row' + (x.ativa ? '' : ' pi-row-off') + '" id="pi-row-' + x.cod + '">' +
+      '<div class="pi-row-hd">' +
+        '<span class="pi-i" title="' + x.label + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<circle cx="12" cy="12" r="9" fill="currentColor"/><rect x="11.1" y="10.4" width="1.8" height="7" rx=".9" fill="#fff"/>' +
+          '<circle cx="12" cy="7.6" r="1.2" fill="#fff"/></svg></span>' +
+        (x.ativa
+          ? '<button class="pi-exp" onclick="evpPlanoToggleLinha(\'' + x.cod + '\')" aria-label="Detalhes">+</button>'
+          : '<span class="pi-exp-vazio"></span>') +
+        '<input type="checkbox" class="pi-ck" ' + (x.ativa ? 'checked' : '') +
+          (x.obrigatoria ? ' disabled title="Cobertura obrigatória"' : '') +
+          ' onchange="evpPlanoCheck(\'' + x.cod + '\', this)">' +
+        '<span class="pi-lbl">' + evpCobRotulo(x) + '</span>' +
+        '<span class="pi-gear" title="Recalcular"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<path d="M20 12a8 8 0 11-2.3-5.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>' +
+          '<path d="M20 3.4V7h-3.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+      '</div>' +
+      '<div class="pi-par"><fieldset class="pi-fs"><legend>Parâmetros</legend><div class="pi-fs-grid">' +
+        EVP_PLANO_CAMPOS.map(function (f) {
+          return '<div class="pi-f' + (f.ro ? '' : ' pi-f-edit') + '">' +
+            '<label for="pi-' + x.cod + '-' + f.k + '">' + f.rot + '</label>' +
+            '<input id="pi-' + x.cod + '-' + f.k + '" value="' + vals[f.k] + '"' +
+              (f.ro ? ' readonly' : ' onchange="evpPlanoCampo(\'' + x.cod + '\',\'' + f.k + '\',this)"') + '>' +
+          '</div>';
+        }).join('') +
+      '</div></fieldset></div></div>';
+  }).join('');
+
+  var ass = document.getElementById('pi-rows-ass');
+  if (ass) {
+    ass.innerHTML = ['Assistência Funeral Individual', 'Assistência Residencial', 'Assistência Nutricional']
+      .map(function (n, i) {
+        return '<div class="pi-row"><div class="pi-row-hd">' +
+          '<span class="pi-i"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+            '<circle cx="12" cy="12" r="9" fill="currentColor"/><rect x="11.1" y="10.4" width="1.8" height="7" rx=".9" fill="#fff"/>' +
+            '<circle cx="12" cy="7.6" r="1.2" fill="#fff"/></svg></span>' +
+          '<span class="pi-exp-vazio"></span>' +
+          '<input type="checkbox" class="pi-ck"' + (i === 0 ? ' checked' : '') + ' disabled>' +
+          '<span class="pi-lbl">' + n + '</span></div></div>';
+      }).join('');
+  }
+}
+
+function evpPlanoToggleLinha(cod) {
+  var row = document.getElementById('pi-row-' + cod);
+  if (!row) return;
+  var aberta = row.classList.toggle('pi-row-aberta');
+  var bt = row.querySelector('.pi-exp');
+  if (bt) bt.textContent = aberta ? '−' : '+';
+}
+
+function evpPlanoCheck(cod, el) {
+  var cobs = evpAnCobsProposto();
+  var c = cobs.find(function (x) { return x.cod === cod; });
+  if (!c) return;
+  c.ativa = el.checked;
+  if (c.ativa && !c.capital) c.capital = 100000;
+  evpPlanoRender();
+}
+
+function evpPlanoCampo(cod, campo, el) {
+  var cobs = evpAnCobsProposto();
+  var c = cobs.find(function (x) { return x.cod === cod; });
+  if (!c) return;
+  var v = parseFloat(String(el.value).replace(/\./g, '').replace(',', '.'));
+  if (isNaN(v) || v < 0) { evpPlanoRender(); return; }
+  if (campo === 'montante') c.capital = v;
+  if (campo === 'agravo') c.agravo = v;
+  evpPlanoRender();
+  var row = document.getElementById('pi-row-' + cod);
+  if (row) { row.classList.add('pi-row-aberta'); var b = row.querySelector('.pi-exp'); if (b) b.textContent = '−'; }
 }
 
 function evpModuloNaoMapeado(nome) {
