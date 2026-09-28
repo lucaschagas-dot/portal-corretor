@@ -347,7 +347,13 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 }
 .f-sel{appearance:none;cursor:pointer}
 .f-inp{padding-right:16px}
-.pv-topo{display:flex;gap:12px;flex-wrap:wrap;padding:0 0 16px}
+    .pv-radios{display:flex;flex-wrap:wrap;gap:9px 26px;padding:4px 16px 10px}
+    .pv-radio{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#3C3C3C;cursor:pointer}
+    .pv-radio input{accent-color:var(--azure);cursor:pointer;flex-shrink:0}
+    .pv-checks{display:flex;flex-wrap:wrap;gap:9px 26px;padding:12px 16px 4px}
+    .pv-check{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#3C3C3C;cursor:pointer}
+    .pv-check input{accent-color:var(--azure);cursor:pointer;flex-shrink:0}
+    .pv-topo{display:flex;gap:12px;flex-wrap:wrap;padding:0 0 16px}
 .pv-aviso-card{background:#EAF7FD;border-left:4px solid var(--azure);border-radius:3px;padding:12px 16px;margin-bottom:16px;font-size:14px;line-height:21px;color:var(--text)}
 .pv-grupo{padding:18px 16px 0}
 .pv-grupo + .filter-inputs-row{padding-top:10px}
@@ -6358,15 +6364,12 @@ const segmentsData = [
     id:"saude",letter:"S",label:"Saúde",color:"#005eb8",
     menuItems:[
       {label:"Acelera",hasSubmenu:true,sub:["Acelera PME","Orçamento PME","Acelera Corporativo"]},
-      {label:"Consultar Clientes",hasSubmenu:true,sub:["2ª Via de Boletos","Consultar Contratos","Consultar Segurados","Faturas","Solicitar Carteira do Beneficiário"]},
-      {label:"Movimentar Clientes",hasSubmenu:true,sub:["Movimentações","Lotes","Alterar Mês de Referência","Calendário de Movimentação","Exclusão de Movimentação Pendente","Exclusão de Movimentação (Grupo)"]},
-      {label:"Novo | Consultar Clientes",hasSubmenu:true,sub:["Consultar Contratos","Consultar Segurados"]},
-      {label:"Novo | Movimentação Cadastral",hasSubmenu:true,sub:["Movimentação de Beneficiários","Histórico de Movimentações","Gerenciar Arquivos","Gerenciar Lotes"]},
-      {label:"Produtor",hasSubmenu:true,sub:["Cadastro","Consultar Comissão por Produtor","Extrato"]},
-      {label:"Novo | Demonstrativos",hasSubmenu:true,sub:["Demonstrativo Analítico de Faturamento","Demonstrativo de Coparticipação","Demonstrativo de Movimentações","Demonstrativo de Reembolso","Demonstrativo de Troca de Faixa Etária","Demonstrativo de Utilização","Demonstrativo de Utilização Indevida","Informe de Rendimento"]},
-      {label:"Novo | Relatórios",hasSubmenu:true,sub:["Acompanhar Faturamento","Beneficiários (Movimentação Cadastral)","Faturamento por Faixa Etária","Relatório de Utilização Geral","Relatório de Utilização Sinistralidade"]},
-      {label:"Novo | Fila de Relatórios",hasSubmenu:false},
-      {label:"Relatórios e Demonstrativos",hasSubmenu:true,sub:["Demonstrativos","Relatórios","Fila de Relatórios"]},
+      {label:"Consultar Clientes",hasSubmenu:true,sub:["Consultar Segurados","Consultar Contratos","2ª Via de Boletos e Faturas"]},
+      {label:"Movimentação Cadastral",hasSubmenu:true,sub:["Movimentação de Beneficiários","Histórico de Movimentações","Gerenciar Arquivos","Gerenciar Lotes"]},
+      {label:"Produtor",hasSubmenu:true,sub:["Extrato de Comissões"]},
+      {label:"Demonstrativos",hasSubmenu:true,sub:["Demonstrativo Analítico de Faturamento","Demonstrativo de Coparticipação","Demonstrativo de Movimentações","Demonstrativo de Reembolso","Demonstrativo de Troca de Faixa Etária","Demonstrativo de Utilização","Demonstrativo de Utilização Indevida","Informe de rendimento"]},
+      {label:"Relatórios",hasSubmenu:true,sub:["Acompanhar Faturamento","Beneficiários (Movimentação Cadastral)","Faturamento por Faixa Etária","Relatório de Sinistralidade","Relatório de Utilização Geral","Relatório de Utilização Sinistralidade"]},
+      {label:"Fila de Relatórios",hasSubmenu:false},
       {label:"Guia Médico",hasSubmenu:false},
       {label:"Material de Apoio",hasSubmenu:false},
     ]
@@ -6830,8 +6833,11 @@ function toggleSegment(segId) {
           'vida/Endosso (em validação)': '/vida/endosso',
           'ramos/Material de Apoio': '/material-apoio',
           'previdencia/2ª Via de Boleto': '/previdencia/segunda-via-boleto',
-          'previdencia/Material de Apoio': '/previdencia/material-apoio'
+          'previdencia/Material de Apoio': '/previdencia/material-apoio',
+          'saude/Fila de Relatórios': '/saude/fila-relatorios',
+          'saude/Material de Apoio': '/saude/material-apoio'
         };
+        if (segId === 'saude' && PV_EXTERNOS[item.label]) { pvAbrirExterno(item.label); return; }
         navigate(topLevelRoutes[segId + '/' + item.label] || '/' + encodeURIComponent(item.label));
       }
     });
@@ -6903,6 +6909,12 @@ function selectMenuItem(segId, label) {
           if (PV_EXTERNOS[subLabel]) { pvAbrirExterno(subLabel); return; }
           const rotaPrev = PV_ROTAS_MENU[item.label + '|' + subLabel];
           if (rotaPrev) { navigate(rotaPrev); return; }
+        }
+        if (segId === 'saude') {
+          if (PV_EXTERNOS[subLabel]) { pvAbrirExterno(subLabel); return; }
+          if (subLabel === 'Informe de rendimento') { saAbrirInforme(); return; }
+          const rotaSau = SA_ROTAS_MENU[item.label + '|' + subLabel];
+          if (rotaSau) { navigate(rotaSau); return; }
         }
         if (segId === 'ramos' && item.label === 'Relatórios' && subLabel === 'Relatório de Inadimplência') {
           navigate('/relatorios/inadimplencia');
@@ -10987,7 +10999,11 @@ var PV_TELAS = {
 // sites externos: no portal esses itens abrem em nova aba
 var PV_EXTERNOS = {
   'Futuro Planejado': 'https://simuladordofuturo.segurosunimed.com.br/',
-  'Formulários de Sinistro': 'https://www.segurosunimed.com.br/formularios-da-previdencia'
+  'Formulários de Sinistro': 'https://www.segurosunimed.com.br/formularios-da-previdencia',
+  'Acelera PME': 'http://segurosunimed.test.planium.io/web/login/sso',
+  'Orçamento PME': 'http://segurosunimed.test.planium.io/web/login/sso',
+  'Acelera Corporativo': 'https://cotador-corretor-hml.segurosunimed.com.br/cotador/saude',
+  'Guia Médico': 'https://www.segurosunimed.com.br/guia-medico/'
 };
 
 var pvRotaAtual = null;
@@ -11007,6 +11023,17 @@ function pvCampoHtml(f) {
   var id = 'pvf-' + f.id;
   var larg = f.larg ? ' style="flex:0 0 ' + f.larg + '"' : '';
   var inner;
+  if (f.t === 'check') {
+    return '<label class="pv-check"><input type="checkbox" id="' + id + '">' + f.rot + '</label>';
+  }
+  if (f.t === 'radio') {
+    return '<div class="pv-radio-grupo" id="' + id + '">' +
+      '<div class="pv-grupo"><span class="vcalc-section-title">' + f.tit + '</span></div>' +
+      '<div class="pv-radios">' + f.ops.map(function (o, i) {
+        return '<label class="pv-radio"><input type="radio" name="' + id + '"' +
+          (i === 0 ? ' checked' : '') + '>' + o + '</label>';
+      }).join('') + '</div></div>';
+  }
   if (f.t === 'sel') {
     inner = '<select class="f-sel" id="' + id + '">' +
       f.ops.map(function (o, i) { return '<option' + (i === 0 ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
@@ -11015,6 +11042,7 @@ function pvCampoHtml(f) {
     var extra = '';
     if (f.t === 'cpf') extra = ' maxlength="14" oninput="maskCPF(this)"';
     else if (f.t === 'data') extra = ' maxlength="10" placeholder="dd/mm/aaaa" oninput="maskDate(this)"';
+    else if (f.t === 'mmaaaa') extra = ' maxlength="7" placeholder="mm/aaaa" oninput="maskMonthYear(this)"';
     var valor = f.valor ? ' value="' + f.valor + '"' : '';
     inner = '<input type="text" class="f-inp" id="' + id + '"' + extra + valor + '>';
   }
@@ -11024,11 +11052,25 @@ function pvCampoHtml(f) {
 function pvGrupoHtml(g) {
   var html = '';
   if (g.tit) html += '<div class="pv-grupo"><span class="vcalc-section-title">' + g.tit + '</span></div>';
-  for (var i = 0; i < g.campos.length; i += 3) {
-    html += '<div class="filter-inputs-row">' +
-      g.campos.slice(i, i + 3).map(pvCampoHtml).join('') +
-      '</div>';
+  // campos normais vao de 3 em 3; checkboxes se juntam numa faixa; radios ocupam
+  // a linha inteira, com o titulo do proprio grupo de opcoes
+  var fila = [], checks = [];
+  function despejaFila() {
+    while (fila.length) {
+      html += '<div class="filter-inputs-row">' + fila.splice(0, 3).map(pvCampoHtml).join('') + '</div>';
+    }
   }
+  function despejaChecks() {
+    if (!checks.length) return;
+    html += '<div class="pv-checks">' + checks.map(pvCampoHtml).join('') + '</div>';
+    checks = [];
+  }
+  g.campos.forEach(function (f) {
+    if (f.t === 'radio') { despejaFila(); despejaChecks(); html += pvCampoHtml(f); }
+    else if (f.t === 'check') { despejaFila(); checks.push(f); }
+    else { despejaChecks(); fila.push(f); }
+  });
+  despejaFila(); despejaChecks();
   return html;
 }
 
@@ -11073,6 +11115,9 @@ function pvRenderTela(rota) {
     card.innerHTML = (t.grupos || []).map(pvGrupoHtml).join('') +
       '<div class="filter-actions">' +
         '<button class="btn-vol" onclick="navigate(\'/\')">Voltar</button>' +
+        (t.extras || []).map(function (b) {
+          return '<button class="btn-limpar btn-extra" onclick="navigate(\'' + b.rota + '\')">' + b.txt + '</button>';
+        }).join('') +
         '<button class="btn-limpar" onclick="pvLimpar()">' + (t.rotuloLimpar || 'Limpar Filtros') + '</button>' +
         '<button class="btn-bus" onclick="pvBuscar()">' +
           (t.acao ? t.acao.txt : (t.rotuloBuscar || 'Buscar')) +
@@ -11101,6 +11146,8 @@ function pvLimpar() {
     g.campos.forEach(function (f) {
       var el = document.getElementById('pvf-' + f.id);
       if (!el) return;
+      if (f.t === 'radio') { var r = el.querySelector('input'); if (r) r.checked = true; return; }
+      if (f.t === 'check') { el.checked = false; return; }
       if (el.tagName === 'SELECT') el.selectedIndex = 0;
       else el.value = f.valor || '';
     });
@@ -11112,7 +11159,11 @@ function pvLimpar() {
 function pvBuscar() {
   var t = PV_TELAS[pvRotaAtual];
   if (!t) return;
-  if (t.acao) { apeShowError(t.acao.msg); return; }
+  if (t.acao) {
+    apeShowError(t.acao.msg);
+    if (t.acao.rota) navigate(t.acao.rota);
+    return;
+  }
   pvBuscou = true;
   pvMostrarResultados();
 }
@@ -11173,6 +11224,494 @@ var PV_ROTAS_MENU = {
   'Sinistros|Consultar Sinistro': '/previdencia/sinistros/consultar-sinistros',
   'Sinistros|Relatório de Sinistros Pagos': '/previdencia/sinistros/relatorio-sinistros-pagos'
 };
+
+// =====================================================================
+// SAÚDE — telas do menu
+// No portal real, toda tela de Saúde (menos Material de Apoio) apenas
+// incorpora o sistema health-portal-app num quadro embutido. Os campos,
+// opções e botões abaixo vieram do conteúdo desse quadro, capturado em
+// 28/09/2026 (ver saude/00_LEIA-ME.txt).
+// =====================================================================
+var SA_CICLO = ['Custo Operacional','Custo Operacional Avulso','Participação','Participação Avulso',
+  'Prêmio','Prêmio Avulso','Reajuste Retroativo','Recuperação de Sinistro','Recuperação de Sinistro Avulso'];
+var SA_ANO = ['2026','2025','2024','2023','2022','2021','2020','2019','2018','2017'];
+var SA_MES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto',
+  'Setembro','Outubro','Novembro','Dezembro'];
+var SA_SAIDA_PDF_TXT = ['Arquivo PDF','Arquivo TXT'];
+
+// Campos que quase toda tela de Demonstrativos/Relatórios repete.
+function saCiclo(p) {
+  return [
+    {id:p+'-ciclo', rot:'Ciclo', t:'sel', ops:SA_CICLO},
+    {id:p+'-ano',   rot:'Ano',   t:'sel', ops:SA_ANO},
+    {id:p+'-mes',   rot:'Mês',   t:'sel', ops:SA_MES}
+  ];
+}
+function saContrato(p, rot) {
+  return {id:p+'-contrato', rot: rot || 'Contrato (Nº ou Razão Social)'};
+}
+// Toda solicitação de relatório cai na Fila de Relatórios.
+var SA_ACAO_FILA = {
+  txt: 'Solicitar',
+  msg: 'Solicitação registrada. No portal o arquivo fica pronto em "Fila de Relatórios", onde pode ser baixado.',
+  rota: '/saude/fila-relatorios'
+};
+var SA_EXTRA_FILA = {txt: 'Consultar Fila', rota: '/saude/fila-relatorios'};
+
+var SA_TELAS = {
+
+  // ---------------------------------------------------- Consultar Clientes
+  '/saude/consultar-clientes/consultar-segurados': {
+    titulo: 'Consultar Segurados',
+    grupos: [{ campos: [
+      saContrato('cseg'),
+      {id:'cseg-num', rot:'Nº do Segurado'},
+      {id:'cseg-nome', rot:'Nome do Segurado'},
+      {id:'cseg-cpf', rot:'CPF do Segurado', t:'cpf'},
+      {id:'cseg-matricula', rot:'Nº da Matrícula Empresa'}
+    ]}],
+    colunas: ['Nº do Segurado','Nome','CPF','Contrato','Plano','Situação'],
+    linhas: [
+      ['0084512001','Adriana Campos Menezes','123.456.789-01','40218 — Construtora Vale Norte','Unimed Seguros Saúde Nacional','Ativo'],
+      ['0084512002','Otávio Campos Menezes','987.654.321-09','40218 — Construtora Vale Norte','Unimed Seguros Saúde Nacional','Ativo'],
+      ['0084733011','Marcos Vinícius Almeida','234.567.890-12','40226 — Clínica Bem Viver','Unimed Seguros Saúde Regional','Ativo'],
+      ['0084733012','Helena Almeida Prado','345.678.901-23','40226 — Clínica Bem Viver','Unimed Seguros Saúde Regional','Inativo'],
+      ['0085104007','Paulo Henrique Rocha','456.789.012-34','40234 — Transportes Santa Rita','Unimed Seguros Saúde Nacional','Em implantação']
+    ]
+  },
+
+  '/saude/consultar-clientes/consultar-contratos': {
+    titulo: 'Consultar Contratos',
+    grupos: [{ campos: [
+      {id:'ccon-num', rot:'Nº Contrato'},
+      {id:'ccon-nome', rot:'Nome'},
+      {id:'ccon-sit', rot:'Situação', t:'sel', ops:['Todas','Ativo','Encerrado','Cancelado','Em implantação','Inadimplente']}
+    ]}],
+    colunas: ['Nº do Contrato','Razão Social','CNPJ','Vidas','Início de Vigência','Situação'],
+    linhas: [
+      ['40218','Construtora Vale Norte Ltda','11.222.333/0001-44','184','01/03/2021','Ativo'],
+      ['40226','Clínica Bem Viver S/S','22.333.444/0001-55','47','15/07/2022','Ativo'],
+      ['40234','Transportes Santa Rita ME','33.444.555/0001-66','29','01/01/2023','Inadimplente'],
+      ['40241','Colégio Horizonte Azul','44.555.666/0001-77','112','10/05/2019','Em implantação'],
+      ['40259','Indústria Metalcampo S.A.','55.666.777/0001-88','356','20/11/2018','Encerrado']
+    ]
+  },
+
+  '/saude/consultar-clientes/segunda-via-boleto-fatura': {
+    titulo: '2ª Via de Boletos e Faturas',
+    grupos: [{ campos: [ saContrato('svb', 'Contrato ou Operadora') ]}],
+    extras: [SA_EXTRA_FILA],
+    colunas: ['Nº do Documento','Contrato','Competência','Vencimento','Valor','Situação'],
+    linhas: [
+      ['FAT-7712004','40218 — Construtora Vale Norte','09/2026','10/10/2026','R$ 148.320,55','Em aberto'],
+      ['FAT-7711890','40218 — Construtora Vale Norte','08/2026','10/09/2026','R$ 146.907,10','Pago'],
+      ['FAT-7712011','40226 — Clínica Bem Viver','09/2026','10/10/2026','R$ 39.442,80','Em aberto'],
+      ['FAT-7712033','40234 — Transportes Santa Rita','09/2026','05/10/2026','R$ 23.115,00','Vencido'],
+      ['FAT-7711944','40241 — Colégio Horizonte Azul','08/2026','10/09/2026','R$ 88.610,25','Pago']
+    ]
+  },
+
+  // ----------------------------------------------- Movimentação Cadastral
+  '/saude/movimentacao-cadastral/movimentar-beneficiarios': {
+    titulo: 'Movimentação de Beneficiários',
+    topo: [{txt:'Incluir Titular', classe:'btn-bus'}],
+    grupos: [{ tit:'Buscar beneficiário', campos: [
+      saContrato('mben'),
+      {id:'mben-num', rot:'Nº do Beneficiário'},
+      {id:'mben-cpf', rot:'CPF do Beneficiário', t:'cpf'},
+      {id:'mben-nome', rot:'Nome do Beneficiário'},
+      {id:'mben-matricula', rot:'Matrícula'}
+    ]}],
+    colunas: ['Nº do Beneficiário','Nome','CPF','Tipo','Plano','Situação'],
+    linhas: [
+      ['0084512001','Adriana Campos Menezes','123.456.789-01','Titular','Nacional Enfermaria','Ativo'],
+      ['0084512002','Otávio Campos Menezes','987.654.321-09','Dependente','Nacional Enfermaria','Ativo'],
+      ['0084512003','Beatriz Campos Menezes','876.543.210-98','Dependente','Nacional Enfermaria','Ativo'],
+      ['0084512010','Rogério Pinheiro Lima','234.567.890-12','Titular','Nacional Apartamento','Ativo'],
+      ['0084512017','Simone Andrade Barros','345.678.901-23','Titular','Regional Enfermaria','Excluído']
+    ],
+    acoesLinha: ['Alterar Cadastro','Incluir Dependente','Trocar Plano','Excluir']
+  },
+
+  '/saude/movimentacao-cadastral/historico-movimentacoes': {
+    titulo: 'Histórico de Movimentações',
+    topo: [{txt:'Excluir Movimentação Pendente', classe:'btn-limpar'}],
+    grupos: [{ campos: [
+      saContrato('hmov'),
+      {id:'hmov-op', rot:'Operação', t:'sel', ops:['Todas','Inclusão de Titular','Inclusão de Dependente','Alteração de Cadastro','Troca de Plano','Exclusão']},
+      {id:'hmov-sit', rot:'Situação', t:'sel', ops:['Todas','Com Erro de Validação','Pendente de Validação','Validado e Pendente de Envio','Em análise na Operadora','Enviado com erro','Não Autorizado','Processado']},
+      {id:'hmov-titular', rot:'Beneficiário Titular'},
+      {id:'hmov-de', rot:'De (mm/aaaa)', t:'mmaaaa'},
+      {id:'hmov-ate', rot:'Até (mm/aaaa)', t:'mmaaaa'}
+    ]}],
+    colunas: ['Protocolo','Operação','Beneficiário','Contrato','Data','Situação'],
+    linhas: [
+      ['MOV-558210','Inclusão de Titular','Rogério Pinheiro Lima','40218','02/09/2026','Processado'],
+      ['MOV-558244','Inclusão de Dependente','Beatriz Campos Menezes','40218','05/09/2026','Processado'],
+      ['MOV-558301','Troca de Plano','Adriana Campos Menezes','40218','12/09/2026','Em análise na Operadora'],
+      ['MOV-558377','Alteração de Cadastro','Marcos Vinícius Almeida','40226','18/09/2026','Pendente de Validação'],
+      ['MOV-558402','Exclusão','Simone Andrade Barros','40234','24/09/2026','Com Erro de Validação']
+    ]
+  },
+
+  '/saude/movimentacao-cadastral/gerenciar-arquivos': {
+    titulo: 'Gerenciar Arquivos',
+    topo: [{txt:'Importar Arquivo', classe:'btn-bus'}],
+    grupos: [{ tit:'Buscar', campos: [
+      saContrato('garq'),
+      {id:'garq-de', rot:'De (mm/aaaa)', t:'mmaaaa'},
+      {id:'garq-ate', rot:'Até (mm/aaaa)', t:'mmaaaa'},
+      {id:'garq-nome', rot:'Nome do Arquivo'}
+    ]}],
+    colunas: ['Nome do Arquivo','Contrato','Competência','Envio','Registros','Situação'],
+    linhas: [
+      ['mov-40218-202609.csv','40218','09/2026','02/09/2026 08:41','126','Processado'],
+      ['mov-40226-202609.csv','40226','09/2026','03/09/2026 10:12','34','Processado'],
+      ['mov-40234-202609.csv','40234','09/2026','05/09/2026 16:55','18','Falha Validações'],
+      ['mov-40218-202608.csv','40218','08/2026','01/08/2026 09:03','118','Processado'],
+      ['mov-40241-202609.csv','40241','09/2026','08/09/2026 14:27','72','Processando']
+    ]
+  },
+
+  '/saude/movimentacao-cadastral/gerenciar-lotes': {
+    titulo: 'Gerenciar Lotes',
+    topo: [{txt:'Fechar Lote', classe:'btn-bus'},{txt:'Alterar Mês de Referência', classe:'btn-limpar'}],
+    grupos: [{ tit:'Buscar', campos: [
+      saContrato('glot'),
+      {id:'glot-num', rot:'Nº do Lote'},
+      {id:'glot-sit', rot:'Situação', t:'sel', ops:['Todas','Aguardando Processamento','Processado','Recusado','Processando','Lote Entregue Via Malote','Pendente de Analise','Em Analise','Processado Parcialmente','Liberado Para Processamento','Falha no Processamento','Falha Fechamento','Falha Validações','Falha Envio']}
+    ]}],
+    colunas: ['Nº do Lote','Contrato','Mês de Referência','Movimentações','Fechamento','Situação'],
+    linhas: [
+      ['LT-22014','40218','09/2026','126','02/09/2026','Processado'],
+      ['LT-22015','40226','09/2026','34','03/09/2026','Processado'],
+      ['LT-22019','40234','09/2026','18','—','Aguardando Processamento'],
+      ['LT-22022','40241','09/2026','72','08/09/2026','Processado Parcialmente'],
+      ['LT-21988','40218','08/2026','118','01/08/2026','Processado']
+    ]
+  },
+
+  // --------------------------------------------------------------- Produtor
+  '/saude/produtor/extrato-comissoes': {
+    titulo: 'Extrato de Comissões',
+    grupos: [
+      { campos: [
+        {id:'exc-de', rot:'Período de', t:'mmaaaa'},
+        {id:'exc-ate', rot:'Período até', t:'mmaaaa'}
+      ]},
+      { campos: [
+        {id:'exc-tipo', t:'radio', tit:'Tipo de Pagamento', ops:['Todos','Comissão','Assessoria']},
+        {id:'exc-saida', t:'radio', tit:'Formato de Saída', ops:['Caminho PDF','Arquivo PDF Resumido','Arquivo PDF Completo','Arquivo PDF Consolidado','Arquivo TXT com Delimitador','Arquivo TXT com Delimitador por Item']}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar',
+    acao: SA_ACAO_FILA
+  },
+
+  // --------------------------------------------------------- Demonstrativos
+  '/saude/demonstrativos/demonstrativo-analitico-faturamento': {
+    titulo: 'Demonstrativo Analítico de Faturamento',
+    grupos: [
+      { campos: [saContrato('daf','Contrato ou Operadora')].concat(saCiclo('daf')).concat([
+        {id:'daf-lotacao', rot:'Lotação'},
+        {id:'daf-titular', rot:'Beneficiário Titular'},
+        {id:'daf-venc-de', rot:'Vencimento de (dd)'},
+        {id:'daf-venc-ate', rot:'Vencimento até (dd)'},
+        {id:'daf-fatura', t:'check', rot:'Por Fatura'},
+        {id:'daf-grupo', t:'check', rot:'Por grupo'}
+      ])},
+      { campos: [
+        {id:'daf-tipo', t:'radio', tit:'Tipo de Relatório', ops:['Normal','Aposentados e Demitidos','Liminar','Benefício Familiar']},
+        {id:'daf-ord', t:'radio', tit:'Ordenação', ops:['Ordenar Contratos por Nome','Ordenar Segurados por Nome']},
+        {id:'daf-quebra', t:'radio', tit:'Quebra', ops:['Contrato','Contrato | Empresa | Lotação','Contrato | Empresa | Lotação | Centro de Custo']},
+        {id:'daf-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-coparticipacao': {
+    titulo: 'Demonstrativo de Coparticipação',
+    grupos: [
+      { campos: [saContrato('dcp')].concat(saCiclo('dcp')).concat([
+        {id:'dcp-titular', rot:'Beneficiário Titular'},
+        {id:'dcp-venc-de', rot:'Vencimento de (dd)'},
+        {id:'dcp-venc-ate', rot:'Vencimento até (dd)'},
+        {id:'dcp-fatura', t:'check', rot:'Por Fatura'},
+        {id:'dcp-grupo', t:'check', rot:'Por grupo'},
+        {id:'dcp-apos', t:'check', rot:'Aposentados e Demitidos'},
+        {id:'dcp-maxdesc', t:'check', rot:'Valor Máximo de Desconto'}
+      ])},
+      { campos: [
+        {id:'dcp-tipo', t:'radio', tit:'Tipo de Relatório', ops:['Por Contrato','Por Titular']},
+        {id:'dcp-ord', t:'radio', tit:'Ordenação', ops:['Código Beneficiário','Nome Beneficiário','Lotação','Lotação | Centro de Custo']},
+        {id:'dcp-saida', t:'radio', tit:'Formato de Saída', ops:['Arquivo PDF','Arquivo TXT com Delimitador (#)']}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-movimentacoes': {
+    titulo: 'Demonstrativo de Movimentações',
+    grupos: [
+      { campos: [saContrato('dmv')].concat(saCiclo('dmv')).concat([
+        {id:'dmv-incexc', t:'check', rot:'Apenas Inclusão e Exclusão'},
+        {id:'dmv-ordnome', t:'check', rot:'Ordenar Titulares por Nome'}
+      ])},
+      { campos: [
+        {id:'dmv-quebra', t:'radio', tit:'Movimentação e Ordenação', ops:['Contrato','Contrato | Empresa','Contrato | Empresa | Lotação','Contrato | Empresa | Lotação | Centro de Custo']},
+        {id:'dmv-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-reembolso': {
+    titulo: 'Demonstrativo de Reembolso',
+    grupos: [
+      { campos: [
+        saContrato('drb'),
+        {id:'drb-benef', rot:'Beneficiário'},
+        {id:'drb-de', rot:'Inclusão de (dd/mm/aaaa)', t:'data'},
+        {id:'drb-ate', rot:'Inclusão até (dd/mm/aaaa)', t:'data'},
+        {id:'drb-protocolo', t:'check', rot:'Por Protocolo ou Reembolso'}
+      ]},
+      { campos: [
+        {id:'drb-tipo', t:'radio', tit:'Tipo de Arquivo', ops:['Reembolsos Solicitados','Reembolsos Pagos']}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-troca-faixa-etaria': {
+    titulo: 'Demonstrativo de Troca de Faixa Etária',
+    grupos: [
+      { campos: [saContrato('dtf')].concat(saCiclo('dtf')) },
+      { campos: [
+        {id:'dtf-ord', t:'radio', tit:'Ordenação', ops:['Código do Titular','Nome do Titular']},
+        {id:'dtf-quebra', t:'radio', tit:'Quebra', ops:['Contrato','Lotação e Central de Custo']},
+        {id:'dtf-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-utilizacao': {
+    titulo: 'Demonstrativo de Utilização',
+    grupos: [
+      { campos: [
+        saContrato('dut'),
+        {id:'dut-lotacao', rot:'Lotação'},
+        {id:'dut-titular', rot:'Beneficiário Titular'},
+        {id:'dut-de', rot:'Atendimento de (dd/mm/aaaa)', t:'data'},
+        {id:'dut-ate', rot:'Atendimento até (dd/mm/aaaa)', t:'data'},
+        {id:'dut-prestador', rot:'Prestador'},
+        {id:'dut-proc', rot:'Procedimento'},
+        {id:'dut-especifico', t:'check', rot:'Beneficiário Específico'},
+        {id:'dut-pagamento', t:'check', rot:'Período de Pagamento'}
+      ]},
+      { campos: [
+        {id:'dut-cronico', t:'radio', tit:'Paciente Crônico', ops:['Todos','Ativos','Excluídos','Específico']},
+        {id:'dut-tipo', t:'radio', tit:'Tipo de Relatório', ops:['Normal','Utilização Indevida','Utilização Coparticipação','Utilização Coparticipação com Limitador']},
+        {id:'dut-ord', t:'radio', tit:'Ordenação', ops:['Número do Beneficiário','Matrícula Contratante','Nome do Titular']},
+        {id:'dut-quebra', t:'radio', tit:'Quebra', ops:['Contrato','Lotação e Centro de Custo']},
+        {id:'dut-saida', t:'radio', tit:'Formato de Saída', ops:['Caminho PDF','Arquivo Texto com Delimitador (#)']}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/demonstrativos/demonstrativo-utilizacao-indevida': {
+    titulo: 'Demonstrativo de Utilização Indevida',
+    grupos: [
+      { campos: [saContrato('dui')].concat(saCiclo('dui')).concat([
+        {id:'dui-lotacao', rot:'Lotação'},
+        {id:'dui-titular', rot:'Beneficiário Titular'},
+        {id:'dui-ordnome', t:'check', rot:'Ordenar Beneficiários por Nome'}
+      ])},
+      { campos: [
+        {id:'dui-benef', t:'radio', tit:'Beneficiário', ops:['Todos','Ativos','Inativos']},
+        {id:'dui-tipo', t:'radio', tit:'Tipo de Relatório', ops:['Contrato','Titular','Lotação e Centro de Custo']},
+        {id:'dui-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  // -------------------------------------------------------------- Relatórios
+  '/saude/relatorios/acompanhar-faturamento': {
+    titulo: 'Acompanhar Faturamento',
+    grupos: [
+      { campos: [saContrato('afa')].concat(saCiclo('afa')).concat([
+        {id:'afa-tipo', rot:'Tipo do Relatório', t:'sel', ops:['Prévia por Contrato','Prévia por Empresa','Não Faturados','Faturas Preparadas','Faturas Emitidas','Faturas Canceladas','Restituições','Faturas Vincendas','Faturas Pagas','Faturas Vencidas','Faturas com Valor Isento']},
+        {id:'afa-ordnome', t:'check', rot:'Ordenar por Nome do Contratante'}
+      ])},
+      { campos: [{id:'afa-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}] }
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/relatorios/beneficiarios-movimentacao-cadastral': {
+    titulo: 'Beneficiários (Movimentação Cadastral)',
+    grupos: [
+      { campos: [saContrato('bmc')] },
+      { campos: [{id:'bmc-tipo', t:'radio', tit:'Tipo', ops:['Somente Ativos','Todos os Beneficiários']}] }
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/relatorios/faturamento-faixa-etaria': {
+    titulo: 'Faturamento por Faixa Etária',
+    grupos: [
+      { campos: [
+        saContrato('ffe'),
+        {id:'ffe-ciclo', rot:'Ciclo', t:'sel', ops:SA_CICLO},
+        {id:'ffe-comp', rot:'Competência (mm/aaaa)', t:'mmaaaa'},
+        {id:'ffe-ordnome', t:'check', rot:'Ordenar Contratos por Nome'}
+      ]},
+      { campos: [
+        {id:'ffe-quebra', t:'radio', tit:'Quebra', ops:['Contrato','Contrato • Empresa • Lotação','Contrato • Empresa • Lotação • Centro de Custo']},
+        {id:'ffe-saida', t:'radio', tit:'Formato de Saída', ops:SA_SAIDA_PDF_TXT}
+      ]}
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/relatorios/relatorio-sinistralidade': {
+    titulo: 'Relatório de Sinistralidade',
+    grupos: [
+      { campos: [
+        saContrato('rsi'),
+        {id:'rsi-comp', rot:'Competência (mm/aaaa)', t:'mmaaaa'},
+        {id:'rsi-limite', rot:'Limite de Registros'},
+        {id:'rsi-grupo', t:'check', rot:'Por grupo'}
+      ]},
+      { campos: [{id:'rsi-periodo', t:'radio', tit:'Período de Pagamento', ops:['12 meses','24 meses','36 meses']}] }
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/relatorios/relatorio-utilizacao-geral': {
+    titulo: 'Relatório de Utilização Geral',
+    grupos: [
+      { campos: [
+        saContrato('rug'),
+        {id:'rug-titular', rot:'Beneficiário Titular'},
+        {id:'rug-de', rot:'Utilização de (dd/mm/aaaa)', t:'data'},
+        {id:'rug-ate', rot:'Utilização até (dd/mm/aaaa)', t:'data'},
+        {id:'rug-pagamento', t:'check', rot:'Período de Pagamento'}
+      ]},
+      { campos: [{id:'rug-tipo', t:'radio', tit:'Tipo de Arquivo', ops:['Normal','Completo','Simples','Utilização ou Coparticipação com Delimitador','Utilização ou Custo Operacional com Delimitador']}] }
+    ],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  '/saude/relatorios/relatorio-utilizacao-sinistralidade': {
+    titulo: 'Relatório de Utilização Sinistralidade',
+    grupos: [{ campos: [
+      saContrato('rus'),
+      {id:'rus-titular', rot:'Beneficiário Titular'},
+      {id:'rus-de', rot:'Utilização de (dd/mm/aaaa)', t:'data'},
+      {id:'rus-ate', rot:'Utilização até (dd/mm/aaaa)', t:'data'},
+      {id:'rus-pagamento', t:'check', rot:'Período de Pagamento'}
+    ]}],
+    rotuloLimpar: 'Limpar', acao: SA_ACAO_FILA, extras: [SA_EXTRA_FILA]
+  },
+
+  // -------------------------------------------------------- Fila e apoio
+  '/saude/fila-relatorios': {
+    titulo: 'Fila de Relatórios',
+    grupos: [{ campos: [
+      {id:'fil-de', rot:'Período de', t:'mmaaaa'},
+      {id:'fil-ate', rot:'Período até', t:'mmaaaa'},
+      {id:'fil-nome', rot:'Nome do Relatório', t:'sel', ops:['Acompanha Faturamento','Analítico Faturamento','Beneficiário Movimentação Cadastral','Demonstrativo Coparticipação','Demonstrativo Movimentação','Demonstrativo Reembolso','Demonstrativo Utilização Indevida','Demonstrativo Utilização','Extrato de comissão','Extrato Pormenorizado de Reajuste','Faturamento Faixa Etária','Relatório de Sinistralidade','Segunda Via da Fatura','Troca Faixa Etária','Utilização Geral','Utilização Sinistralidade']}
+    ]}],
+    colunas: ['Relatório','Contrato','Solicitado em','Formato','Situação'],
+    linhas: [
+      ['Demonstrativo Utilização','40218','26/09/2026 09:14','Arquivo PDF','Disponível'],
+      ['Analítico Faturamento','40218','25/09/2026 16:02','Arquivo TXT','Disponível'],
+      ['Demonstrativo Coparticipação','40226','24/09/2026 11:37','Arquivo PDF','Processando'],
+      ['Relatório de Sinistralidade','40234','22/09/2026 08:50','Arquivo PDF','Expirado'],
+      ['Extrato de comissão','—','19/09/2026 14:23','Arquivo PDF Completo','Disponível']
+    ]
+  },
+
+  '/saude/material-apoio': {
+    titulo: 'Material de Apoio',
+    material: [
+      { id:'sama-manuais', tit:'Manuais e Documentos', itens: [
+        'Checklist Empresarial',
+        'Portabilidade',
+        'Cadastro de Inativos',
+        'Descontos em Medicamentos',
+        'Checklist PME',
+        'Contratação de Planos de Saúde',
+        'Extensão de Seguro Saúde'
+      ]}
+    ]
+  }
+};
+
+// Toda tela de Saúde (menos Material de Apoio) é um sistema embutido no portal.
+Object.keys(SA_TELAS).forEach(function (rota) {
+  var t = SA_TELAS[rota];
+  if (!t.material && !t.aviso) {
+    t.aviso = 'No portal esta tela carrega o sistema de Saúde dentro de um quadro embutido. Os campos e as colunas abaixo reproduzem esse sistema.';
+  }
+  PV_TELAS[rota] = t;
+});
+
+// rota de cada item do submenu de Saúde
+var SA_ROTAS_MENU = {
+  'Consultar Clientes|Consultar Segurados': '/saude/consultar-clientes/consultar-segurados',
+  'Consultar Clientes|Consultar Contratos': '/saude/consultar-clientes/consultar-contratos',
+  'Consultar Clientes|2ª Via de Boletos e Faturas': '/saude/consultar-clientes/segunda-via-boleto-fatura',
+  'Movimentação Cadastral|Movimentação de Beneficiários': '/saude/movimentacao-cadastral/movimentar-beneficiarios',
+  'Movimentação Cadastral|Histórico de Movimentações': '/saude/movimentacao-cadastral/historico-movimentacoes',
+  'Movimentação Cadastral|Gerenciar Arquivos': '/saude/movimentacao-cadastral/gerenciar-arquivos',
+  'Movimentação Cadastral|Gerenciar Lotes': '/saude/movimentacao-cadastral/gerenciar-lotes',
+  'Produtor|Extrato de Comissões': '/saude/produtor/extrato-comissoes',
+  'Demonstrativos|Demonstrativo Analítico de Faturamento': '/saude/demonstrativos/demonstrativo-analitico-faturamento',
+  'Demonstrativos|Demonstrativo de Coparticipação': '/saude/demonstrativos/demonstrativo-coparticipacao',
+  'Demonstrativos|Demonstrativo de Movimentações': '/saude/demonstrativos/demonstrativo-movimentacoes',
+  'Demonstrativos|Demonstrativo de Reembolso': '/saude/demonstrativos/demonstrativo-reembolso',
+  'Demonstrativos|Demonstrativo de Troca de Faixa Etária': '/saude/demonstrativos/demonstrativo-troca-faixa-etaria',
+  'Demonstrativos|Demonstrativo de Utilização': '/saude/demonstrativos/demonstrativo-utilizacao',
+  'Demonstrativos|Demonstrativo de Utilização Indevida': '/saude/demonstrativos/demonstrativo-utilizacao-indevida',
+  'Relatórios|Acompanhar Faturamento': '/saude/relatorios/acompanhar-faturamento',
+  'Relatórios|Beneficiários (Movimentação Cadastral)': '/saude/relatorios/beneficiarios-movimentacao-cadastral',
+  'Relatórios|Faturamento por Faixa Etária': '/saude/relatorios/faturamento-faixa-etaria',
+  'Relatórios|Relatório de Sinistralidade': '/saude/relatorios/relatorio-sinistralidade',
+  'Relatórios|Relatório de Utilização Geral': '/saude/relatorios/relatorio-utilizacao-geral',
+  'Relatórios|Relatório de Utilização Sinistralidade': '/saude/relatorios/relatorio-utilizacao-sinistralidade'
+};
+
+// "Informe de rendimento" não muda de rota: abre um modal sobre a tela Início.
+function saAbrirInforme() {
+  navigate('/');
+  setTimeout(function () {
+    var ov = document.getElementById('sa-informe-overlay');
+    if (!ov) return;
+    document.getElementById('sa-informe-doc').value = '';
+    document.getElementById('sa-informe-ano').value = '';
+    ov.style.display = 'flex';
+  }, 120);
+}
+function saFecharInforme() {
+  var ov = document.getElementById('sa-informe-overlay');
+  if (ov) ov.style.display = 'none';
+}
+function saGerarInforme() {
+  var doc = document.getElementById('sa-informe-doc').value.trim();
+  var ano = document.getElementById('sa-informe-ano').value.trim();
+  if (!doc || !ano) {
+    apeShowError('Preencha o CPF/CNPJ e o ano de referência para gerar o informe.');
+    return;
+  }
+  saFecharInforme();
+  apeShowError('Informe de rendimento de ' + ano + ' solicitado para ' + doc +
+    '. A geração do arquivo não faz parte deste protótipo.');
+}
 
 // =====================
 // CLICK OUTSIDE
@@ -11815,6 +12354,36 @@ ocBuild();
 </div>
 
 <!-- Error popup -->
+<!-- Saúde > Demonstrativos > Informe de rendimento: no portal abre
+     um modal sobre a tela Início, sem trocar de rota. -->
+<div class="ape-overlay" id="sa-informe-overlay" style="display:none">
+  <div class="ape-modal" style="max-width:520px">
+    <div class="ape-modal-hdr">
+      <span class="ape-modal-title">Informe de Rendimento</span>
+      <button class="ape-modal-close" onclick="saFecharInforme()" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="ape-modal-body">
+      <p style="font-size:14px;color:#44546c;margin-bottom:16px">Determine os parâmetros abaixo para gerar o informe.</p>
+      <div class="filter-inputs-row">
+        <div class="f-field"><div class="f-box">
+          <label for="sa-informe-doc">CPF/CNPJ</label>
+          <input type="text" class="f-inp" id="sa-informe-doc" maxlength="18">
+        </div></div>
+      </div>
+      <div class="filter-inputs-row">
+        <div class="f-field"><div class="f-box">
+          <label for="sa-informe-ano">Ano de Referência</label>
+          <input type="text" class="f-inp" id="sa-informe-ano" maxlength="4" placeholder="aaaa">
+        </div></div>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-vol" onclick="saFecharInforme()">Voltar</button>
+      <button class="btn-bus" onclick="saGerarInforme()">Gerar</button>
+    </div>
+  </div>
+</div>
+
 <div id="ape-error-popup" style="display:none;position:fixed;inset:0;z-index:9500;align-items:center;justify-content:center;background:rgba(0,0,0,0.4)" onclick="this.style.display='none'">
   <div style="background:#fff;border-radius:4px;padding:24px 28px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);text-align:center" onclick="event.stopPropagation()">
     <p id="ape-error-msg" style="font-size:14px;color:#44546c;margin-bottom:18px;line-height:1.5"></p>
