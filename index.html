@@ -347,6 +347,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 }
 .f-sel{appearance:none;cursor:pointer}
 .f-inp{padding-right:16px}
+.pv-topo{display:flex;gap:12px;flex-wrap:wrap;padding:0 0 16px}
+.pv-aviso-card{background:#EAF7FD;border-left:4px solid var(--azure);border-radius:3px;padding:12px 16px;margin-bottom:16px;font-size:14px;line-height:21px;color:var(--text)}
+.pv-grupo{padding:18px 16px 0}
+.pv-grupo + .filter-inputs-row{padding-top:10px}
 .f-chev{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none}
 .f-lupa{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:flex;cursor:pointer}
 .f-inp-lupa{padding-right:52px}
@@ -5253,6 +5257,110 @@ function authLogout(){
       </div>
     </div>
 
+    <!-- PREVIDÊNCIA — SIMULAR PROPOSTA PAGE -->
+    <div id="page-previdencia-simular-proposta" class="page">
+      <div class="cotador-page">
+        <div class="cotador-hist">
+          <div>
+            <h2 class="section-title">Simular Proposta</h2>
+            <hr class="section-divider">
+          </div>
+
+          <div class="filter-card">
+            <div class="pv-grupo"><span class="vcalc-section-title">Plano</span></div>
+            <div class="filter-inputs-row">
+              <div class="f-field"><div class="f-box">
+                <label for="pv-tipo-produto">Tipo de Produto</label>
+                <select class="f-sel" id="pv-tipo-produto">
+                  <option value="" selected></option>
+                  <option>PGBL</option>
+                  <option>VGBL</option>
+                  <option>VGBL Educação</option>
+                  <option>PGBL Educação</option>
+                  <option>Benefício de Risco</option>
+                </select><span class="f-chev"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#586880" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div></div>
+            </div>
+
+            <div class="pv-grupo"><span class="vcalc-section-title">Dados Pessoais</span></div>
+            <div class="filter-inputs-row">
+              <div class="f-field"><div class="f-box">
+                <label for="pv-cpf">CPF</label>
+                <input type="text" class="f-inp" id="pv-cpf" maxlength="14" oninput="maskCPF(this)">
+              </div></div>
+              <div class="f-field"><div class="f-box">
+                <label for="pv-nome">Nome Completo</label>
+                <input type="text" class="f-inp" id="pv-nome" maxlength="100">
+              </div></div>
+            </div>
+            <div class="filter-inputs-row">
+              <div class="f-field"><div class="f-box">
+                <label for="pv-sexo">Sexo</label>
+                <select class="f-sel" id="pv-sexo">
+                  <option value="" selected></option>
+                  <option>Masculino</option>
+                  <option>Feminino</option>
+                </select><span class="f-chev"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#586880" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div></div>
+              <div class="f-field"><div class="f-box">
+                <label for="pv-nascimento">Data de Nascimento</label>
+                <input type="text" class="f-inp" id="pv-nascimento" maxlength="10" placeholder="dd/mm/aaaa" oninput="maskDate(this)">
+              </div></div>
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn-vol" onclick="navigate('/')">Voltar</button>
+              <button class="btn-limpar" onclick="pvGerar()">Gerar</button>
+              <button class="btn-bus" onclick="pvSimular()">Simular</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIDÊNCIA — TELAS DO MENU (renderizadas a partir de PV_TELAS) -->
+    <div id="page-previdencia" class="page">
+      <div class="cotador-page">
+        <div class="cotador-hist">
+          <div>
+            <h2 class="section-title" id="pv-titulo">&mdash;</h2>
+            <hr class="section-divider">
+          </div>
+          <div id="pv-aviso"></div>
+          <div id="pv-topo" class="pv-topo"></div>
+          <div class="filter-card" id="pv-filtros"></div>
+        </div>
+        <div id="pv-material"></div>
+        <div id="pv-empty-prompt" class="empty-prompt">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 8h20l10 10v40a4 4 0 01-4 4H20a4 4 0 01-4-4V12a4 4 0 014-4z" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M40 8v10h10" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="24" y1="30" x2="42" y2="30" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="38" x2="42" y2="38" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="46" x2="34" y2="46" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="50" cy="52" r="11" fill="#fff" stroke="#009DDB" stroke-width="2.5"/>
+            <line x1="58" y1="60" x2="65" y2="67" stroke="#009DDB" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <div class="empty-prompt-text">Utilize os parâmetros de busca para<br>visualizar os resultados encontrados.</div>
+        </div>
+        <div id="pv-results" class="results-wrap" style="display:none">
+          <div style="width:100%">
+            <h2 class="section-title">Resultados</h2>
+            <hr class="section-divider">
+          </div>
+          <div class="tbl-card">
+            <div class="tbl-scroll">
+              <table class="rcp-t">
+                <thead><tr id="pv-thead"></tr></thead>
+                <tbody id="pv-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="pv-footer-slot"></div>
+      </div>
+    </div>
+
     <!-- STUB PAGE -->
     <div id="page-stub" class="page">
       <div class="stub-breadcrumb">
@@ -5978,14 +6086,13 @@ const segmentsData = [
   {
     id:"previdencia",letter:"P",label:"Previdência",color:"#e8b078",
     menuItems:[
-      {label:"Simuladores",hasSubmenu:true,sub:["Simulação","Contratação","Futuro Planejado"]},
-      {label:"Contratação",hasSubmenu:true,sub:["Proposta Coletiva","Proposta Individual"]},
-      {label:"Consultar",hasSubmenu:true,sub:["Extrato de Comissão"]},
+      {label:"Simuladores",hasSubmenu:true,sub:["Simulação","Contratação | Individual/Coletivo","Futuro Planejado"]},
+      {label:"Consultar",hasSubmenu:true,sub:["Extrato de Comissão","Central de Documentos"]},
       {label:"Proposta",hasSubmenu:true,sub:["Consultar Proposta","Emitir Extrato"]},
       {label:"Contrato",hasSubmenu:true,sub:["Consultar Contrato","Emitir Extrato de Fundo Global"]},
       {label:"2ª Via de Boleto",hasSubmenu:false},
-      {label:"Informe de Rendimentos",hasSubmenu:true,sub:["Informe de Rendimento do Corretor","Informe de Rendimento do Cliente"]},
-      {label:"Sinistros",hasSubmenu:true,sub:["Comunicar Sinistro","Pendências de Sinistro","Formulários de Sinistro","Relatório de Sinistros Pagos"]},
+      {label:"Informe de Rendimentos",hasSubmenu:true,sub:["Informe de Rendimento do Corretor"]},
+      {label:"Sinistros",hasSubmenu:true,sub:["Comunicar Sinistro","Consultar Sinistro","Relatório de Sinistros Pagos","Formulários de Sinistro"]},
       {label:"Material de Apoio",hasSubmenu:false},
     ]
   },
@@ -6258,6 +6365,18 @@ function handleRoute() {
     setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Calcule +</span>');
     stopCarousel();
     initCalculeMaisPage();
+  } else if (path === '/previdencia/simuladores/simulador-individual') {
+    document.getElementById('page-previdencia-simular-proposta').classList.add('active');
+    portalName.textContent = 'Simular Proposta';
+    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Simular Proposta</span>');
+    stopCarousel();
+    initPrevidenciaSimularPage();
+  } else if (PV_TELAS[path]) {
+    document.getElementById('page-previdencia').classList.add('active');
+    portalName.textContent = PV_TELAS[path].titulo;
+    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>' + PV_TELAS[path].titulo + '</span>');
+    stopCarousel();
+    initPrevidenciaPage(path);
   } else {
     document.getElementById('page-stub').classList.add('active');
     const label = decodeURIComponent(path.replace(/^\//, '').replace(/-/g,' '));
@@ -6451,7 +6570,9 @@ function toggleSegment(segId) {
           'ramos/Calcule +': '/calcule-mais',
           'vida/Calcule +': '/vida/calcule-mais',
           'vida/Endosso (em validação)': '/vida/endosso',
-          'ramos/Material de Apoio': '/material-apoio'
+          'ramos/Material de Apoio': '/material-apoio',
+          'previdencia/2ª Via de Boleto': '/previdencia/segunda-via-boleto',
+          'previdencia/Material de Apoio': '/previdencia/material-apoio'
         };
         navigate(topLevelRoutes[segId + '/' + item.label] || '/' + encodeURIComponent(item.label));
       }
@@ -6519,6 +6640,11 @@ function selectMenuItem(segId, label) {
         if (item.label === '2ª Via' && subLabel === '2ª Via de Boleto') {
           navigate('/2via/boleto');
           return;
+        }
+        if (segId === 'previdencia') {
+          if (PV_EXTERNOS[subLabel]) { pvAbrirExterno(subLabel); return; }
+          const rotaPrev = PV_ROTAS_MENU[item.label + '|' + subLabel];
+          if (rotaPrev) { navigate(rotaPrev); return; }
         }
         if (segId === 'ramos' && item.label === 'Relatórios' && subLabel === 'Relatório de Inadimplência') {
           navigate('/relatorios/inadimplencia');
@@ -10253,6 +10379,542 @@ function initCalculeMaisPage() {
   calcRenderPropostas();
   calcRenderTransmitidos();
 }
+
+// =====================
+// PREVIDÊNCIA — SIMULAR PROPOSTA
+// =====================
+function pvCampos() {
+  return {
+    produto: document.getElementById('pv-tipo-produto'),
+    cpf: document.getElementById('pv-cpf'),
+    nome: document.getElementById('pv-nome'),
+    sexo: document.getElementById('pv-sexo'),
+    nascimento: document.getElementById('pv-nascimento')
+  };
+}
+function pvValida() {
+  const c = pvCampos();
+  const faltando = [];
+  if (!c.produto.value) faltando.push('Tipo de Produto');
+  if (!c.cpf.value.trim()) faltando.push('CPF');
+  if (!c.nome.value.trim()) faltando.push('Nome Completo');
+  if (!c.sexo.value) faltando.push('Sexo');
+  if (!c.nascimento.value.trim()) faltando.push('Data de Nascimento');
+  if (faltando.length) {
+    apeShowError('Preencha antes de continuar: ' + faltando.join(', ') + '.');
+    return false;
+  }
+  return true;
+}
+function pvSimular() {
+  if (!pvValida()) return;
+  apeShowError('A tela de resultado da simulação ainda não foi mapeada neste protótipo.');
+}
+function pvGerar() {
+  if (!pvValida()) return;
+  apeShowError('A geração do relatório ainda não foi mapeada neste protótipo.');
+}
+function initPrevidenciaSimularPage() {
+  const c = pvCampos();
+  c.produto.value = ''; c.cpf.value = ''; c.nome.value = '';
+  c.sexo.value = ''; c.nascimento.value = '';
+}
+
+// =====================
+// PREVIDÊNCIA — TELAS DO MENU
+// Estrutura extraída das capturas do portal de homologação (28/09/2026).
+// Cada tela descreve seus grupos de campos, botões e colunas de resultado;
+// um único renderizador monta a página a partir dessa descrição.
+// =====================
+var PV_CHEV = '<span class="f-chev"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#586880" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+
+var PV_TELAS = {
+
+  '/previdencia/proposta/buscar-solicitacao': {
+    titulo: 'Consultar Solicitação Proposta',
+    menu: ['Simuladores', 'Contratação | Individual/Coletivo'],
+    aviso: 'As solicitações de proposta individual e coletiva iniciadas pelo novo canal ficam disponíveis aqui até a confirmação. O acesso ao canal antigo segue disponível pelo botão acima.',
+    topo: [
+      { txt: 'Nova Solicitação Proposta', classe: 'btn-bus' },
+      { txt: 'Acesso antigo canal de contratação de Proposta Individual', classe: 'btn-limpar' }
+    ],
+    grupos: [{ campos: [
+      { id: 'prop-num', rot: 'Nº da Proposta' },
+      { id: 'prop-cpf', rot: 'CPF', t: 'cpf' },
+      { id: 'prop-part', rot: 'Participante' },
+      { id: 'prop-sit', rot: 'Situação', t: 'sel', ops: ['Todas','Preenchimento','Aguarda Assinatura','Erro Envio Assinatura','Recusa Participante','Assinatura Expirada','Erro Validação','Cancelada','Proposta em Análise','Proposta Confirmada','Proposta Recusada'] },
+      { id: 'prop-plano', rot: 'Plano', t: 'sel', ops: ['Todos','Individual','Coletivo'] },
+      { id: 'prop-contrato', rot: 'Nº do Contrato' },
+      { id: 'prop-produto', rot: 'Tipo de Produto', t: 'sel', ops: ['Todos','PGBL','VGBL','PGBL/VGBL','Benefício de Risco'] },
+      { id: 'prop-de', rot: 'Última Atualização de', t: 'data' },
+      { id: 'prop-ate', rot: 'Última Atualização até', t: 'data' }
+    ]}],
+    colunas: ['Nº da Proposta','Participante','CPF','Plano','Tipo de Produto','Última Atualização','Situação'],
+    linhas: [
+      ['PRV-880114','Adriana Campos Menezes','123.456.789-01','Individual','PGBL','12/09/2026','Preenchimento'],
+      ['PRV-880127','Rogério Pinheiro Lima','234.567.890-12','Individual','VGBL','15/09/2026','Aguarda Assinatura'],
+      ['PRV-880139','Construtora Vale Norte Ltda','11.222.333/0001-44','Coletivo','PGBL/VGBL','18/09/2026','Proposta em Análise'],
+      ['PRV-880146','Simone Andrade Barros','345.678.901-23','Individual','Benefício de Risco','20/09/2026','Proposta Confirmada'],
+      ['PRV-880152','Tiago Moreira Fontes','456.789.012-34','Individual','VGBL','22/09/2026','Assinatura Expirada'],
+      ['PRV-880168','Clínica Bem Viver S/S','22.333.444/0001-55','Coletivo','PGBL','24/09/2026','Cancelada'],
+      ['PRV-880175','Letícia Farias Duarte','567.890.123-45','Individual','PGBL','26/09/2026','Proposta Recusada']
+    ]
+  },
+
+  '/previdencia/consultar-extrato-comissao': {
+    titulo: 'Extrato de Comissão',
+    menu: ['Consultar', 'Extrato de Comissão'],
+    grupos: [{ campos: [
+      { id: 'ext-sistema', rot: 'Sistema', t: 'sel', ops: ['Todos','Ramos Elementares','Vida/Previdência'] },
+      { id: 'ext-sit', rot: 'Situação', t: 'sel', ops: ['Todos','Pago','Pendente'] },
+      { id: 'ext-de', rot: 'Emissão de', t: 'data' },
+      { id: 'ext-ate', rot: 'Emissão até', t: 'data' }
+    ]}],
+    colunas: ['Nº do Extrato','Sistema','Competência','Emissão','Valor','Situação'],
+    linhas: [
+      ['EXT-2026-0914','Vida/Previdência','08/2026','05/09/2026','R$ 12.480,35','Pago'],
+      ['EXT-2026-0915','Vida/Previdência','08/2026','05/09/2026','R$ 3.914,20','Pago'],
+      ['EXT-2026-0931','Ramos Elementares','08/2026','05/09/2026','R$ 7.226,90','Pago'],
+      ['EXT-2026-1002','Vida/Previdência','09/2026','05/10/2026','R$ 11.037,15','Pendente'],
+      ['EXT-2026-1003','Ramos Elementares','09/2026','05/10/2026','R$ 5.648,00','Pendente']
+    ]
+  },
+
+  '/previdencia/consultar/central-documentos': {
+    titulo: 'Central de Documentos',
+    menu: ['Consultar', 'Central de Documentos'],
+    grupos: [{ campos: [
+      { id: 'pcd-ramo', rot: 'Ramo', valor: 'Previdência' },
+      { id: 'pcd-tipo', rot: 'Tipo de Documento', t: 'sel', ops: ['Todos','Extrato de Comissão PDF','Extrato de Comissão Excel','Demonstrativo Analítico por Segurado','2ª Via de Certificados ou Apólices'] },
+      { id: 'pcd-sit', rot: 'Situação', t: 'sel', ops: ['Todos','Aguardando Processamento','Em Processamento','Finalizado','Expirado','Finalizado com Falha','Finalizado sem Registros','Finalizado com Inconsistências'] },
+      { id: 'pcd-data', rot: 'Data Solicitação', t: 'sel', ops: ['Hoje','Últimos 7 dias','Últimos 30 dias','Últimos 90 dias'], larg: '320px' }
+    ]}],
+    colunas: ['Documento','Ramo','Solicitação','Situação'],
+    linhas: [
+      ['Extrato de Comissão PDF','Previdência','26/09/2026 09:14','Finalizado'],
+      ['Demonstrativo Analítico por Segurado','Previdência','25/09/2026 16:02','Em Processamento'],
+      ['2ª Via de Certificados ou Apólices','Previdência','24/09/2026 11:37','Finalizado'],
+      ['Extrato de Comissão Excel','Previdência','22/09/2026 08:50','Expirado'],
+      ['Demonstrativo Analítico por Segurado','Previdência','19/09/2026 14:23','Finalizado sem Registros']
+    ]
+  },
+
+  '/previdencia/proposta/buscar': {
+    titulo: 'Consultar Propostas',
+    menu: ['Proposta', 'Consultar Proposta'],
+    grupos: [{ campos: [
+      { id: 'cp-num', rot: 'Nº da Proposta' },
+      { id: 'cp-cpf', rot: 'CPF', t: 'cpf' },
+      { id: 'cp-part', rot: 'Participante' },
+      { id: 'cp-sit', rot: 'Situação', t: 'sel', ops: ['Todas','Cancelada','Ativa','Inadimplente','Em Gozo','Resgatada','Suspensa','Pendente','Recusada'] },
+      { id: 'cp-plano', rot: 'Plano', t: 'sel', ops: ['Todos','Individual','Coletivo'] },
+      { id: 'cp-contrato', rot: 'Nº do Contrato' },
+      { id: 'cp-produto', rot: 'Tipo de Produto', t: 'sel', ops: ['Todos','Benefício de Risco','Tradicional','PGBL','VGBL','PGBL/VGBL'] },
+      { id: 'cp-de', rot: 'Vigência de', t: 'data' },
+      { id: 'cp-ate', rot: 'Vigência até', t: 'data' }
+    ]}],
+    colunas: ['Nº da Proposta','Participante','CPF','Plano','Tipo de Produto','Vigência','Situação'],
+    linhas: [
+      ['PRV-771204','Adriana Campos Menezes','123.456.789-01','Individual','PGBL','01/03/2021','Ativa'],
+      ['PRV-771318','Rogério Pinheiro Lima','234.567.890-12','Individual','VGBL','15/07/2022','Ativa'],
+      ['PRV-771442','Construtora Vale Norte Ltda','11.222.333/0001-44','Coletivo','PGBL/VGBL','01/01/2023','Ativa'],
+      ['PRV-771507','Simone Andrade Barros','345.678.901-23','Individual','Tradicional','10/05/2019','Em Gozo'],
+      ['PRV-771663','Tiago Moreira Fontes','456.789.012-34','Individual','VGBL','20/11/2024','Inadimplente'],
+      ['PRV-771729','Letícia Farias Duarte','567.890.123-45','Individual','Benefício de Risco','02/02/2025','Suspensa'],
+      ['PRV-771801','Marcelo Ribeiro Tavares','678.901.234-56','Individual','PGBL','08/08/2020','Resgatada'],
+      ['PRV-771860','Clínica Bem Viver S/S','22.333.444/0001-55','Coletivo','PGBL','01/06/2023','Cancelada']
+    ]
+  },
+
+  '/previdencia/emitir-extrato': {
+    titulo: 'Extrato',
+    menu: ['Proposta', 'Emitir Extrato'],
+    grupos: [{ campos: [
+      { id: 'ee-por', rot: 'Pesquisar por', t: 'sel', ops: ['Nº Proposta','CPF'] },
+      { id: 'ee-valor', rot: 'Nº da Proposta' },
+      { id: 'ee-periodo', rot: 'Período', t: 'sel', ops: ['Último mês','Últimos 3 meses','Últimos 6 meses','Últimos 12 meses','Personalizado'] }
+    ]}],
+    acao: { txt: 'Gerar Extrato', msg: 'O extrato seria gerado em PDF. A geração do arquivo não faz parte deste protótipo.' }
+  },
+
+  '/previdencia/contrato/buscar': {
+    titulo: 'Consultar Contratos',
+    menu: ['Contrato', 'Consultar Contrato'],
+    grupos: [{ campos: [
+      { id: 'cc-num', rot: 'Nº Contrato' },
+      { id: 'cc-empresa', rot: 'Empresa' },
+      { id: 'cc-sit', rot: 'Situação', t: 'sel', ops: ['Todas','Ativo','Suspenso','Encerrado','Inadimplente'] }
+    ]}],
+    colunas: ['Nº do Contrato','Empresa','CNPJ','Plano','Participantes','Situação'],
+    linhas: [
+      ['CTR-40218','Construtora Vale Norte Ltda','11.222.333/0001-44','Coletivo Averbado','184','Ativo'],
+      ['CTR-40226','Clínica Bem Viver S/S','22.333.444/0001-55','Coletivo Instituído','47','Ativo'],
+      ['CTR-40234','Transportes Santa Rita ME','33.444.555/0001-66','Coletivo Averbado','29','Inadimplente'],
+      ['CTR-40241','Colégio Horizonte Azul','44.555.666/0001-77','Coletivo Instituído','112','Suspenso'],
+      ['CTR-40259','Indústria Metalcampo S.A.','55.666.777/0001-88','Coletivo Averbado','356','Encerrado']
+    ]
+  },
+
+  '/previdencia/contrato/extrato-fundo-global': {
+    titulo: 'Extrato de Fundo Global',
+    menu: ['Contrato', 'Emitir Extrato de Fundo Global'],
+    grupos: [{ campos: [
+      { id: 'fg-num', rot: 'Nº Contrato' },
+      { id: 'fg-tipo', rot: 'Tipo', t: 'sel', ops: ['Analítico','Sintético'] },
+      { id: 'fg-saida', rot: 'Formato de Saída', t: 'sel', ops: ['PDF','Excel'] },
+      { id: 'fg-periodo', rot: 'Período', t: 'sel', ops: ['Último mês','Últimos 3 meses','Últimos 6 meses','Últimos 12 meses','Personalizado'] }
+    ]}],
+    acao: { txt: 'Gerar Extrato', msg: 'O extrato de fundo global seria gerado no formato escolhido. A geração do arquivo não faz parte deste protótipo.' }
+  },
+
+  '/previdencia/segunda-via-boleto': {
+    titulo: '2ª Via de Boleto',
+    menu: ['2ª Via de Boleto', ''],
+    grupos: [{ campos: [
+      { id: 'bl-por', rot: 'Pesquisar por', t: 'sel', ops: ['Proposta','Contrato','CPF','CNPJ'] },
+      { id: 'bl-valor', rot: 'Nº da Proposta' },
+      { id: 'bl-tipo', rot: 'Tipo', t: 'sel', ops: ['Todos','Faturamento','Aporte'] },
+      { id: 'bl-de', rot: 'Vencimento de', t: 'data' },
+      { id: 'bl-ate', rot: 'Vencimento até', t: 'data' }
+    ]}],
+    colunas: ['Nº do Documento','Participante / Empresa','Tipo','Vencimento','Valor','Situação'],
+    linhas: [
+      ['BOL-5590213','Adriana Campos Menezes','Faturamento','10/09/2026','R$ 480,00','Pago'],
+      ['BOL-5590247','Adriana Campos Menezes','Faturamento','10/10/2026','R$ 480,00','Em aberto'],
+      ['BOL-5590288','Rogério Pinheiro Lima','Aporte','15/10/2026','R$ 5.000,00','Em aberto'],
+      ['BOL-5590301','Construtora Vale Norte Ltda','Faturamento','05/09/2026','R$ 21.340,80','Pago'],
+      ['BOL-5590334','Transportes Santa Rita ME','Faturamento','05/09/2026','R$ 3.115,00','Vencido']
+    ]
+  },
+
+  '/previdencia/informe-rendimentos/corretor': {
+    titulo: 'Informe de Rendimentos Corretor',
+    menu: ['Informe de Rendimentos', 'Informe de Rendimento do Corretor'],
+    grupos: [{ campos: [
+      { id: 'ir-ramo', rot: 'Ramo', t: 'sel', ops: ['Todos','Vida/Previdência','Ramos Elementares'] },
+      { id: 'ir-ano', rot: 'Ano Base', t: 'sel', ops: ['2025','2024','2023'] }
+    ]}],
+    acao: { txt: 'Gerar Informe', msg: 'O informe de rendimentos seria gerado em PDF. A geração do arquivo não faz parte deste protótipo.' }
+  },
+
+  '/previdencia/sinistros/sinistro-online': {
+    titulo: 'Comunicar Sinistro',
+    menu: ['Sinistros', 'Comunicar Sinistro'],
+    aviso: 'No portal esta tela carrega o sistema de Sinistros dentro de um quadro embutido. Os campos abaixo reproduzem esse formulário.',
+    grupos: [
+      { tit: 'Dados do Segurado', campos: [
+        { id: 'cs-cpf-seg', rot: 'CPF segurado', t: 'cpf' },
+        { id: 'cs-nome-seg', rot: 'Nome segurado' },
+        { id: 'cs-nasc-seg', rot: 'Data de nascimento', t: 'data' }
+      ]},
+      { tit: 'Dados do Sinistrado', campos: [
+        { id: 'cs-cpf-sin', rot: 'CPF sinistrado', t: 'cpf' },
+        { id: 'cs-nome-sin', rot: 'Nome sinistrado' },
+        { id: 'cs-data-oco', rot: 'Data da ocorrência', t: 'data' },
+        { id: 'cs-cidade-oco', rot: 'Cidade da ocorrência' }
+      ]},
+      { tit: 'Dados do Comunicante', campos: [
+        { id: 'cs-nome-com', rot: 'Nome do comunicante' },
+        { id: 'cs-tel-com', rot: 'Telefone do comunicante' },
+        { id: 'cs-email-com', rot: 'E-mail do comunicante' }
+      ]}
+    ],
+    rotuloLimpar: 'Cancelar',
+    acao: { txt: 'Registrar Comunicado', msg: 'O registro do comunicado é feito no sistema de Sinistros. Essa etapa não faz parte deste protótipo.' }
+  },
+
+  '/previdencia/sinistros/consultar-sinistros': {
+    titulo: 'Consultar Sinistro',
+    menu: ['Sinistros', 'Consultar Sinistro'],
+    aviso: 'No portal esta tela carrega o sistema de Sinistros dentro de um quadro embutido. Os filtros e as colunas abaixo reproduzem esse sistema.',
+    grupos: [{ campos: [
+      { id: 'sn-com', rot: 'Nº do comunicado' },
+      { id: 'sn-sin', rot: 'Nº do sinistro' },
+      { id: 'sn-de', rot: 'Data de', t: 'data' },
+      { id: 'sn-ate', rot: 'Data até', t: 'data' },
+      { id: 'sn-doc-seg', rot: 'CPF/CNPJ do segurado' },
+      { id: 'sn-nome-seg', rot: 'Nome do segurado' },
+      { id: 'sn-cpf-sin', rot: 'CPF do sinistrado' },
+      { id: 'sn-nome-sin', rot: 'Nome do sinistrado' }
+    ]}],
+    rotuloLimpar: 'Limpar',
+    rotuloBuscar: 'Filtrar',
+    colunas: ['Nº do Comunicado','Data/Hora do comunicado','Cobertura','CPF Segurado','Nome Segurado','Nome Sinistrado','Data da Ocorrência','Status'],
+    linhas: [
+      ['CM-2026-10441','12/08/2026 10:22','Morte Natural','123.456.789-01','Adriana Campos Menezes','Otávio Campos Menezes','05/08/2026','Em análise'],
+      ['CM-2026-10478','19/08/2026 14:05','Invalidez por Acidente','234.567.890-12','Rogério Pinheiro Lima','Rogério Pinheiro Lima','11/08/2026','Documentação pendente'],
+      ['CM-2026-10502','27/08/2026 09:41','Morte Acidental','345.678.901-23','Simone Andrade Barros','Carlos Barros Filho','20/08/2026','Deferido'],
+      ['CM-2026-10556','04/09/2026 16:58','Pecúlio','456.789.012-34','Tiago Moreira Fontes','Tiago Moreira Fontes','28/08/2026','Em análise'],
+      ['CM-2026-10603','16/09/2026 11:13','Morte Natural','567.890.123-45','Letícia Farias Duarte','Hélio Farias Duarte','09/09/2026','Indeferido']
+    ]
+  },
+
+  '/previdencia/sinistros/relatorio-sinistros-pagos': {
+    titulo: 'Relatório de Sinistros Pagos',
+    menu: ['Sinistros', 'Relatório de Sinistros Pagos'],
+    aviso: 'No portal esta tela carrega o sistema de Sinistros dentro de um quadro embutido. Os filtros e as colunas abaixo reproduzem esse sistema.',
+    grupos: [{ campos: [
+      { id: 'rp-com', rot: 'Nº Comunicado' },
+      { id: 'rp-sin', rot: 'Nº Sinistro' },
+      { id: 'rp-apo', rot: 'Nº Apólice' },
+      { id: 'rp-doc-seg', rot: 'CPF/CNPJ Segurado' },
+      { id: 'rp-nome-seg', rot: 'Nome Segurado/Empresa' },
+      { id: 'rp-doc-ben', rot: 'CPF/CNPJ Beneficiário' },
+      { id: 'rp-nome-ben', rot: 'Nome Beneficiário' },
+      { id: 'rp-de', rot: 'Pagamento de', t: 'data' },
+      { id: 'rp-ate', rot: 'Pagamento até', t: 'data' }
+    ]}],
+    rotuloLimpar: 'Limpar',
+    rotuloBuscar: 'Filtrar',
+    colunas: ['Data/Hora de Emissão','Situação Arquivo','Nome Arquivo','Origem','Suborigem'],
+    linhas: [
+      ['26/09/2026 08:31','Disponível','sinistros-pagos-202609.xlsx','Previdência','Pecúlio'],
+      ['12/09/2026 17:44','Disponível','sinistros-pagos-202608.xlsx','Previdência','Morte'],
+      ['30/08/2026 10:09','Expirado','sinistros-pagos-202607.xlsx','Previdência','Invalidez'],
+      ['15/08/2026 13:20','Disponível','sinistros-pagos-202606.xlsx','Previdência','Morte'],
+      ['01/08/2026 09:02','Processando','sinistros-pagos-202605.xlsx','Previdência','Pecúlio']
+    ]
+  },
+
+  '/previdencia/material-apoio': {
+    titulo: 'Material de Apoio',
+    menu: ['Material de Apoio', ''],
+    material: [
+      { id: 'pvma-manuais', tit: 'Manuais e Tabelas', itens: [
+        'Manual de Produtos de Previdência e Risco (Corretor)',
+        'Lâmina de Remuneração (Planos Individuais)',
+        'Lâmina Cobertura de Risco Individual (Cliente)',
+        'Cartilha para Declaração de Previdência no IR',
+        'Tabela de Rentabilidade',
+        'Manual de Previdência (Planos Individuais Cliente)',
+        'Lâmina Previdência e Risco (Cliente)',
+        'Lâmina Cobertura de Risco Coletivo (Cliente)',
+        'Regulamentos de Previdência'
+      ]},
+      { id: 'pvma-multi', tit: 'Proposta Multifundos', itens: [
+        'Coberturas de Risco (Individual e Coletivo)',
+        'Plano Individual (Futuro Planejado)',
+        'Plano Individual',
+        'Plano Individual (Acordo Comercial)',
+        'Plano Coletivo (Averbado)',
+        'Plano Coletivo (Instituído)',
+        'Plano Empresarial (Instituído e Averbado)'
+      ]},
+      { id: 'pvma-naomulti', tit: 'Proposta Não Multifundos', itens: [
+        'PGBL Instituído/Averbado (AT 83 0%)',
+        'PGBL Instituído/Averbado (AT 83 e AT 2000 3%)',
+        'PGBL Instituído/Averbado (BR-EMS 0%)',
+        'VGBL Averbado (AT 83 0%)',
+        'VGBL Averbado (AT 83 e AT 2000 3%)',
+        'VGBL Averbado (BR-EMS 0%)'
+      ]},
+      { id: 'pvma-form', tit: 'Formulários', itens: [
+        'Alterar Responsável Financeiro e Legal',
+        'Transferência Interna e Atualização do FIE',
+        'Transferência Interna entre Proposta',
+        'Termo de Portabilidade entre EAPC e Seguradora',
+        'Solicitar Benefício (Plano Tradicional)',
+        'Formulários de Previdência',
+        'Atualizar Dados',
+        'Solicitar Resgate',
+        'Termo de Opção de Regime Tributário',
+        'Termo para Trocar Titularidade entre Planos',
+        'Solicitar Benefício (PGBL e VGBL)',
+        'Formulários de Proposta'
+      ]}
+    ]
+  }
+};
+
+// sites externos: no portal esses itens abrem em nova aba
+var PV_EXTERNOS = {
+  'Futuro Planejado': 'https://simuladordofuturo.segurosunimed.com.br/',
+  'Formulários de Sinistro': 'https://www.segurosunimed.com.br/formularios-da-previdencia'
+};
+
+var pvRotaAtual = null;
+var pvBuscou = false;
+
+function pvStatusClasse(s) {
+  var verdes = ['Ativa','Ativo','Pago','Finalizado','Proposta Confirmada','Deferido','Disponível','Em Gozo'];
+  var vermelhas = ['Cancelada','Encerrado','Vencido','Expirado','Recusada','Proposta Recusada','Indeferido','Inadimplente','Assinatura Expirada','Erro Validação','Erro Envio Assinatura','Recusa Participante','Finalizado com Falha','Finalizado com Inconsistências'];
+  var ambares = ['Pendente','Em aberto','Suspensa','Suspenso','Em análise','Preenchimento','Aguarda Assinatura','Proposta em Análise','Documentação pendente','Em Processamento','Aguardando Processamento','Processando','Finalizado sem Registros','Resgatada'];
+  if (verdes.indexOf(s) >= 0) return 'stag stag-c';
+  if (vermelhas.indexOf(s) >= 0) return 'stag stag-v';
+  if (ambares.indexOf(s) >= 0) return 'stag stag-a';
+  return 'stag';
+}
+
+function pvCampoHtml(f) {
+  var id = 'pvf-' + f.id;
+  var larg = f.larg ? ' style="flex:0 0 ' + f.larg + '"' : '';
+  var inner;
+  if (f.t === 'sel') {
+    inner = '<select class="f-sel" id="' + id + '">' +
+      f.ops.map(function (o, i) { return '<option' + (i === 0 ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+      '</select>' + PV_CHEV;
+  } else {
+    var extra = '';
+    if (f.t === 'cpf') extra = ' maxlength="14" oninput="maskCPF(this)"';
+    else if (f.t === 'data') extra = ' maxlength="10" placeholder="dd/mm/aaaa" oninput="maskDate(this)"';
+    var valor = f.valor ? ' value="' + f.valor + '"' : '';
+    inner = '<input type="text" class="f-inp" id="' + id + '"' + extra + valor + '>';
+  }
+  return '<div class="f-field"' + larg + '><div class="f-box"><label for="' + id + '">' + f.rot + '</label>' + inner + '</div></div>';
+}
+
+function pvGrupoHtml(g) {
+  var html = '';
+  if (g.tit) html += '<div class="pv-grupo"><span class="vcalc-section-title">' + g.tit + '</span></div>';
+  for (var i = 0; i < g.campos.length; i += 3) {
+    html += '<div class="filter-inputs-row">' +
+      g.campos.slice(i, i + 3).map(pvCampoHtml).join('') +
+      '</div>';
+  }
+  return html;
+}
+
+function pvRenderTela(rota) {
+  var t = PV_TELAS[rota];
+  if (!t) return;
+  pvRotaAtual = rota;
+  pvBuscou = false;
+
+  document.getElementById('pv-titulo').textContent = t.titulo;
+
+  var aviso = document.getElementById('pv-aviso');
+  aviso.innerHTML = t.aviso ? '<div class="pv-aviso-card">' + t.aviso + '</div>' : '';
+
+  var topo = document.getElementById('pv-topo');
+  topo.innerHTML = (t.topo || []).map(function (b) {
+    return '<button class="' + b.classe + '" onclick="pvNaoMapeado()">' + b.txt + '</button>';
+  }).join('');
+  topo.style.display = (t.topo && t.topo.length) ? 'flex' : 'none';
+
+  var card = document.getElementById('pv-filtros');
+  var material = document.getElementById('pv-material');
+
+  if (t.material) {
+    card.style.display = 'none';
+    material.style.display = 'block';
+    material.innerHTML = '<div class="ma-wrap"><div class="ma-nav-row">' +
+      t.material.map(function (s) {
+        return '<button class="ma-nav-btn" onclick="maScrollTo(\'' + s.id + '\')">' + pvIconeDoc() + s.tit + '</button>';
+      }).join('') + '</div>' +
+      t.material.map(function (s) {
+        return '<div class="ma-section" id="' + s.id + '">' +
+          '<h2 class="ma-sec-title">' + s.tit + '</h2><hr class="ma-sec-divider">' +
+          '<div class="ma-card">' + s.itens.map(function (it) {
+            return '<a class="ma-link" href="#" onclick="return false">' + pvIconeLink() + it + '</a>';
+          }).join('') + '</div></div>';
+      }).join('') + '</div>';
+  } else {
+    material.style.display = 'none';
+    material.innerHTML = '';
+    card.style.display = 'block';
+    card.innerHTML = (t.grupos || []).map(pvGrupoHtml).join('') +
+      '<div class="filter-actions">' +
+        '<button class="btn-vol" onclick="navigate(\'/\')">Voltar</button>' +
+        '<button class="btn-limpar" onclick="pvLimpar()">' + (t.rotuloLimpar || 'Limpar Filtros') + '</button>' +
+        '<button class="btn-bus" onclick="pvBuscar()">' +
+          (t.acao ? t.acao.txt : (t.rotuloBuscar || 'Buscar')) +
+        '</button>' +
+      '</div>';
+  }
+
+  pvMostrarResultados();
+}
+
+function pvIconeDoc() {
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#0f2a51" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#0f2a51" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+}
+function pvIconeLink() {
+  return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#009DDB" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#009DDB" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+}
+
+function pvNaoMapeado() {
+  apeShowError('Esta funcionalidade ainda não foi mapeada neste protótipo.');
+}
+
+function pvLimpar() {
+  var t = PV_TELAS[pvRotaAtual];
+  if (!t) return;
+  (t.grupos || []).forEach(function (g) {
+    g.campos.forEach(function (f) {
+      var el = document.getElementById('pvf-' + f.id);
+      if (!el) return;
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = f.valor || '';
+    });
+  });
+  pvBuscou = false;
+  pvMostrarResultados();
+}
+
+function pvBuscar() {
+  var t = PV_TELAS[pvRotaAtual];
+  if (!t) return;
+  if (t.acao) { apeShowError(t.acao.msg); return; }
+  pvBuscou = true;
+  pvMostrarResultados();
+}
+
+function pvMostrarResultados() {
+  var t = PV_TELAS[pvRotaAtual] || {};
+  var vazio = document.getElementById('pv-empty-prompt');
+  var res = document.getElementById('pv-results');
+  var temTabela = !!t.colunas;
+
+  if (!temTabela) { vazio.style.display = 'none'; res.style.display = 'none'; return; }
+  if (!pvBuscou) { vazio.style.display = 'flex'; res.style.display = 'none'; return; }
+
+  vazio.style.display = 'none';
+  res.style.display = 'flex';
+
+  document.getElementById('pv-thead').innerHTML = '<th class="sp"></th>' +
+    t.colunas.map(function (c) {
+      return '<th style="min-width:' + (c.length > 18 ? 210 : 140) + 'px"><span class="th-t">' + c + '</span></th>';
+    }).join('') + '<th style="min-width:85px"><span class="th-t">Ações</span></th>';
+
+  var ult = t.colunas.length - 1;
+  document.getElementById('pv-tbody').innerHTML = t.linhas.map(function (l) {
+    return '<tr><td class="sp"></td>' + l.map(function (v, i) {
+      if (i === 0) return '<td><span class="td-link">' + v + '</span></td>';
+      if (i === ult) return '<td><span class="' + pvStatusClasse(v) + '">' + v + '</span></td>';
+      return '<td>' + v + '</td>';
+    }).join('') + '<td style="color:#aaa">&bull;&bull;&bull;</td></tr>';
+  }).join('');
+}
+
+function pvAbrirExterno(nome) {
+  var url = PV_EXTERNOS[nome];
+  if (url) window.open(url, '_blank', 'noopener');
+}
+
+function initPrevidenciaPage(rota) {
+  var slot = document.getElementById('pv-footer-slot');
+  if (slot && !slot.firstChild) {
+    var f = document.querySelector('#page-central-documentos footer.cc2-footer');
+    if (f) slot.appendChild(f.cloneNode(true));
+  }
+  pvRenderTela(rota);
+}
+
+// rota de cada item do submenu de Previdência
+var PV_ROTAS_MENU = {
+  'Simuladores|Simulação': '/previdencia/simuladores/simulador-individual',
+  'Simuladores|Contratação | Individual/Coletivo': '/previdencia/proposta/buscar-solicitacao',
+  'Consultar|Extrato de Comissão': '/previdencia/consultar-extrato-comissao',
+  'Consultar|Central de Documentos': '/previdencia/consultar/central-documentos',
+  'Proposta|Consultar Proposta': '/previdencia/proposta/buscar',
+  'Proposta|Emitir Extrato': '/previdencia/emitir-extrato',
+  'Contrato|Consultar Contrato': '/previdencia/contrato/buscar',
+  'Contrato|Emitir Extrato de Fundo Global': '/previdencia/contrato/extrato-fundo-global',
+  'Informe de Rendimentos|Informe de Rendimento do Corretor': '/previdencia/informe-rendimentos/corretor',
+  'Sinistros|Comunicar Sinistro': '/previdencia/sinistros/sinistro-online',
+  'Sinistros|Consultar Sinistro': '/previdencia/sinistros/consultar-sinistros',
+  'Sinistros|Relatório de Sinistros Pagos': '/previdencia/sinistros/relatorio-sinistros-pagos'
+};
 
 // =====================
 // CLICK OUTSIDE
