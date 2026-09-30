@@ -353,6 +353,107 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 }
 .f-sel{appearance:none;cursor:pointer}
 .f-inp{padding-right:16px}
+    /* ===== Sitemap: mapa de tudo que existe no protótipo ===== */
+    .sm-wrap{padding:0 0 60px}
+    .sm-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px}
+    .sm-resumo{display:flex;gap:26px;flex-wrap:wrap}
+    .sm-num{display:flex;flex-direction:column;gap:1px}
+    .sm-num b{font-size:26px;font-weight:700;color:var(--azure);line-height:1;font-variant-numeric:tabular-nums}
+    .sm-num span{font-size:11.5px;color:#7A93AE;text-transform:uppercase;letter-spacing:.4px}
+    .sm-legenda{display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+      padding:10px 14px;background:#F4FAFD;border:1px solid #D8ECF6;border-radius:3px}
+    .sm-leg{display:flex;align-items:center;gap:6px;font-size:12px;color:#44546C}
+    .sm-leg i{width:11px;height:11px;border-radius:2px;flex-shrink:0;display:block}
+    .sm-leg-ok{background:#B7DDF0;border:1px solid #7FC3E4}
+    .sm-leg-emb{background:#FFE9C7;border:1px solid #E8B85F}
+    .sm-leg-ext{background:#DCF3E2;border:1px solid #7FC79A}
+    .sm-leg-ind{background:#F6DADA;border:1px solid #DFA0A0}
+    .sm-leg-stub{background:#ECEFF2;border:1px solid #C4CCD4}
+
+    /* uma faixa por segmento */
+    .sm-seg{margin-top:30px;border:1px solid #D8ECF6;border-radius:4px;background:#fff;
+      box-shadow:0 1px 5px rgba(0,0,0,.07);overflow:hidden}
+    .sm-seg-hd{display:flex;align-items:center;gap:12px;padding:12px 18px;
+      background:linear-gradient(90deg,#0F2A51 0%,#1B4C87 100%)}
+    .sm-seg-letra{width:26px;height:26px;border-radius:3px;display:flex;align-items:center;
+      justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+    .sm-seg-nome{font-family:'UnimedSlab',Georgia,serif;font-size:17px;font-weight:700;color:#fff}
+    .sm-seg-cnt{margin-left:auto;font-size:12px;color:#B7DDF0}
+    .sm-seg-bd{padding:6px 18px 20px}
+
+    /* um grupo por item de menu */
+    .sm-grupo{position:relative;padding:14px 0 4px 26px;border-left:2px solid #D8ECF6}
+    .sm-grupo:last-child{border-left-color:transparent}
+    .sm-grupo::before{content:'';position:absolute;left:0;top:26px;width:18px;height:2px;background:#D8ECF6}
+    .sm-grupo-tit{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;
+      color:#0F2A51;margin-bottom:10px}
+    .sm-grupo-tit em{font-style:normal;font-size:11px;font-weight:400;color:#7A93AE}
+    .sm-telas{display:flex;flex-wrap:wrap;gap:14px}
+
+    /* miniatura de tela, no estilo do fluxograma de referência */
+    .sm-tela{width:108px;display:flex;flex-direction:column;gap:5px;text-align:left;
+      background:none;border:none;padding:0;font:inherit;cursor:pointer}
+    .sm-tela[disabled]{cursor:default}
+    .sm-mini{height:70px;border-radius:3px;border:1px solid #B7DDF0;background:#E8F4FB;
+      padding:0;overflow:hidden;transition:transform .12s,box-shadow .12s,border-color .12s}
+    .sm-tela:not([disabled]):hover .sm-mini{transform:translateY(-2px);
+      box-shadow:0 4px 10px rgba(0,0,0,.14);border-color:var(--azure)}
+    .sm-mini-bar{height:11px;background:#CDE8F7;display:flex;align-items:center;gap:2px;padding:0 4px}
+    .sm-mini-bar i{width:3px;height:3px;border-radius:50%;background:#8FC7E6;display:block}
+    .sm-mini-bd{padding:5px;display:flex;flex-direction:column;gap:3px}
+    .sm-mini-bd span{display:block;height:4px;border-radius:1px;background:#B7DDF0}
+    .sm-mini-bd .w60{width:60%} .sm-mini-bd .w85{width:85%} .sm-mini-bd .w40{width:40%}
+    .sm-mini-cols{display:flex;gap:3px;margin-top:2px}
+    .sm-mini-cols em{flex:1;height:16px;border-radius:1px;background:#CDE8F7;display:block}
+    .sm-lbl{font-size:11px;line-height:1.3;color:#0F2A51;overflow-wrap:anywhere}
+    .sm-tag{font-size:9.5px;line-height:1;padding:2px 5px;border-radius:7px;align-self:flex-start;
+      text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+
+    /* variantes por situação da tela */
+    .sm-emb .sm-mini{background:#FFF6E7;border-color:#E8B85F}
+    .sm-emb .sm-mini-bar{background:#FFE9C7} .sm-emb .sm-mini-bd span,.sm-emb .sm-mini-cols em{background:#F0CF93}
+    .sm-emb .sm-tag{background:#FFE9C7;color:#8A5D00}
+    .sm-ext .sm-mini{background:#F1FBF4;border-color:#7FC79A}
+    .sm-ext .sm-mini-bar{background:#DCF3E2} .sm-ext .sm-mini-bd span,.sm-ext .sm-mini-cols em{background:#A9DCBC}
+    .sm-ext .sm-tag{background:#DCF3E2;color:#1C6B3A}
+    .sm-ind .sm-mini{background:#FDF3F3;border-color:#DFA0A0}
+    .sm-ind .sm-mini-bar{background:#F6DADA} .sm-ind .sm-mini-bd span,.sm-ind .sm-mini-cols em{background:#E8BFBF}
+    .sm-ind .sm-tag{background:#F6DADA;color:#9B2C2C}
+    .sm-stub .sm-mini{background:#F6F8FA;border-color:#C4CCD4}
+    .sm-stub .sm-mini-bar{background:#ECEFF2} .sm-stub .sm-mini-bd span,.sm-stub .sm-mini-cols em{background:#D6DCE3}
+    .sm-stub .sm-lbl{color:#7A8794}
+    .sm-stub .sm-tag{background:#ECEFF2;color:#66727E}
+
+    /* fluxo do Endosso, com as decisões que o protótipo realmente tem */
+    .sm-fluxo{display:flex;align-items:flex-start;gap:0;flex-wrap:nowrap;
+      overflow-x:auto;padding:6px 2px 14px}
+    .sm-no{display:flex;flex-direction:column;align-items:center;gap:5px;width:116px;flex-shrink:0}
+    .sm-no .sm-mini{width:100%}
+    .sm-no .sm-lbl{text-align:center;font-weight:600}
+    .sm-seta{width:26px;height:2px;background:#B7DDF0;position:relative;flex-shrink:0;margin-top:35px}
+    .sm-seta::after{content:'';position:absolute;right:0;top:-3px;border:4px solid transparent;
+      border-left-color:#B7DDF0}
+    .sm-dec{width:104px;height:74px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+      background:#E8F4FB;border:1px solid #B7DDF0;transform:rotate(45deg);margin:22px 26px 0}
+    .sm-dec span{transform:rotate(-45deg);font-size:10px;line-height:1.25;text-align:center;
+      color:#0F2A51;font-weight:700;padding:0 6px}
+    .sm-ramo{display:flex;flex-direction:column;gap:12px}
+    .sm-ramo-linha{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+    .sm-ramo-lbl{font-size:10px;font-weight:700;color:#7A93AE;letter-spacing:.5px;
+      align-self:center;margin:0 10px;flex-shrink:0}
+    .sm-ramo{flex-shrink:0}
+
+    /* anotação vermelha, como os círculos do fluxograma de referência */
+    .sm-nota{display:flex;align-items:flex-start;gap:8px;margin-top:12px;
+      font-size:12px;line-height:1.45;color:#8A3B3B}
+    .sm-nota i{width:13px;height:13px;border-radius:50%;border:2px solid #E63329;flex-shrink:0;margin-top:2px}
+
+    @media (max-width:820px){
+      .sm-dec{margin:0 10px}
+      .sm-telas{gap:10px}
+      .sm-tela{width:94px}
+    }
+
     .pv-radios{display:flex;flex-wrap:wrap;gap:9px 26px;padding:4px 16px 10px}
     .pv-radio{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#3C3C3C;cursor:pointer}
     .pv-radio input{accent-color:var(--azure);cursor:pointer;flex-shrink:0}
@@ -5588,6 +5689,32 @@ function authLogout(){
       </div>
     </div>
 
+    <!-- SITEMAP — mapa de tudo que existe no protótipo -->
+    <div id="page-sitemap" class="page">
+      <div class="cotador-page">
+        <div class="sm-wrap">
+          <div>
+            <h2 class="section-title">Sitemap</h2>
+            <hr class="section-divider">
+          </div>
+          <div class="sm-topo">
+            <div class="sm-resumo" id="sitemap-resumo"></div>
+            <div class="sm-legenda">
+              <span class="sm-leg"><i class="sm-leg-ok"></i>tela construída</span>
+              <span class="sm-leg"><i class="sm-leg-emb"></i>sistema embutido</span>
+              <span class="sm-leg"><i class="sm-leg-ext"></i>site externo</span>
+              <span class="sm-leg"><i class="sm-leg-ind"></i>indisponível em homologação</span>
+              <span class="sm-leg"><i class="sm-leg-stub"></i>ainda não mapeada</span>
+            </div>
+          </div>
+          <p class="sm-nota"><i></i><span>Clique em qualquer miniatura para abrir a tela.
+            Este mapa é gerado a partir do próprio menu do protótipo, então acompanha
+            sozinho o que for adicionado.</span></p>
+          <div id="sitemap-conteudo"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- PREVIDÊNCIA — TELAS DO MENU (renderizadas a partir de PV_TELAS) -->
     <div id="page-previdencia" class="page">
       <div class="cotador-page">
@@ -6642,6 +6769,12 @@ function handleRoute() {
     setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Simular Proposta</span>');
     stopCarousel();
     initPrevidenciaSimularPage();
+  } else if (path === '/sitemap') {
+    document.getElementById('page-sitemap').classList.add('active');
+    portalName.textContent = 'Sitemap';
+    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Sitemap</span>');
+    stopCarousel();
+    initSitemapPage();
   } else if (PV_TELAS[path]) {
     document.getElementById('page-previdencia').classList.add('active');
     portalName.textContent = PV_TELAS[path].titulo;
@@ -14399,6 +14532,238 @@ function saGerarInforme() {
   apeShowError('Informe de rendimento de ' + ano + ' solicitado para ' + doc +
     '. A geração do arquivo não faz parte deste protótipo.');
 }
+
+// =====================================================================
+// SITEMAP — mapa de tudo que existe no protótipo
+// Gerado em tempo de execução a partir das MESMAS estruturas que montam
+// os menus (segmentsData, PV_TELAS, os mapas de rota e quickAccess), para
+// não descolar do portal quando alguma tela for adicionada ou trocada.
+// =====================================================================
+
+// Resolve a rota de um caminho do menu, na mesma ordem que os cliques usam.
+function smRota(segId, itemLabel, subLabel, sub3Label) {
+  if (sub3Label) {
+    if (segId === 'vida' && typeof VD_ROTAS_MENU !== 'undefined') {
+      var r3 = VD_ROTAS_MENU[itemLabel + '|' + subLabel + '|' + sub3Label];
+      if (r3) return r3;
+    }
+    if (PV_EXTERNOS[sub3Label]) return 'externo:' + PV_EXTERNOS[sub3Label];
+    return null;
+  }
+  if (subLabel) {
+    if (segId === 'previdencia') {
+      if (PV_EXTERNOS[subLabel]) return 'externo:' + PV_EXTERNOS[subLabel];
+      var rp = PV_ROTAS_MENU[itemLabel + '|' + subLabel];
+      if (rp) return rp;
+    }
+    if (segId === 'saude') {
+      if (PV_EXTERNOS[subLabel]) return 'externo:' + PV_EXTERNOS[subLabel];
+      if (subLabel === 'Informe de rendimento') return 'modal:informe';
+      var rs = SA_ROTAS_MENU[itemLabel + '|' + subLabel];
+      if (rs) return rs;
+    }
+    if (segId === 'vida' && typeof VD_ROTAS_MENU !== 'undefined') {
+      var rv = VD_ROTAS_MENU[itemLabel + '|' + subLabel];
+      if (rv) return rv;
+    }
+    if (itemLabel === 'Renovação' && subLabel === 'RCP Individual') return '/renovacao/rcp';
+    if (itemLabel === 'Renovação' && subLabel === 'Residencial') return '/calcule-mais';
+    if (itemLabel === '2ª Via' && subLabel === '2ª Via de Boleto') return '/2via/boleto';
+    if (segId === 'ramos' && itemLabel === 'Relatórios' && subLabel === 'Relatório de Inadimplência') return '/relatorios/inadimplencia';
+    if (segId === 'ramos' && itemLabel === 'Sinistros' && subLabel === 'Relatório de Sinistros Pagos') return '/sinistros/relatorio-pagos';
+    return SM_ROTAS_ESPECIAIS[subLabel] || null;
+  }
+  // item de topo sem submenu: Saude tem "Guia Medico", que abre site externo
+  if (segId === 'saude' && PV_EXTERNOS[itemLabel]) return 'externo:' + PV_EXTERNOS[itemLabel];
+  return SM_ROTAS_TOPO[segId + '/' + itemLabel] || null;
+}
+
+// Espelham os mapas usados nos cliques do menu.
+var SM_ROTAS_ESPECIAIS = {
+  'RCP Individual': '/cotador/rcp', 'Consultar Apólices Master': '/consultar/apolices-master',
+  'Consultar Apólices': '/consultar/apolices', 'Consultar Clientes': '/consultar/clientes',
+  'Consultar Corretor': '/consultar/corretor', 'Extrato de Comissão': '/consultar/extrato-comissao',
+  'Central de Documentos': '/consultar/central-documentos', '2ª Via de Apólices': '/2via/apolices',
+  'Testando aqui': '/cotador/testando-aqui', 'Novo | Aviso Digital': '/sinistros/aviso-digital'
+};
+var SM_ROTAS_TOPO = {
+  'ramos/Calcule +': '/calcule-mais', 'vida/Calcule +': '/vida/calcule-mais',
+  'vida/Endosso (em validação)': '/vida/endosso', 'ramos/Material de Apoio': '/material-apoio',
+  'previdencia/2ª Via de Boleto': '/previdencia/segunda-via-boleto',
+  'previdencia/Material de Apoio': '/previdencia/material-apoio',
+  'saude/Fila de Relatórios': '/saude/fila-relatorios',
+  'saude/Material de Apoio': '/saude/material-apoio',
+  'vida/Informe de Rendimentos Corretor': '/vida/informe-rendimentos-corretor',
+  'vida/Movimentação Online': '/vida/movimentacao-online',
+  'vida/Material de Apoio': '/vida/material-apoio'
+};
+
+// Classifica uma tela: como ela existe hoje no protótipo.
+function smClasse(rota) {
+  if (!rota) return {cls: 'sm-stub', tag: 'não mapeada'};
+  if (rota.indexOf('externo:') === 0) return {cls: 'sm-ext', tag: 'site externo'};
+  if (rota.indexOf('modal:') === 0) return {cls: 'sm-ok', tag: 'modal'};
+  var t = PV_TELAS[rota];
+  if (t && t.somenteAviso) return {cls: 'sm-ind', tag: 'indisponível'};
+  if (t && t.aviso && /embutido|quadro/.test(t.aviso)) return {cls: 'sm-emb', tag: 'sistema embutido'};
+  if (t) return {cls: 'sm-ok', tag: ''};
+  // paginas proprias do prototipo (Calcule+, Endosso, cotadores, consultas...)
+  var slug = 'page-' + rota.replace(/^\//, '').replace(/\//g, '-');
+  if (document.getElementById(slug)) return {cls: 'sm-ok', tag: ''};
+  if (SM_PAGINAS_PROPRIAS[rota]) return {cls: 'sm-ok', tag: ''};
+  return {cls: 'sm-stub', tag: 'não mapeada'};
+}
+
+// Rotas que abrem paginas proprias cujo id nao segue o padrao do slug.
+var SM_PAGINAS_PROPRIAS = {
+  '/calcule-mais': 1, '/vida/calcule-mais': 1, '/vida/endosso': 1, '/material-apoio': 1,
+  '/cotador/rcp': 1, '/consultar/apolices-master': 1, '/consultar/apolices': 1,
+  '/consultar/clientes': 1, '/consultar/corretor': 1, '/consultar/extrato-comissao': 1,
+  '/consultar/central-documentos': 1, '/2via/apolices': 1, '/2via/boleto': 1,
+  '/renovacao/rcp': 1, '/relatorios/inadimplencia': 1, '/sinistros/aviso-digital': 1,
+  '/sinistros/relatorio-pagos': 1, '/portal-admin': 1
+};
+
+function smMini() {
+  return '<div class="sm-mini">' +
+    '<div class="sm-mini-bar"><i></i><i></i><i></i></div>' +
+    '<div class="sm-mini-bd"><span class="w60"></span><span class="w85"></span>' +
+    '<div class="sm-mini-cols"><em></em><em></em><em></em></div>' +
+    '<span class="w40"></span></div></div>';
+}
+
+function smTela(rotulo, rota) {
+  var c = smClasse(rota);
+  var acao = '';
+  if (rota && rota.indexOf('externo:') === 0) acao = 'window.open(\'' + rota.slice(8) + '\',\'_blank\',\'noopener\')';
+  else if (rota === 'modal:informe') acao = 'saAbrirInforme()';
+  else if (rota && c.cls !== 'sm-stub') acao = 'navigate(\'' + rota + '\')';
+  return '<button class="sm-tela ' + c.cls + '"' +
+    (acao ? ' onclick="' + acao + '"' : ' disabled') +
+    ' title="' + (rota || 'sem rota') + '">' +
+    smMini() +
+    '<span class="sm-lbl">' + rotulo + '</span>' +
+    (c.tag ? '<span class="sm-tag">' + c.tag + '</span>' : '') +
+    '</button>';
+}
+
+function smDecisao(texto) {
+  return '<div class="sm-dec"><span>' + texto + '</span></div>';
+}
+function smSeta() { return '<div class="sm-seta"></div>'; }
+
+// O fluxo do Endosso é o único com ramificação real; desenhado como no
+// fluxograma de referência, com as decisões que o protótipo tem de fato.
+function smFluxoEndosso() {
+  return '<div class="sm-grupo"><div class="sm-grupo-tit">Fluxo do Endosso ' +
+      '<em>PQA-447 — o caminho que o corretor percorre</em></div>' +
+    '<div class="sm-fluxo">' +
+      '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Central de Endosso</span></div>' + smSeta() +
+      '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Cotação</span></div>' + smSeta() +
+      '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Precificação</span></div>' + smSeta() +
+      smDecisao('Preencher a DPS ou enviar ao proponente?') +
+      '<div class="sm-ramo">' +
+        '<div class="sm-ramo-linha"><span class="sm-ramo-lbl">PREENCHER</span>' +
+          '<div class="sm-no">' + smMini() + '<span class="sm-lbl">DPS no portal</span></div></div>' +
+        '<div class="sm-ramo-linha"><span class="sm-ramo-lbl">PROPONENTE</span>' +
+          '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Link por e-mail</span></div></div>' +
+      '</div>' + smSeta() +
+      '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Assinatura Digital</span></div>' + smSeta() +
+      smDecisao('Clean case?') +
+      '<div class="sm-ramo">' +
+        '<div class="sm-ramo-linha"><span class="sm-ramo-lbl">SIM</span>' +
+          '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Implantação automática</span></div></div>' +
+        '<div class="sm-ramo-linha"><span class="sm-ramo-lbl">NÃO</span>' +
+          '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Mesa Técnica</span></div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="sm-nota"><i></i><span>Todo endosso encerrado volta para o board de 3 colunas ' +
+      '(Aguardando assinatura · Assinado · Análise Técnica) e entra no Painel de Análise Endosso, ' +
+      'onde dá para comparar a apólice vigente com a proposta e editar as coberturas.</span></div>' +
+    '</div>';
+}
+
+function smRenderPagina() {
+  var alvo = document.getElementById('sitemap-conteudo');
+  if (!alvo) return;
+
+  var totTelas = 0, totMapeadas = 0;
+  var html = '';
+
+  segmentsData.forEach(function (seg) {
+    var grupos = '';
+    seg.menuItems.forEach(function (item) {
+      var telas = '', n = 0;
+      if (item.hasSubmenu && item.sub) {
+        item.sub.forEach(function (entrada) {
+          var subLabel = typeof entrada === 'string' ? entrada : entrada.label;
+          var sub3 = typeof entrada === 'string' ? null : entrada.sub3;
+          if (sub3 && sub3.length) {
+            sub3.forEach(function (s3) {
+              var r = smRota(seg.id, item.label, subLabel, s3);
+              telas += smTela(subLabel + ' &rsaquo; ' + s3, r); n++;
+              totTelas++; if (smClasse(r).cls !== 'sm-stub') totMapeadas++;
+            });
+          } else {
+            var r2 = smRota(seg.id, item.label, subLabel, null);
+            telas += smTela(subLabel, r2); n++;
+            totTelas++; if (smClasse(r2).cls !== 'sm-stub') totMapeadas++;
+          }
+        });
+      } else {
+        var r1 = smRota(seg.id, item.label, null, null);
+        telas += smTela(item.label, r1); n++;
+        totTelas++; if (smClasse(r1).cls !== 'sm-stub') totMapeadas++;
+      }
+      grupos += '<div class="sm-grupo"><div class="sm-grupo-tit">' + item.label +
+        ' <em>' + n + (n === 1 ? ' tela' : ' telas') + '</em></div>' +
+        '<div class="sm-telas">' + telas + '</div></div>';
+    });
+
+    // o fluxo do Endosso entra dentro de Vida, logo apos os itens
+    if (seg.id === 'vida') grupos += smFluxoEndosso();
+
+    html += '<section class="sm-seg">' +
+      '<div class="sm-seg-hd">' +
+        '<span class="sm-seg-letra" style="background:' + seg.color + '">' + seg.letter + '</span>' +
+        '<span class="sm-seg-nome">' + seg.label + '</span>' +
+        '<span class="sm-seg-cnt">' + seg.menuItems.length + ' itens de menu</span>' +
+      '</div>' +
+      '<div class="sm-seg-bd">' + grupos + '</div>' +
+    '</section>';
+  });
+
+  // atalhos da home
+  var atalhos = '';
+  quickAccess.forEach(function (q) {
+    var r = document.getElementById('page-' + q.route.replace(/^\//, '').replace(/\//g, '-')) ? q.route : null;
+    if (q.route === '/sitemap') r = '/sitemap';
+    atalhos += smTela(q.label, r);
+    totTelas++; if (r) totMapeadas++;
+  });
+  html += '<section class="sm-seg">' +
+    '<div class="sm-seg-hd">' +
+      '<span class="sm-seg-letra" style="background:#0F84C4">A</span>' +
+      '<span class="sm-seg-nome">Acesso Rápido</span>' +
+      '<span class="sm-seg-cnt">' + quickAccess.length + ' atalhos da tela inicial</span>' +
+    '</div>' +
+    '<div class="sm-seg-bd"><div class="sm-grupo"><div class="sm-grupo-tit">Atalhos ' +
+      '<em>' + quickAccess.length + ' telas</em></div>' +
+      '<div class="sm-telas">' + atalhos + '</div></div></div>' +
+  '</section>';
+
+  alvo.innerHTML = html;
+
+  var r = document.getElementById('sitemap-resumo');
+  if (r) r.innerHTML =
+    '<div class="sm-num"><b>' + segmentsData.length + '</b><span>segmentos</span></div>' +
+    '<div class="sm-num"><b>' + segmentsData.reduce(function (a, s) { return a + s.menuItems.length; }, 0) +
+      '</b><span>itens de menu</span></div>' +
+    '<div class="sm-num"><b>' + totTelas + '</b><span>telas no mapa</span></div>' +
+    '<div class="sm-num"><b>' + totMapeadas + '</b><span>já construídas</span></div>';
+}
+
+function initSitemapPage() { smRenderPagina(); }
 
 // =====================
 // CLICK OUTSIDE
