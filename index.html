@@ -340,7 +340,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .aviso-text{font-size:15px;color:var(--text);line-height:24px}
 .cotador-hist{display:flex;flex-direction:column;gap:32px;padding-top:32px;width:100%}
 .filter-card{background:#fff;border-radius:3px;box-shadow:var(--card-shadow)}
-.filter-inputs-row{display:flex;flex-wrap:wrap;padding:16px 0 0 0}
+/* o .f-field so tem recuo a esquerda, entao sem este 16px a direita a
+   ultima caixa de cada linha encostava na borda do card — o rodape de
+   botoes ja respeitava os 16px, e a assimetria aparecia em toda tela */
+.filter-inputs-row{display:flex;flex-wrap:wrap;padding:16px 16px 0 0}
 .f-field{flex:1;min-width:200px;padding:0 0 16px 16px;position:relative}
 .f-box{background:#f6f8fa;border-radius:4px;min-height:60px;position:relative;border:1px solid var(--border)}
 .f-box.f-err{border-color:#e53935}
@@ -11383,7 +11386,12 @@ function pvMostrarResultados() {
   document.getElementById('pv-tbody').innerHTML = t.linhas.map(function (l) {
     return '<tr><td class="sp"></td>' + l.map(function (v, i) {
       if (i === 0) return '<td><span class="td-link">' + v + '</span></td>';
-      if (i === ult) return '<td><span class="' + pvStatusClasse(v) + '">' + v + '</span></td>';
+      // so vira etiqueta o que e mesmo situacao: a ultima coluna as vezes e
+      // dinheiro, data ou CEP, e ai a pilula deixava a celula 13px semibold
+      if (i === ult) {
+        var cls = pvStatusClasse(v);
+        if (cls !== 'stag') return '<td><span class="' + cls + '">' + v + '</span></td>';
+      }
       return '<td>' + v + '</td>';
     }).join('') + '<td style="color:#aaa">&bull;&bull;&bull;</td></tr>';
   }).join('');
