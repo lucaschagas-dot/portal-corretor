@@ -5353,11 +5353,32 @@ function authLogout(){
     .end-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .end-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
     .end-grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+    /* as caixas cadastrais nao cabem em 4 colunas numa largura de celular */
+    @media (max-width:900px){ .end-grid4{grid-template-columns:1fr 1fr} }
+    @media (max-width:560px){ .end-grid4{grid-template-columns:1fr} }
 
     .end-cadbox{border:1px solid #d0d5dd;border-radius:3px;padding:10px 14px;background:#fafbfc}
     .end-cadbox-lbl{font-size:11.5px;color:#a2aaad;display:block;margin-bottom:3px}
     .end-cadbox-val{font-size:14px;font-weight:600;color:#44546c}
     .end-analista-readonly{background:#eef1f4}
+    .end-cadbox-input{border:none;background:transparent;width:100%;font:inherit;font-size:14px;font-weight:600;color:#44546c;padding:0;outline:none}
+    .end-cadbox-edit{display:flex;align-items:baseline;gap:7px}
+    .end-cadbox-imc{flex:0 0 38px;width:38px}
+    /* sublinhado pontilhado: sem ele os campos de texto passam por rotulo estatico */
+    .end-cadbox input.end-cadbox-input{border-bottom:1px dashed #b9c1cc;padding-bottom:1px}
+    .end-cadbox input.end-cadbox-input:focus{border-bottom:1px solid var(--azure)}
+    .end-cadbox-sufixo{font-size:12px;color:#8a94a3;white-space:nowrap}
+    .end-cadbox-vig{display:block;font-size:11px;color:#8a94a3;margin-top:5px}
+    .end-cadbox.end-cadbox-alt{border-color:#a8dcf2;background:#f3fafd}
+
+    /* antes/depois dos dados cadastrais, no cabecalho do comparativo e na Mesa Tecnica */
+    .end-cad-delta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+    .end-cad-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;font-size:11.5px;line-height:1.35;background:#eaf6fc;border:1px solid #cfe9f7;border-radius:12px;padding:3px 10px;color:#44546c}
+    .end-cad-chip > span{min-width:0;overflow-wrap:anywhere}
+    .end-cad-chip .end-cad-k{color:#7b8696;font-weight:700}
+    .end-cad-chip .end-cad-de{color:#a2aaad;text-decoration:line-through}
+    .end-cad-chip .end-cad-arrow{color:#a2aaad}
+    .end-cad-chip .end-cad-para{color:var(--azure);font-weight:700}
 
     .end-cov-table{border:1px solid #e3e6ea;border-radius:4px;overflow:hidden;margin-top:8px}
     .end-cov-row{display:grid;grid-template-columns:26px 1.7fr 200px 170px;gap:14px;align-items:center;padding:12px 14px;border-bottom:1px solid #eef1f4}
@@ -15607,6 +15628,57 @@ function endParseMoeda(str) {
   var n = parseFloat(digits);
   return isNaN(n) ? 0 : n;
 }
+// ---- Dados cadastrais editaveis (Fase 2) e o antes/depois deles (Fase 3) ----
+// O IMC circula como texto no formato "25,0 (Sobrepeso)". Estas tres funcoes
+// convertem entre esse texto e o numero, e derivam a classificacao do valor —
+// assim o corretor digita so o indice e a faixa se ajusta sozinha.
+function endImcValor(str) {
+  if (typeof str === 'number') return isFinite(str) ? str : 0;
+  var m = String(str || '').match(/\d+(?:[.,]\d+)?/);
+  return m ? parseFloat(m[0].replace(',', '.')) : 0;
+}
+function endImcClasse(v) {
+  if (v < 18.5) return 'Abaixo do peso';
+  if (v < 25)   return 'Normal';
+  if (v < 30)   return 'Sobrepeso';
+  if (v < 35)   return 'Obesidade grau I';
+  if (v < 40)   return 'Obesidade grau II';
+  return 'Obesidade grau III';
+}
+function endImcFmt(v) {
+  var x = endImcValor(v);
+  if (!x) return '—';
+  return x.toFixed(1).replace('.', ',') + ' (' + endImcClasse(x) + ')';
+}
+
+// Os quatro campos cadastrais que o corretor pode alterar na Fase 2.
+var END_CAD_CAMPOS = [
+  {k:'profissao', rot:'Profissão'},
+  {k:'renda',     rot:'Renda Mensal'},
+  {k:'imc',       rot:'IMC'},
+  {k:'vinculo',   rot:'Vínculo Empregatício'}
+];
+function endCadDiffs(vigente, novo) {
+  if (!vigente || !novo) return [];
+  return END_CAD_CAMPOS
+    .filter(function(c){ return novo[c.k] && vigente[c.k] && novo[c.k] !== vigente[c.k]; })
+    .map(function(c){ return {rot:c.rot, de:vigente[c.k], para:novo[c.k]}; });
+}
+// Linha de chips "campo: valor vigente -> valor proposto". Devolve string vazia
+// quando nada mudou, para o cabecalho nao ganhar ruido em endosso so de cobertura.
+function endCadDeltaHtml(vigente, novo) {
+  var diffs = endCadDiffs(vigente, novo);
+  if (!diffs.length) return '';
+  return '<div class="end-cad-delta">' + diffs.map(function(d){
+    return '<span class="end-cad-chip">' +
+             '<span class="end-cad-k">' + d.rot + '</span>' +
+             '<span class="end-cad-de">' + d.de + '</span>' +
+             '<span class="end-cad-arrow">&rarr;</span>' +
+             '<span class="end-cad-para">' + d.para + '</span>' +
+           '</span>';
+  }).join('') + '</div>';
+}
+
 function endAlertIco(tipo) {
   if (tipo === 'ok') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0f5c30" stroke-width="1.8"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="#0f5c30" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   if (tipo === 'warn' || tipo === 'err') return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="' + (tipo==='err' ? '#e53935' : '#e58a00') + '"/><line x1="12" y1="9" x2="12" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -16331,6 +16403,7 @@ function endResetCorretorState() {
     dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
     dpsProponenteEnviado:false, dpsProponenteConcluido:false,
     caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista',
+    cadastroVigente:null, cadastroNovo:null,
     motivoEndosso:'', dataVigencia:'', emailProponente:''
   };
   END_STATE.faseMax = 1;
@@ -16528,7 +16601,19 @@ function endAplicarApoliceSelecionada() {
   END_STATE.coberturasVig = endCoberturasBase();
   END_STATE.coberturas = endCoberturasBase();
   END_STATE.modoRestrito = !!(END_STATE.cliente.restritiva || END_STATE.cliente.naoRenovar);
-  END_STATE._profissaoSel = 'analista';
+  // A profissao selecionada parte da que esta vigente na apolice — se partisse de um
+  // valor fixo, a Fase 3 acusaria uma alteracao que o corretor nunca fez.
+  var profVig = END_PROFISSOES.find(function(p){ return p.label === base.profissao; });
+  END_STATE._profissaoSel = profVig ? profVig.v : END_PROFISSOES[0].v;
+  // Dois snapshots: o que esta no E-vida e o que o endosso propoe. O antes/depois
+  // da Fase 3 sai da comparacao entre eles.
+  END_STATE.cadastroVigente = {
+    profissao: base.profissao,
+    renda: base.renda,
+    imc: endImcFmt(base.imc),
+    vinculo: base.vinculo
+  };
+  END_STATE.cadastroNovo = Object.assign({}, END_STATE.cadastroVigente);
   END_STATE.motivoNaoClean = [];
   END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false;
   END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
@@ -16559,6 +16644,46 @@ function endFase1Avancar() {
 function endRenderFase2() {
   var el = document.getElementById('end-fase-2');
   var cli = END_STATE.cliente;
+  var cadVig = END_STATE.cadastroVigente || {};
+  var cad = END_STATE.cadastroNovo || {};
+
+  // Cada caixa ganha borda azul e a legenda "Vigente: ..." quando o valor difere
+  // do que está na apólice — o mesmo vocabulário já usado no grid de coberturas.
+  function cadBox(campo, interno) {
+    var alterado = !!(cad[campo] && cadVig[campo] && cad[campo] !== cadVig[campo]);
+    return '<div class="end-cadbox' + (alterado ? ' end-cadbox-alt' : '') + '" id="end-cadbox-' + campo + '">' +
+      interno +
+      (alterado ? '<span class="end-cadbox-vig">Vigente: ' + cadVig[campo] + '</span>' : '') +
+      '</div>';
+  }
+
+  var imcNum = endImcValor(cad.imc);
+  var vincOpts = END_VINCULOS.slice();
+  // Segurado PJ tem vínculo "Pessoa Jurídica", que não está na lista padrão.
+  if (cadVig.vinculo && vincOpts.indexOf(cadVig.vinculo) === -1) vincOpts.unshift(cadVig.vinculo);
+
+  var caixasCadastrais =
+    cadBox('profissao',
+      '<span class="end-cadbox-lbl">Profissão</span>' +
+      '<select id="end-profissao" class="end-cadbox-input" style="cursor:pointer" title="' + (cad.profissao || '') + '" onchange="endOnProfissaoChange(this)">' +
+        END_PROFISSOES.map(function(p){ return '<option value="' + p.v + '"' + (p.v===END_STATE._profissaoSel?' selected':'') + '>' + p.label + '</option>'; }).join('') +
+      '</select>') +
+    cadBox('renda',
+      '<span class="end-cadbox-lbl">Renda Mensal</span>' +
+      '<input type="text" id="end-renda" class="end-cadbox-input" inputmode="decimal" value="' + (cad.renda || '') + '"' +
+        ' onblur="endOnRendaBlur(this)" onkeydown="if(event.keyCode===13){this.blur();}">') +
+    cadBox('imc',
+      '<span class="end-cadbox-lbl">IMC</span>' +
+      '<div class="end-cadbox-edit">' +
+        '<input type="text" id="end-imc" class="end-cadbox-input end-cadbox-imc" inputmode="decimal" value="' + imcNum.toFixed(1).replace('.', ',') + '"' +
+          ' oninput="endOnImcInput(this)" onblur="endOnImcBlur(this)" onkeydown="if(event.keyCode===13){this.blur();}">' +
+        '<span class="end-cadbox-sufixo" id="end-imc-classe">' + endImcClasse(imcNum) + '</span>' +
+      '</div>') +
+    cadBox('vinculo',
+      '<span class="end-cadbox-lbl">Vínculo Empregatício</span>' +
+      '<select id="end-vinculo" class="end-cadbox-input" style="cursor:pointer" onchange="endOnVinculoChange(this)">' +
+        vincOpts.map(function(v){ return '<option value="' + v + '"' + (v===cad.vinculo?' selected':'') + '>' + v + '</option>'; }).join('') +
+      '</select>');
 
   var restritoNota = END_STATE.modoRestrito
     ? '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Esta apólice está sob restrição — apenas <strong>redução de capital</strong> ou <strong>exclusão de coberturas</strong> são permitidas. Inclusões e aumentos aparecem desabilitados no grid abaixo.</span></div>'
@@ -16567,16 +16692,7 @@ function endRenderFase2() {
   el.innerHTML =
     '<p class="end-card-sub">Dados cadastrais atuais obtidos do E-vida e grid dinâmico de coberturas vigentes.</p>' +
     restritoNota +
-    '<div class="end-grid4">' +
-      '<div class="end-cadbox"><span class="end-cadbox-lbl">Profissão</span>' +
-        '<select id="end-profissao" onchange="endOnProfissaoChange(this)" style="border:none;background:transparent;width:100%;font:inherit;font-weight:600;color:#44546c;cursor:pointer">' +
-          END_PROFISSOES.map(function(p){ return '<option value="' + p.v + '"' + (p.v===END_STATE._profissaoSel?' selected':'') + '>' + p.label + '</option>'; }).join('') +
-        '</select>' +
-      '</div>' +
-      '<div class="end-cadbox"><span class="end-cadbox-lbl">Renda Mensal</span><span class="end-cadbox-val">' + cli.renda + '</span></div>' +
-      '<div class="end-cadbox"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + cli.imc + '</span></div>' +
-      '<div class="end-cadbox"><span class="end-cadbox-lbl">Vínculo Empregatício</span><span class="end-cadbox-val">' + cli.vinculo + '</span></div>' +
-    '</div>' +
+    '<div class="end-grid4">' + caixasCadastrais + '</div>' +
     '<div id="end-profissao-alerta"></div>' +
     '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
     '<div class="end-actions-row end-actions-between">' +
@@ -16588,14 +16704,79 @@ function endRenderFase2() {
   endOnProfissaoChange(document.getElementById('end-profissao'), true);
 }
 
+// Liga/desliga a borda e a legenda "Vigente: ..." de uma caixa sem redesenhar a
+// Fase 2 inteira — um re-render aqui tiraria o foco do campo em edição.
+function endAtualizaCadBox(campo) {
+  var box = document.getElementById('end-cadbox-' + campo);
+  if (!box) return;
+  var vig = (END_STATE.cadastroVigente || {})[campo];
+  var nov = (END_STATE.cadastroNovo || {})[campo];
+  var alterado = !!(vig && nov && vig !== nov);
+  box.classList.toggle('end-cadbox-alt', alterado);
+  var leg = box.querySelector('.end-cadbox-vig');
+  if (alterado) {
+    if (!leg) {
+      leg = document.createElement('span');
+      leg.className = 'end-cadbox-vig';
+      box.appendChild(leg);
+    }
+    leg.textContent = 'Vigente: ' + vig;
+  } else if (leg) {
+    leg.parentNode.removeChild(leg);
+  }
+}
+
+// A renda é normalizada no blur: o que o corretor digitar vira sempre "R$ x.xxx,xx".
+function endOnRendaBlur(inp) {
+  // Texto sem nenhum digito volta ao vigente — zerar a renda silenciosamente
+  // seria pior do que recusar a digitacao.
+  if (!/\d/.test(inp.value)) {
+    inp.value = END_STATE.cadastroVigente.renda;
+    END_STATE.cadastroNovo.renda = END_STATE.cadastroVigente.renda;
+    endAtualizaCadBox('renda');
+    return;
+  }
+  var valor = endParseMoeda(inp.value);
+  if (valor < 0) valor = 0;
+  END_STATE.cadastroNovo.renda = endFmtMoeda(valor);
+  inp.value = END_STATE.cadastroNovo.renda;
+  endAtualizaCadBox('renda');
+}
+
+// A faixa (Normal / Sobrepeso / Obesidade) acompanha a digitação, antes do blur.
+function endOnImcInput(inp) {
+  var x = endImcValor(inp.value);
+  var cl = document.getElementById('end-imc-classe');
+  if (cl) cl.textContent = x ? endImcClasse(x) : '—';
+}
+function endOnImcBlur(inp) {
+  var x = endImcValor(inp.value);
+  // Campo vazio ou ilegível volta ao vigente; fora da faixa plausível, é limitado.
+  if (!x) x = endImcValor(END_STATE.cadastroVigente.imc);
+  if (x < 10) x = 10;
+  if (x > 60) x = 60;
+  END_STATE.cadastroNovo.imc = endImcFmt(x);
+  inp.value = x.toFixed(1).replace('.', ',');
+  endOnImcInput(inp);
+  endAtualizaCadBox('imc');
+}
+
+function endOnVinculoChange(sel) {
+  END_STATE.cadastroNovo.vinculo = sel.value;
+  endAtualizaCadBox('vinculo');
+}
+
 function endOnProfissaoChange(sel, silencioso) {
   var novaVal = sel.value;
   var nova = END_PROFISSOES.find(function(p){ return p.v === novaVal; });
   var alertaEl = document.getElementById('end-profissao-alerta');
-  var antigaAgravada = END_STATE._profissaoAgravadaSnapshot;
-  if (antigaAgravada === undefined) antigaAgravada = false;
   END_STATE._profissaoSel = novaVal;
-  if (nova && nova.agravada) {
+  if (nova && END_STATE.cadastroNovo) END_STATE.cadastroNovo.profissao = nova.label;
+  if (nova) sel.title = nova.label;
+  endAtualizaCadBox('profissao');
+  // Só é "mudança para risco agravado" se de fato mudou: uma apólice que já nasce
+  // com profissão agravada não vira Não Clean Case sozinha.
+  if (nova && nova.agravada && nova.label !== (END_STATE.cadastroVigente || {}).profissao) {
     alertaEl.innerHTML = '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Profissão de risco agravado selecionada. Este caso será direcionado para a <strong>Mesa Técnica</strong> (Não Clean Case).</span></div>';
   } else {
     alertaEl.innerHTML = '';
@@ -16710,7 +16891,9 @@ function endValidaFase2() {
   }
   END_STATE.motivoNaoClean = [];
   var profissaoObj = END_PROFISSOES.find(function(p){ return p.v === END_STATE._profissaoSel; });
-  if (profissaoObj && profissaoObj.agravada) END_STATE.motivoNaoClean.push('Mudança para profissão de risco agravado (' + profissaoObj.label + ')');
+  if (profissaoObj && profissaoObj.agravada && profissaoObj.label !== (END_STATE.cadastroVigente || {}).profissao) {
+    END_STATE.motivoNaoClean.push('Mudança para profissão de risco agravado (' + profissaoObj.label + ')');
+  }
   var totalVig = END_STATE.coberturasVig.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
   var totalNovo = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
   if (totalVig > 0 && totalNovo > totalVig * 1.5) END_STATE.motivoNaoClean.push('Aumento de capital superior a 50% sobre o valor vigente');
@@ -16805,6 +16988,7 @@ function endRenderComparePlano() {
           '<div class="ape-plan-title-block">' +
             '<span class="ape-plan-title"><strong>' + cli.nome + '</strong> &ndash; Apólice ' + cli.apolice + '</span>' +
             '<span class="ape-plan-cnpj">' + cli.tipoDoc + ' ' + cli.cpf + '</span>' +
+            endCadDeltaHtml(END_STATE.cadastroVigente, END_STATE.cadastroNovo) +
           '</div>' +
           '<svg class="ape-plan-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="#586880" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
         '</div>' +
@@ -17189,6 +17373,8 @@ function endGarantirCaso() {
     cleanCase: null,
     dataHora: endFmtDataHora(new Date()),
     cliente: Object.assign({}, END_STATE.cliente),
+    cadastroVigente: Object.assign({}, END_STATE.cadastroVigente || {}),
+    cadastroNovo: Object.assign({}, END_STATE.cadastroNovo || {}),
     premioVig: END_STATE.cliente.premioVigente,
     premioNovo: END_STATE.premioNovo,
     dpsTipo: END_STATE.dpsTipo,
@@ -17361,7 +17547,8 @@ function endRenderAnalistaDetalhe(el) {
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Apólice</span><span class="end-cadbox-val">' + c.cliente.apolice + '</span></div>' +
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Recebido em</span><span class="end-cadbox-val">' + c.dataHora + '</span></div>' +
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Enquadramento</span><span class="end-cadbox-val">' + (c.cleanCase ? 'Clean case' : 'Non-clean') + '</span></div>' +
-    '</div>';
+    '</div>' +
+    endCadDeltaHtml(c.cadastroVigente, c.cadastroNovo);
 
   if (c.motivos.length) {
     html += '<div class="end-alert end-alert-warn" style="margin-top:12px">' + endAlertIco('warn') + '<span>' + c.motivos.join(' &middot; ') + '</span></div>';
@@ -17392,9 +17579,10 @@ function endRenderAnalistaCaso(el) {
     '<div class="end-grid4">' +
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">Nome</span><span class="end-cadbox-val">' + c.cliente.nome + '</span></div>' +
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">CPF</span><span class="end-cadbox-val">' + c.cliente.cpf + '</span></div>' +
-      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + c.cliente.imc + '</span></div>' +
+      '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">IMC</span><span class="end-cadbox-val">' + ((c.cadastroNovo && c.cadastroNovo.imc) || c.cliente.imc) + '</span></div>' +
       '<div class="end-cadbox end-analista-readonly"><span class="end-cadbox-lbl">% Comissão / Corretagem</span><span class="end-cadbox-val">20% / 100</span></div>' +
     '</div>' +
+    endCadDeltaHtml(c.cadastroVigente, c.cadastroNovo) +
     '<div class="end-alert end-alert-warn" style="margin-top:12px">' + endAlertIco('warn') + '<span>' + c.motivos.join(' &middot; ') + '</span></div>' +
     '<div class="end-analista-split" style="margin-top:14px">' +
       '<div><div style="font-weight:700;color:#44546c;margin-bottom:8px">Precificação proposta pelo motor</div><div id="end-analista-compare"></div></div>' +
