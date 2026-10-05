@@ -4615,10 +4615,6 @@ function authLogout(){
 
               <section class="evp-an-card">
                 <h3 class="evp-an-sec">Grupo(s)</h3>
-                <div class="evp-an-abas">
-                  <button class="evp-an-aba evp-an-aba-ativa" id="evp-an-aba-vigente" onclick="evpAnAba('vigente')">Apólice vigente (as is)</button>
-                  <button class="evp-an-aba" id="evp-an-aba-proposto" onclick="evpAnAba('proposto')">Proposta de endosso (to be)</button>
-                </div>
                 <div id="evp-an-grupo"></div>
               </section>
 
@@ -5210,11 +5206,6 @@ function authLogout(){
     .evp-an-dl span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
     .evp-an-dl strong{font-size:14px;color:#3C3C3C;font-weight:700;overflow-wrap:anywhere}
 
-    .evp-an-abas{display:flex;gap:4px;border-bottom:2px solid #E4E6E9;margin-bottom:16px}
-    .evp-an-aba{background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;
-      font:inherit;font-size:13.5px;font-weight:600;color:#8A8F96;cursor:pointer;padding:9px 16px}
-    .evp-an-aba:hover{color:#009DDB}
-    .evp-an-aba-ativa{color:#009DDB;border-bottom-color:#009DDB}
     .evp-an-grupo-hd{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:14px}
     .evp-an-gi{display:flex;flex-direction:column;gap:2px}
     .evp-an-gi span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
@@ -5229,6 +5220,19 @@ function authLogout(){
     .evp-an-tbl tfoot td{font-weight:700;border-bottom:none;border-top:2px solid #D7DBDF}
     .evp-an-tbl td.evp-an-off{color:#B9C1CC}
     .evp-an-tbl td.evp-an-novo{color:#009DDB;font-weight:700}
+
+    /* comparativo lado a lado: um separador e um fundo leve bastam para o olho
+       distinguir os dois blocos sem precisar de abas */
+    .evp-an-tbl-wrap{overflow-x:auto}
+    .evp-an-tbl-cmp{min-width:860px}
+    .evp-an-tbl-cmp .evp-an-th-cob{vertical-align:bottom}
+    .evp-an-tbl-cmp .evp-an-tr-lados th{text-align:center;padding-bottom:4px}
+    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left}
+    .evp-an-tbl-cmp .evp-an-th-nov{color:#009DDB}
+    .evp-an-tbl-cmp th.evp-an-sep,.evp-an-tbl-cmp td.evp-an-sep{border-left:2px solid #D7DBDF}
+    .evp-an-tbl-cmp tbody td:nth-child(n+5),.evp-an-tbl-cmp tfoot td:nth-child(n+5){background:#F5FAFD}
+    .evp-an-tbl-cmp td.evp-an-saiu{color:#C1440E;font-weight:600}
+    .evp-an-novo-txt{color:#009DDB}
     .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
     .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 
@@ -15981,7 +15985,6 @@ var EVP_PAINEL_EXEMPLOS = [
 ];
 
 var evpAnCasoAtual = null;   // caso aberto na tela de análise
-var evpAnAbaAtual = 'vigente';
 
 // ---------------------------------------------------------------- helpers
 
@@ -16135,7 +16138,6 @@ function evpAbrirAnalise(i) {
   var c = casos[i];
   if (!c) return;
   evpAnCasoAtual = c;
-  evpAnAbaAtual = 'vigente';
 
   ['evp-view-home', 'evp-view-endosso', 'evp-view-painel'].forEach(function (id) {
     var el = document.getElementById(id); if (el) el.style.display = 'none';
@@ -16158,17 +16160,8 @@ function evpAbrirAnalise(i) {
     return '<div><span>' + p[0] + '</span><strong>' + (p[1] || '—') + '</strong></div>';
   }).join('');
 
-  evpAnAba('vigente');
-  window.scrollTo({top: 0});
-}
-
-function evpAnAba(qual) {
-  evpAnAbaAtual = qual;
-  ['vigente', 'proposto'].forEach(function (a) {
-    var b = document.getElementById('evp-an-aba-' + a);
-    if (b) b.classList.toggle('evp-an-aba-ativa', a === qual);
-  });
   evpAnRenderGrupo();
+  window.scrollTo({top: 0});
 }
 
 function evpAnCobsProposto() {
@@ -16177,51 +16170,81 @@ function evpAnCobsProposto() {
   return EVP_PAINEL_EDITADO[c.num] || c.cobNovo;
 }
 
+// Vigente e proposta na mesma tabela, lado a lado: o analista compara sem trocar
+// de aba e sem guardar números de cabeça.
 function evpAnRenderGrupo() {
   var c = evpAnCasoAtual;
   var alvo = document.getElementById('evp-an-grupo');
   if (!c || !alvo) return;
-  var proposto = evpAnAbaAtual === 'proposto';
-  var cobs = proposto ? evpAnCobsProposto() : c.cobVig;
-  var ref = proposto ? c.cobVig : evpAnCobsProposto();   // a outra aba, para marcar o que mudou
-  var total = evpPremioTotal(cobs);
-  var totalOutro = evpPremioTotal(ref);
+  var vig = c.cobVig || [];
+  var nov = evpAnCobsProposto() || [];
+  var totalVig = evpPremioTotal(vig);
+  var totalNov = evpPremioTotal(nov);
 
-  var linhas = cobs.map(function (x) {
-    var antes = ref.find(function (y) { return y.cod === x.cod; }) || {ativa: false, capital: 0};
-    var mudou = proposto && (x.ativa !== antes.ativa || x.capital !== antes.capital);
-    if (!x.ativa && !antes.ativa) return '';
-    if (!x.ativa) {
-      return '<tr><td class="evp-an-off">' + evpCobRotulo(x) + '</td>' +
-        '<td class="evp-an-off" colspan="3">Não contratada' +
-        (proposto && antes.ativa ? ' &mdash; retirada neste endosso' : '') + '</td></tr>';
-    }
-    return '<tr><td' + (mudou ? ' class="evp-an-novo"' : '') + '>' + evpCobRotulo(x) + '</td>' +
-      '<td' + (mudou ? ' class="evp-an-novo"' : '') + '>' + endFmtMoeda(x.capital) + '</td>' +
-      '<td>' + evpNum(EVP_TAXAS[x.cod] || 0.3, 4) + '</td>' +
-      '<td>' + endFmtMoeda(evpPremioCob(x)) + '</td></tr>';
+  // União das duas listas, na ordem da vigente — uma cobertura incluída pelo
+  // endosso não existe em cobVig e sumiria se iterássemos só por ela.
+  var ordem = vig.map(function (x) { return x.cod; });
+  nov.forEach(function (x) { if (ordem.indexOf(x.cod) === -1) ordem.push(x.cod); });
+
+  var linhas = ordem.map(function (cod) {
+    var v = vig.find(function (y) { return y.cod === cod; });
+    var p = nov.find(function (y) { return y.cod === cod; });
+    var base = p || v;
+    if (!base) return '';
+    var vAtiva = !!(v && v.ativa), pAtiva = !!(p && p.ativa);
+    if (!vAtiva && !pAtiva) return '';
+    var mudou = pAtiva !== vAtiva || (pAtiva && vAtiva && p.capital !== v.capital);
+
+    var ladoVig = vAtiva
+      ? '<td>' + endFmtMoeda(v.capital) + '</td>' +
+        '<td>' + evpNum(EVP_TAXAS[cod] || 0.3, 4) + '</td>' +
+        '<td>' + endFmtMoeda(evpPremioCob(v)) + '</td>'
+      : '<td class="evp-an-off" colspan="3">Não contratada</td>';
+
+    var cls = mudou ? ' evp-an-novo' : '';
+    var ladoNov = pAtiva
+      ? '<td class="evp-an-sep' + cls + '">' + endFmtMoeda(p.capital) + '</td>' +
+        '<td>' + evpNum(EVP_TAXAS[cod] || 0.3, 4) + '</td>' +
+        '<td class="' + (mudou ? 'evp-an-novo' : '') + '">' + endFmtMoeda(evpPremioCob(p)) + '</td>'
+      : '<td class="evp-an-sep evp-an-saiu" colspan="3">' + (vAtiva ? 'Retirada neste endosso' : 'Não contratada') + '</td>';
+
+    return '<tr><td' + (mudou ? ' class="evp-an-novo"' : '') + '>' + evpCobRotulo(base) + '</td>' +
+      ladoVig + ladoNov + '</tr>';
   }).join('');
 
-  var dif = Math.round((total - totalOutro) * 100) / 100;
-  var nota = proposto
-    ? (dif === 0 ? 'O prêmio não muda com este endosso.'
-       : 'Diferença em relação à apólice vigente: <strong>' +
-         (dif > 0 ? '+' : '') + endFmtMoeda(dif) + '</strong> por mês.')
-    : 'Coberturas e prêmio como estão hoje na apólice, antes do endosso.';
+  var dif = Math.round((totalNov - totalVig) * 100) / 100;
+  var difTxt = dif === 0
+    ? 'sem alteração'
+    : (dif > 0 ? '+' : '\u2212') + endFmtMoeda(Math.abs(dif));
 
   alvo.innerHTML =
     '<div class="evp-an-grupo-hd">' +
       '<div class="evp-an-gi"><span>Grupo segurável</span><strong>01 &mdash; Titular</strong></div>' +
       '<div class="evp-an-gi"><span>Plano</span><strong>' + c.produto + ' &mdash; Multiproteção</strong></div>' +
       '<div class="evp-an-gi"><span>Vidas</span><strong>' + c.vidas + '</strong></div>' +
-      '<div class="evp-an-gi"><span>Prêmio</span><strong>' + endFmtMoeda(total) + ' / mensal</strong></div>' +
-      (proposto ? '<button class="end-btn end-btn-outline evp-an-editar" onclick="evpPlanoAbrir()">Editar Coberturas</button>' : '') +
+      '<div class="evp-an-gi"><span>Prêmio vigente</span><strong>' + endFmtMoeda(totalVig) + ' / mensal</strong></div>' +
+      '<div class="evp-an-gi"><span>Prêmio proposto</span><strong class="evp-an-novo-txt">' + endFmtMoeda(totalNov) + ' / mensal</strong></div>' +
+      '<div class="evp-an-gi"><span>Diferença</span><strong' + (dif !== 0 ? ' class="evp-an-novo-txt"' : '') + '>' + difTxt + (dif !== 0 ? ' / mês' : '') + '</strong></div>' +
+      '<button class="end-btn end-btn-outline evp-an-editar" onclick="evpPlanoAbrir()">Editar Coberturas</button>' +
     '</div>' +
-    '<table class="evp-an-tbl"><thead><tr>' +
-      '<th>Cobertura</th><th>Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
-    '</tr></thead><tbody>' + linhas + '</tbody>' +
-    '<tfoot><tr><td>Total</td><td></td><td></td><td>' + endFmtMoeda(total) + '</td></tr></tfoot></table>' +
-    '<p class="evp-an-nota">' + nota + '</p>';
+    '<div class="evp-an-tbl-wrap">' +
+    '<table class="evp-an-tbl evp-an-tbl-cmp">' +
+      '<thead>' +
+        '<tr class="evp-an-tr-lados">' +
+          '<th rowspan="2" class="evp-an-th-cob">Cobertura</th>' +
+          '<th colspan="3">Apólice vigente (as is)</th>' +
+          '<th colspan="3" class="evp-an-sep evp-an-th-nov">Proposta de endosso (to be)</th>' +
+        '</tr>' +
+        '<tr>' +
+          '<th>Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
+          '<th class="evp-an-sep">Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
+        '</tr>' +
+      '</thead>' +
+      '<tbody>' + linhas + '</tbody>' +
+      '<tfoot><tr><td>Total</td><td></td><td></td><td>' + endFmtMoeda(totalVig) + '</td>' +
+        '<td class="evp-an-sep"></td><td></td><td class="evp-an-novo">' + endFmtMoeda(totalNov) + '</td></tr></tfoot>' +
+    '</table></div>' +
+    '<p class="evp-an-nota">À esquerda, a apólice como está hoje; à direita, como fica com o endosso. Em azul, o que muda.</p>';
 }
 
 function evpAnNaoMapeado(nome) {
