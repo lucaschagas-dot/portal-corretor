@@ -4608,25 +4608,27 @@ function authLogout(){
                 </div>
               </div>
 
-              <fieldset class="evp-fs">
-                <legend>Dados do endosso</legend>
-                <div class="evp-cd" id="evp-an-dados"></div>
-              </fieldset>
+              <div class="evp-an-folha">
+                <fieldset class="evp-fs">
+                  <legend>Dados do endosso</legend>
+                  <div class="evp-cd" id="evp-an-dados"></div>
+                </fieldset>
 
-              <fieldset class="evp-fs">
-                <legend>Dados do cliente</legend>
-                <div class="evp-cd" id="evp-an-cliente"></div>
-                <div id="evp-an-cliente-nota"></div>
-              </fieldset>
+                <fieldset class="evp-fs">
+                  <legend>Dados do cliente</legend>
+                  <div class="evp-cd" id="evp-an-cliente"></div>
+                  <div id="evp-an-cliente-nota"></div>
+                </fieldset>
 
-              <fieldset class="evp-fs">
-                <legend>Coberturas</legend>
-                <div id="evp-an-grupo"></div>
-              </fieldset>
+                <fieldset class="evp-fs evp-fs-ultimo">
+                  <legend>Coberturas</legend>
+                  <div id="evp-an-grupo"></div>
+                </fieldset>
 
-              <div class="evp-an-acoes">
-                <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
-                <button class="end-btn end-btn-primary" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
+                <div class="evp-an-acoes">
+                  <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
+                  <button class="end-btn end-btn-primary" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
+                </div>
               </div>
             </div>
 
@@ -5204,7 +5206,12 @@ function authLogout(){
 
     /* Bloco em fieldset com rótulo na borda e pares "Campo:" + valor — é o
        layout que o portal corrente já usa; aqui ele é reaproveitado como está. */
-    .evp-fs{border:1px solid #D7DBDF;border-radius:3px;padding:10px 16px 16px;margin:0 0 18px;min-width:0}
+    /* Folha branca com a faixa vermelha na lateral: é o card do portal corrente,
+       e os fieldsets vivem dentro dele. */
+    .evp-an-folha{background:#fff;border-left:4px solid #E63329;border-radius:0 2px 2px 0;
+      box-shadow:0 1px 5px rgba(0,0,0,.13);padding:18px 22px 20px;margin-bottom:20px}
+    .evp-fs{background:#fff;border:1px solid #D7DBDF;border-radius:3px;padding:10px 16px 16px;margin:0 0 18px;min-width:0}
+    .evp-fs-ultimo{margin-bottom:0}
     .evp-fs > legend{font-size:14px;color:#44546C;padding:0 6px}
     .evp-cd{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 26px}
     .evp-cd-i{min-width:0;font-size:13.5px;line-height:1.45}
@@ -5234,16 +5241,21 @@ function authLogout(){
     /* faixa cinza no topo, como nas tabelas do portal corrente */
     .evp-an-tbl-cmp .evp-an-tr-lados th{background:#8A8F96;color:#fff;text-align:center;
       border-bottom:none;text-transform:none;letter-spacing:0;font-size:13px;padding:9px 10px}
-    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left;vertical-align:middle}
+    /* a celula tem rowspan=2; sem o vertical-align:top o texto desce para o meio
+       das duas linhas e desalinha dos outros dois titulos */
+    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left;vertical-align:top}
+    /* o 1o <th> desta linha e :first-child da propria <tr> (a coluna 1 pertence a
+       celula rowspan=2 da linha de cima), entao .evp-an-tbl th:not(:first-child)
+       nao o alcanca e ele ficaria a esquerda sobre uma coluna de numeros */
     .evp-an-tbl-cmp thead tr + tr th{background:#E9EBED;color:#44546C;border-bottom:1px solid #D7DBDF;
-      text-transform:none;letter-spacing:0;font-size:12.5px}
+      text-transform:none;letter-spacing:0;font-size:12.5px;text-align:right}
     .evp-an-tbl-cmp tbody tr:nth-child(even){background:#F4F6F7}
     .evp-an-tbl-cmp th.evp-an-sep,.evp-an-tbl-cmp td.evp-an-sep{border-left:2px solid #D7DBDF}
     .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-sep{border-left-color:#fff}
     .evp-an-tbl-cmp td.evp-an-saiu{color:#C1440E;font-weight:600}
     .evp-an-novo-txt{color:#009DDB}
     .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
-    .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px}
 
     /* ===== Modal "Plano Ideal" — edição de coberturas ===== */
     .pi-modal{max-width:1180px}
@@ -16048,7 +16060,7 @@ function evpCasoParaCard(c) {
   return {
     num: String(330000 + c.id) + '/1',
     segurado: (c.cliente.nome || '').toUpperCase(),
-    doc: c.cliente.doc || '',
+    doc: c.cliente.cpf || c.cliente.doc || '',
     apolice: c.cliente.apolice || '',
     produto: c.cliente.produto || 'Vida Individual',
     tipo: 'Endosso simulado no protótipo',
@@ -16473,7 +16485,7 @@ function endResetCorretorState() {
     premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'',
     dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
     dpsProponenteEnviado:false, dpsProponenteConcluido:false,
-    caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista',
+    caseId:null, _chaveCaso:'', cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista',
     cadastroVigente:null, cadastroNovo:null,
     motivoEndosso:'', dataVigencia:'', vigenciaOpcao:'', emailProponente:''
   };
@@ -16669,6 +16681,14 @@ function endAplicarApoliceSelecionada() {
     inadimplente: cen === 'inadimplente', sinistroAtivo: cen === 'naorenovar',
     premioVigente: ap.premioVigente, periodicidade: ap.periodicidade
   };
+  // Reabrir a MESMA apolice mantem o caso ja aberto (evita rascunho duplicado);
+  // trocar de apolice ou de segurado comeca um endosso novo — senao a Fase 4
+  // reaproveitaria o caso anterior e misturaria o cadastro de uma pessoa com a
+  // apolice de outra.
+  var chaveCaso = (ap.apolice || '') + '|' + (base.doc || '');
+  if (END_STATE.caseId && END_STATE._chaveCaso !== chaveCaso) END_STATE.caseId = null;
+  END_STATE._chaveCaso = chaveCaso;
+
   END_STATE.coberturasVig = endCoberturasBase();
   END_STATE.coberturas = endCoberturasBase();
   END_STATE.modoRestrito = !!(END_STATE.cliente.restritiva || END_STATE.cliente.naoRenovar);
@@ -17433,7 +17453,15 @@ function endFmtDataHora(d) {
 function endGarantirCaso() {
   if (END_STATE.caseId) {
     var existente = END_QUEUE.find(function(c) { return c.id === END_STATE.caseId; });
-    if (existente) return existente;
+    if (existente) {
+      // O corretor pode voltar a Fase 2 e mexer no cadastro depois do caso aberto.
+      // Sem esta ressincronizacao o caso guardaria o cadastro congelado da primeira
+      // entrada na Fase 4, e a Mesa Tecnica veria "nada mudou" com o motivo da
+      // mudanca estampado logo acima.
+      existente.cadastroVigente = Object.assign({}, END_STATE.cadastroVigente || {});
+      existente.cadastroNovo = Object.assign({}, END_STATE.cadastroNovo || {});
+      return existente;
+    }
   }
   END_CASE_SEQ++;
   var caso = {
