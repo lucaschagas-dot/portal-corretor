@@ -4665,6 +4665,74 @@ function authLogout(){
               </div>
             </div>
 
+            <!-- ===== Modal "Ajustes da cotação" (Mesa Técnica) ===== -->
+            <div class="ape-overlay" id="evp-ajuste-overlay" style="display:none">
+              <div class="ape-modal pi-modal aj-modal">
+                <div class="pi-hdr">
+                  <span class="pi-tit">Ajustes da cotação</span>
+                  <button class="pi-close" onclick="evpAjusteFechar()" aria-label="Fechar">&times;</button>
+                </div>
+                <div class="pi-body aj-body">
+
+                  <div class="pi-sec" id="aj-sec-basicos">
+                    <div class="pi-rail"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4.5L20 8.5 15.5 4 4 15.5V20z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 5.5L18.5 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+                    <div class="pi-sec-main">
+                      <div class="pi-sec-hd" onclick="evpPlanoToggleSec('aj-sec-basicos')">
+                        <span>Dados B&aacute;sicos</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                      <div class="pi-rows">
+                        <div class="aj-basicos">
+                          <div class="aj-campos">
+                            <label class="aj-f"><input type="text" id="aj-linear" inputmode="decimal" placeholder=" "><span>Ajuste linear (% desconto agravo)</span></label>
+                            <label class="aj-f"><input type="text" id="aj-impostos" inputmode="decimal" placeholder=" "><span>Acr&eacute;scimo de Impostos (%)</span></label>
+                          </div>
+                          <div class="aj-checks">
+                            <label class="aj-ck"><input type="checkbox" id="aj-desconto-comercial"> Permitir desconto comercial</label>
+                            <label class="aj-ck"><input type="checkbox" id="aj-isencao-iof"> Isen&ccedil;&atilde;o de IOF</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pi-sec" id="aj-sec-cond">
+                    <div class="pi-rail"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4.5L20 8.5 15.5 4 4 15.5V20z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 5.5L18.5 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+                    <div class="pi-sec-main">
+                      <div class="pi-sec-hd" onclick="evpPlanoToggleSec('aj-sec-cond')">
+                        <span>Condi&ccedil;&otilde;es Diversas</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                      <div class="pi-rows">
+                        <label class="aj-f aj-f-curto"><input type="text" id="aj-vigencia" inputmode="numeric" placeholder=" "><span>Per&iacute;odo de vig&ecirc;ncia (meses)</span></label>
+
+                        <label class="aj-ck"><input type="checkbox" id="aj-excedente" onchange="evpAjusteToggleGrupo(this,'aj-grupo-excedente')"> Excedente T&eacute;cnico</label>
+                        <div class="aj-grid4" id="aj-grupo-excedente">
+                          <label class="aj-f"><input type="text" id="aj-devolucao" inputmode="decimal" placeholder=" "><span>% de devolu&ccedil;&atilde;o</span></label>
+                          <label class="aj-f"><input type="text" id="aj-ibnr" inputmode="decimal" placeholder=" "><span>% de IBNR</span></label>
+                          <label class="aj-f"><input type="text" id="aj-oa" inputmode="decimal" placeholder=" "><span>% de OA</span></label>
+                          <label class="aj-f"><input type="text" id="aj-pis" inputmode="decimal" placeholder=" "><span>% de PIS/COFINS</span></label>
+                        </div>
+
+                        <label class="aj-ck"><input type="checkbox" id="aj-gatilho" onchange="evpAjusteToggleGrupo(this,'aj-grupo-gatilho')"> Gatilho</label>
+                        <div id="aj-grupo-gatilho">
+                          <div class="aj-subchecks">
+                            <label class="aj-ck"><input type="checkbox" id="aj-doc-cotacao"> Documento Cota&ccedil;&atilde;o</label>
+                            <label class="aj-ck"><input type="checkbox" id="aj-doc-proposta"> Documento Proposta</label>
+                          </div>
+                          <label class="aj-f aj-f-medio"><input type="text" id="aj-titulo" placeholder=" "><span>T&iacute;tulo</span></label>
+                          <label class="aj-f aj-f-area"><textarea id="aj-descricao" rows="4" placeholder=" "></textarea><span>Descri&ccedil;&atilde;o Gatilho</span></label>
+                        </div>
+
+                        <label class="aj-ck"><input type="checkbox" id="aj-cobrar-fechamento"> Cobrar Fechamento</label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="pi-ft aj-ft">
+                  <button class="pi-btn" onclick="evpAjusteFechar()">Cancelar</button>
+                  <button class="end-btn end-btn-primary" onclick="evpAjusteSalvar()">Salvar ajustes</button>
+                </div>
+              </div>
+            </div>
+
             <div id="evp-view-endosso" style="display:none">
               <div class="end-wrap">
 
@@ -5299,7 +5367,65 @@ function authLogout(){
       background:transparent;width:100%;min-width:0;font-variant-numeric:tabular-nums}
     .pi-f input:read-only{color:#9AA0A6;font-weight:400}
     .pi-f-edit{border-color:#0F84C4}
+    /* ===== Modal "Ajustes da cotação" ===== */
+    .aj-modal{max-width:1080px}
+    .aj-body{background:#F0F1F2;padding:16px 18px}
+    .aj-body .pi-sec{margin-bottom:14px}
+    .aj-body .pi-sec:last-child{margin-bottom:0}
+    .aj-body .pi-rows{padding:4px 18px 18px}
+    /* o recolher do "Plano Ideal" esconde .pi-rows, então as seções daqui
+       usam a mesma classe de corpo e herdam o comportamento de graça */
+
+    /* campo com rótulo flutuante: o <span> sobe quando o input deixa de estar vazio */
+    .aj-f{position:relative;display:block;background:#fff;border:1px solid #D7DBDF;border-radius:2px}
+    .aj-f > input,.aj-f > textarea{width:100%;border:none;outline:none;background:transparent;
+      font-family:inherit;font-size:14px;font-weight:700;color:#3C3C3C;padding:21px 10px 6px}
+    .aj-f > textarea{resize:vertical;min-height:92px;font-weight:400;line-height:1.45}
+    .aj-f > span{position:absolute;left:11px;top:15px;font-size:14px;color:#A2AAAD;
+      pointer-events:none;transition:top .15s,font-size .15s}
+    .aj-f > input:focus ~ span,.aj-f > input:not(:placeholder-shown) ~ span,
+    .aj-f > textarea:focus ~ span,.aj-f > textarea:not(:placeholder-shown) ~ span{top:5px;font-size:11px}
+    .aj-f:focus-within{border-color:#009DDB}
+    .aj-f-curto{max-width:255px}
+    .aj-f-medio{max-width:345px}
+    .aj-f-area{margin-top:10px}
+    /* num <textarea> rolavel o texto e pintado dentro da faixa do padding-top, que
+       e area visivel. Sem fundo proprio, o rotulo flutuado seria cruzado pelas
+       linhas que sobem a partir da 5a. O fundo so existe no estado flutuado — com
+       o campo vazio nao ha nada atras do rotulo, e uma faixa opaca no meio da
+       caixa seria pior do que o problema que ela resolve. */
+    .aj-f-area > textarea:focus ~ span,
+    .aj-f-area > textarea:not(:placeholder-shown) ~ span{top:1px;left:1px;right:1px;
+      padding:5px 10px 4px;background:#fff}
+    .aj-off .aj-f-area > textarea ~ span{background:#F2F4F5}
+    /* bloco inteiro desativado enquanto a caixa de seleção que o governa está vazia */
+    .aj-off .aj-f{background:#F2F4F5}
+    .aj-off .aj-f > input,.aj-off .aj-f > textarea{color:#A2AAAD}
+    .aj-off .aj-ck{color:#A2AAAD}
+
+    .aj-ck{display:flex;align-items:center;gap:7px;font-size:14px;color:#3C3C3C;cursor:pointer;margin:14px 0 0}
+    .aj-ck input{width:15px;height:15px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0}
+    .aj-subchecks{display:flex;flex-wrap:wrap;gap:6px 26px;margin-left:24px}
+    .aj-subchecks .aj-ck{margin-top:8px}
+
+    .aj-basicos{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:14px 40px;align-items:start}
+    .aj-campos{display:flex;flex-direction:column;gap:12px}
+    .aj-checks{display:flex;flex-direction:column;gap:12px;padding-top:4px}
+    .aj-checks .aj-ck{margin:0}
+    .aj-grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:10px}
+    #aj-grupo-gatilho{margin-top:2px}
+
+
+    @media (max-width:860px){
+      .aj-basicos{grid-template-columns:1fr}
+      .aj-f-curto,.aj-f-medio{max-width:none}
+    }
+
     .pi-ft{display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid #E4E6E9}
+    /* seletor duplo (0,2,0) em vez de so mover a regra: fica imune a qualquer
+       reordenacao futura deste bloco de estilo. O .pi-ft nasceu para um rodape de
+       um botao so, entao nao tem gap — os dois botoes daqui ficariam colados. */
+    .pi-ft.aj-ft{gap:10px}
     .pi-btn{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;font-size:13.5px;
       color:#3C3C3C;cursor:pointer;padding:8px 30px}
     .pi-btn:hover{border-color:#009DDB;color:#009DDB}
@@ -15911,6 +16037,10 @@ function evpVoltarHome() {
   evpMarcarMenu(null);
   endCovModalClose();
   evpPlanoFechar();
+  // O overlay e irmao das views, nao filho delas: esconder a view nao o tira da
+  // tela. Sem este fechamento ele reaparece por cima da home ao reentrar na rota.
+  evpAjusteFechar();
+  evpAnCasoAtual = null;   // a home do modulo nao tem caso aberto
   evpAtualizarHomeCards();
   window.scrollTo({top: 0});
 }
@@ -16117,6 +16247,8 @@ function evpAbrirPainel() {
   evpMarcarMenu('Painel de Análise Endosso');
   endCovModalClose();
   evpPlanoFechar();
+  evpAjusteFechar();
+  evpAnCasoAtual = null;   // o painel lista casos; nenhum esta aberto
   evpRenderPainel();
   window.scrollTo({top: 0});
 }
@@ -16302,8 +16434,99 @@ function evpAnRenderGrupo() {
     '<p class="evp-an-nota">À esquerda, a apólice como está hoje; à direita, como fica com o endosso. Em azul, o que muda.</p>' +
     '<div class="evp-an-btns">' +
       '<button class="end-btn end-btn-primary" onclick="evpPlanoAbrir()">Editar Coberturas</button>' +
-      '<button class="end-btn end-btn-primary" onclick="evpAnNaoMapeado(\'Ajustes da cotação\')">Ajustes da cotação</button>' +
+      '<button class="end-btn end-btn-primary" onclick="evpAjusteAbrir()">Ajustes da cotação</button>' +
     '</div>';
+}
+
+// ------------------------------------------------- modal "Ajustes da cotação"
+
+// Valores por caso, para o analista reabrir o modal e achar o que já tinha ajustado.
+var EVP_AJUSTES = {};
+
+// Os percentuais técnicos já vêm preenchidos, como no portal corrente.
+function evpAjustePadrao() {
+  return {
+    linear: '', impostos: '', descontoComercial: false, isencaoIof: false,
+    vigencia: '12', excedente: false,
+    devolucao: '', ibnr: '12,50', oa: '20,00', pis: '4,65',
+    gatilho: false, docCotacao: false, docProposta: false, titulo: '', descricao: '',
+    cobrarFechamento: false
+  };
+}
+
+// id do campo -> chave no objeto de ajustes. Uma lista só, usada para preencher e para ler.
+var EVP_AJUSTE_CAMPOS = [
+  ['aj-linear', 'linear', 'texto'],
+  ['aj-impostos', 'impostos', 'texto'],
+  ['aj-desconto-comercial', 'descontoComercial', 'check'],
+  ['aj-isencao-iof', 'isencaoIof', 'check'],
+  ['aj-vigencia', 'vigencia', 'texto'],
+  ['aj-excedente', 'excedente', 'check'],
+  ['aj-devolucao', 'devolucao', 'texto'],
+  ['aj-ibnr', 'ibnr', 'texto'],
+  ['aj-oa', 'oa', 'texto'],
+  ['aj-pis', 'pis', 'texto'],
+  ['aj-gatilho', 'gatilho', 'check'],
+  ['aj-doc-cotacao', 'docCotacao', 'check'],
+  ['aj-doc-proposta', 'docProposta', 'check'],
+  ['aj-titulo', 'titulo', 'texto'],
+  ['aj-descricao', 'descricao', 'texto'],
+  ['aj-cobrar-fechamento', 'cobrarFechamento', 'check']
+];
+
+function evpAjusteAbrir() {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  if (!EVP_AJUSTES[c.num]) EVP_AJUSTES[c.num] = evpAjustePadrao();
+  var a = EVP_AJUSTES[c.num];
+
+  EVP_AJUSTE_CAMPOS.forEach(function (campo) {
+    var el = document.getElementById(campo[0]);
+    if (!el) return;
+    if (campo[2] === 'check') el.checked = !!a[campo[1]];
+    else el.value = a[campo[1]] || '';
+  });
+
+  evpAjusteToggleGrupo(document.getElementById('aj-excedente'), 'aj-grupo-excedente');
+  evpAjusteToggleGrupo(document.getElementById('aj-gatilho'), 'aj-grupo-gatilho');
+
+  // As duas seções sempre abrem expandidas, mesmo que tenham sido recolhidas antes.
+  ['aj-sec-basicos', 'aj-sec-cond'].forEach(function (id) {
+    var sec = document.getElementById(id);
+    if (sec) sec.classList.remove('pi-sec-fechada');
+  });
+
+  document.getElementById('evp-ajuste-overlay').style.display = 'flex';
+}
+
+function evpAjusteFechar() {
+  var ov = document.getElementById('evp-ajuste-overlay');
+  if (ov) ov.style.display = 'none';
+}
+
+// Enquanto a caixa que governa o bloco está vazia, os campos dele ficam
+// desabilitados — é o estado cinza do portal corrente.
+function evpAjusteToggleGrupo(chk, idGrupo) {
+  var grupo = document.getElementById(idGrupo);
+  if (!chk || !grupo) return;
+  var ligado = chk.checked;
+  grupo.classList.toggle('aj-off', !ligado);
+  var campos = grupo.querySelectorAll('input, textarea');
+  for (var i = 0; i < campos.length; i++) campos[i].disabled = !ligado;
+}
+
+function evpAjusteSalvar() {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  var a = EVP_AJUSTES[c.num] || evpAjustePadrao();
+  EVP_AJUSTE_CAMPOS.forEach(function (campo) {
+    var el = document.getElementById(campo[0]);
+    if (!el) return;
+    a[campo[1]] = (campo[2] === 'check') ? el.checked : el.value;
+  });
+  EVP_AJUSTES[c.num] = a;
+  evpAjusteFechar();
+  apeShowError('Ajustes da cotação registrados neste protótipo. A repercussão no prêmio ainda não está mapeada.');
 }
 
 function evpAnNaoMapeado(nome) {
