@@ -5418,6 +5418,7 @@ function authLogout(){
     .end-dps-modo-row{display:flex;gap:26px;margin-bottom:14px}
     .end-dps-modo-opt{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#44546c;cursor:pointer}
     .end-dps-modo-opt input{cursor:pointer}
+    .end-vig-data{font-size:12px;color:#8a94a3;font-variant-numeric:tabular-nums}
     .end-dps-desc{font-size:12.5px;color:#8a94a3;margin-bottom:16px;line-height:1.5}
 
     .end-dps-q{padding:14px 0;border-bottom:1px solid #eef1f4}
@@ -16399,12 +16400,12 @@ function endResetCorretorState() {
   END_STATE = {
     profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[],
     modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
-    premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'', dpsReaproveitada:false,
+    premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'',
     dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
     dpsProponenteEnviado:false, dpsProponenteConcluido:false,
     caseId:null, cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista',
     cadastroVigente:null, cadastroNovo:null,
-    motivoEndosso:'', dataVigencia:'', emailProponente:''
+    motivoEndosso:'', dataVigencia:'', vigenciaOpcao:'', emailProponente:''
   };
   END_STATE.faseMax = 1;
   endCovModalClose();
@@ -16615,13 +16616,14 @@ function endAplicarApoliceSelecionada() {
   };
   END_STATE.cadastroNovo = Object.assign({}, END_STATE.cadastroVigente);
   END_STATE.motivoNaoClean = [];
-  END_STATE.dpsTipo = ''; END_STATE.dpsReaproveitada = false;
+  END_STATE.dpsTipo = '';
   END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
   END_STATE.dpsModo = 'preencher';
   END_STATE.dpsProponenteEnviado = false; END_STATE.dpsProponenteConcluido = false;
   END_STATE.resseguroAprovado = false;
   END_STATE.motivoEndosso = '';
   END_STATE.dataVigencia = '';
+  END_STATE.vigenciaOpcao = '';
   END_STATE.emailProponente = '';
 }
 
@@ -16693,7 +16695,6 @@ function endRenderFase2() {
     '<p class="end-card-sub">Dados cadastrais atuais obtidos do E-vida e grid dinâmico de coberturas vigentes.</p>' +
     restritoNota +
     '<div class="end-grid4">' + caixasCadastrais + '</div>' +
-    '<div id="end-profissao-alerta"></div>' +
     '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
     '<div class="end-actions-row end-actions-between">' +
       '<button class="end-btn end-btn-outline" onclick="endGoFase(1)">&lsaquo; Voltar</button>' +
@@ -16766,21 +16767,16 @@ function endOnVinculoChange(sel) {
   endAtualizaCadBox('vinculo');
 }
 
+// O enquadramento (clean / não clean) continua sendo calculado em endValidaFase2,
+// mas não é mais anunciado aqui: na simulação o corretor não deve saber se o caso
+// vai para a Mesa Técnica.
 function endOnProfissaoChange(sel, silencioso) {
   var novaVal = sel.value;
   var nova = END_PROFISSOES.find(function(p){ return p.v === novaVal; });
-  var alertaEl = document.getElementById('end-profissao-alerta');
   END_STATE._profissaoSel = novaVal;
   if (nova && END_STATE.cadastroNovo) END_STATE.cadastroNovo.profissao = nova.label;
   if (nova) sel.title = nova.label;
   endAtualizaCadBox('profissao');
-  // Só é "mudança para risco agravado" se de fato mudou: uma apólice que já nasce
-  // com profissão agravada não vira Não Clean Case sozinha.
-  if (nova && nova.agravada && nova.label !== (END_STATE.cadastroVigente || {}).profissao) {
-    alertaEl.innerHTML = '<div class="end-alert end-alert-warn">' + endAlertIco('warn') + '<span>Profissão de risco agravado selecionada. Este caso será direcionado para a <strong>Mesa Técnica</strong> (Não Clean Case).</span></div>';
-  } else {
-    alertaEl.innerHTML = '';
-  }
 }
 
 function endRenderCovTable() {
@@ -17066,7 +17062,6 @@ function endRenderFase4() {
   var novoTipo = endComputeDpsTipo();
   if (novoTipo !== END_STATE.dpsTipo) {
     END_STATE.dpsRespondida = false;
-    END_STATE.dpsReaproveitada = false;
     END_STATE._dpsRespostas = {};
     END_STATE.dpsProponenteEnviado = false;
     END_STATE.dpsProponenteConcluido = false;
@@ -17082,10 +17077,10 @@ function endRenderFase4() {
         '<textarea id="end-motivo-endosso" rows="3" placeholder="Descreva o motivo da solicita&ccedil;&atilde;o deste endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
       '</div>') +
     endSecao('end-sec-vigencia', 'Vig&ecirc;ncia',
-      '<div class="end-grid2">' +
-        '<div class="vcalc-f"><span class="vcalc-f-lbl">Data de vig&ecirc;ncia desejada <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
-          '<input type="date" id="end-data-vigencia" min="' + endHojeISO() + '" value="' + (END_STATE.dataVigencia || '') + '" oninput="endOnDadosEndossoInput()">' +
-        '</div>' +
+      '<p class="end-dps-ask">A partir de quando este endosso passa a valer? <span class="end-dps-req">*</span></p>' +
+      '<div class="end-dps-modo-row">' +
+        '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="d1" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='d1'?' checked':'') + '> D+1 <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('d1')) + '</span></label>' +
+        '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="proxmes" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='proxmes'?' checked':'') + '> Pr&oacute;ximo m&ecirc;s de cobertura <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('proxmes')) + '</span></label>' +
       '</div>') +
     endSecao('end-sec-dps', 'Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de',
       '<p class="end-dps-ask">Corretor, deseja preencher a Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de ou enviar ao proponente para preenchimento?</p>' +
@@ -17103,15 +17098,33 @@ function endRenderFase4() {
   endRenderDpsArea();
 }
 
-function endHojeISO() {
-  var d = new Date();
+function endIso(d) {
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
+function endHojeISO() { return endIso(new Date()); }
+
+// As duas únicas vigências possíveis no endosso: o dia seguinte, ou o primeiro dia
+// do próximo mês de cobertura. A data concreta continua sendo gravada em
+// END_STATE.dataVigencia (ISO) — é dela que a Mesa Técnica e o painel leem.
+function endVigenciaISO(opcao) {
+  var h = new Date();
+  return endIso(opcao === 'proxmes'
+    ? new Date(h.getFullYear(), h.getMonth() + 1, 1)
+    : new Date(h.getFullYear(), h.getMonth(), h.getDate() + 1));
+}
+function endDataBrISO(iso) {
+  var p = String(iso || '').split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '';
+}
+function endOnVigenciaChange(radio) {
+  END_STATE.vigenciaOpcao = radio.value;
+  END_STATE.dataVigencia = endVigenciaISO(radio.value);
+  endAtualizarFase4Botao();
+}
+
 function endOnDadosEndossoInput() {
   var m = document.getElementById('end-motivo-endosso');
-  var v = document.getElementById('end-data-vigencia');
   END_STATE.motivoEndosso = m ? m.value.trim() : '';
-  END_STATE.dataVigencia = v ? v.value : '';
   endAtualizarFase4Botao();
 }
 function endDadosEndossoOk() {
@@ -17136,7 +17149,6 @@ function endToggleSecao(id) {
 function endOnDpsModoChange(radio) {
   END_STATE.dpsModo = radio.value;
   END_STATE.dpsRespondida = false;
-  END_STATE.dpsReaproveitada = false;
   END_STATE._dpsRespostas = {};
   END_STATE.dpsProponenteEnviado = false;
   END_STATE.dpsProponenteConcluido = false;
@@ -17168,28 +17180,16 @@ function endRenderDpsArea() {
   }
 
   html += '<p class="end-dps-desc">Preencha esta Declaração Pessoal de Saúde e transmita eletronicamente a proposta de contratação assinada pelo proponente.</p>';
-  html += '<label class="prop-check-item" style="margin:0 0 14px"><input type="checkbox" id="end-dps-reaproveita" onchange="endOnDpsReaproveitaChange(this)"' + (END_STATE.dpsReaproveitada?' checked':'') + '> Cliente já respondeu este modelo de DPS há menos de 30 dias, sem novas patologias declaradas (reaproveitar histórico)</label>';
+  // O reaproveitamento de DPS respondida há menos de 30 dias foi retirado daqui
+  // enquanto a viabilidade técnica não é avaliada.
   html += '<div id="end-dps-form"></div>';
   area.innerHTML = html;
   endRenderDpsForm();
 }
 
-function endOnDpsReaproveitaChange(chk) {
-  END_STATE.dpsReaproveitada = chk.checked;
-  if (chk.checked) END_STATE.dpsRespondida = true;
-  else END_STATE.dpsRespondida = false;
-  endRenderDpsForm();
-  endAtualizarFase4Botao();
-}
-
 function endRenderDpsForm() {
   var wrap = document.getElementById('end-dps-form');
   if (!wrap) return;
-  if (END_STATE.dpsReaproveitada) {
-    wrap.innerHTML = '<div class="end-alert end-alert-ok">' + endAlertIco('ok') + '<span>DPS reaproveitada do histórico recente. Preenchimento dispensado.</span></div>';
-    endAtualizarFase4Botao();
-    return;
-  }
   var perguntas = endDpsPerguntasAtivas();
   var html = perguntas.map(function(p, i) {
     var val = END_STATE._dpsRespostas[i] || '';
@@ -17334,7 +17334,7 @@ function endComputeMotivosFinal() {
   if (END_STATE.cliente.sinistroAtivo) motivos.push('Sinistro ativo identificado no RGS/E-vida');
   var totalNovo = END_STATE.coberturas.filter(function(c){return c.ativa;}).reduce(function(s,c){return s+c.capital;},0);
   if (totalNovo > 3500000) motivos.push('Capital segurado total elevado (acima de R$ 3.500.000,00)');
-  if (END_STATE.dpsTipo === 'completa' && !END_STATE.dpsReaproveitada) motivos.push('DPS Completa exigida para o aumento solicitado');
+  if (END_STATE.dpsTipo === 'completa') motivos.push('DPS Completa exigida para o aumento solicitado');
   return motivos;
 }
 
