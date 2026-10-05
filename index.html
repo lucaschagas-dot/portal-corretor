@@ -4608,27 +4608,30 @@ function authLogout(){
                 </div>
               </div>
 
-              <div class="evp-an-folha">
-                <fieldset class="evp-fs">
-                  <legend>Dados do endosso</legend>
-                  <div class="evp-cd" id="evp-an-dados"></div>
-                </fieldset>
+              <fieldset class="evp-fs">
+                <legend>Dados do endosso</legend>
+                <div class="evp-cd" id="evp-an-dados"></div>
+              </fieldset>
 
-                <fieldset class="evp-fs">
-                  <legend>Dados do cliente</legend>
-                  <div class="evp-cd" id="evp-an-cliente"></div>
-                  <div id="evp-an-cliente-nota"></div>
-                </fieldset>
+              <fieldset class="evp-fs">
+                <legend>Dados do cliente</legend>
+                <div class="evp-cd" id="evp-an-cliente"></div>
+                <div id="evp-an-cliente-nota"></div>
+              </fieldset>
 
-                <fieldset class="evp-fs evp-fs-ultimo">
-                  <legend>Coberturas</legend>
-                  <div id="evp-an-grupo"></div>
-                </fieldset>
+              <fieldset class="evp-fs">
+                <legend>Coberturas</legend>
+                <div id="evp-an-grupo"></div>
+              </fieldset>
 
-                <div class="evp-an-acoes">
-                  <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
-                  <button class="end-btn end-btn-primary" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
-                </div>
+              <fieldset class="evp-fs">
+                <legend>Documentos para transmiss&atilde;o</legend>
+                <div id="evp-an-docs"></div>
+              </fieldset>
+
+              <div class="evp-an-acoes">
+                <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
+                <button class="end-btn end-btn-success" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
               </div>
             </div>
 
@@ -5274,12 +5277,11 @@ function authLogout(){
 
     /* Bloco em fieldset com rótulo na borda e pares "Campo:" + valor — é o
        layout que o portal corrente já usa; aqui ele é reaproveitado como está. */
-    /* Folha branca com a faixa vermelha na lateral: é o card do portal corrente,
-       e os fieldsets vivem dentro dele. */
-    .evp-an-folha{background:#fff;border-left:4px solid #E63329;border-radius:0 2px 2px 0;
-      box-shadow:0 1px 5px rgba(0,0,0,.13);padding:18px 22px 20px;margin-bottom:20px}
-    .evp-fs{background:#fff;border:1px solid #D7DBDF;border-radius:3px;padding:10px 16px 16px;margin:0 0 18px;min-width:0}
-    .evp-fs-ultimo{margin-bottom:0}
+    /* Cada bloco é um card seu: branco, faixa vermelha na lateral, separados pelo
+       cinza da página — o mesmo ritmo das fases do fluxo de endosso. */
+    .evp-fs{background:#fff;border:1px solid #D7DBDF;border-left:4px solid #E63329;
+      border-radius:0 3px 3px 0;box-shadow:0 1px 5px rgba(0,0,0,.10);
+      padding:12px 20px 18px;margin:0 0 20px;min-width:0}
     .evp-fs > legend{font-size:14px;color:#44546C;padding:0 6px}
     .evp-cd{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 26px}
     .evp-cd-i{min-width:0;font-size:13.5px;line-height:1.45}
@@ -5309,9 +5311,7 @@ function authLogout(){
     /* faixa cinza no topo, como nas tabelas do portal corrente */
     .evp-an-tbl-cmp .evp-an-tr-lados th{background:#8A8F96;color:#fff;text-align:center;
       border-bottom:none;text-transform:none;letter-spacing:0;font-size:13px;padding:9px 10px}
-    /* a celula tem rowspan=2; sem o vertical-align:top o texto desce para o meio
-       das duas linhas e desalinha dos outros dois titulos */
-    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left;vertical-align:top}
+    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left}
     /* o 1o <th> desta linha e :first-child da propria <tr> (a coluna 1 pertence a
        celula rowspan=2 da linha de cima), entao .evp-an-tbl th:not(:first-child)
        nao o alcanca e ele ficaria a esquerda sobre uma coluna de numeros */
@@ -5323,7 +5323,19 @@ function authLogout(){
     .evp-an-tbl-cmp td.evp-an-saiu{color:#C1440E;font-weight:600}
     .evp-an-novo-txt{color:#009DDB}
     .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
-    .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px}
+
+    /* Documentos para transmissão: nome do documento à esquerda, a regra à direita */
+    .evp-doc-linha{display:flex;align-items:center;justify-content:space-between;gap:16px;
+      flex-wrap:wrap;padding:10px 2px;border-bottom:1px solid #EDEFF1}
+    .evp-doc-linha:last-child{border-bottom:none}
+    .evp-doc-nome{display:flex;align-items:center;gap:9px;font-size:13.5px;color:#3C3C3C;min-width:0}
+    .evp-doc-nome svg{flex-shrink:0;color:#0F84C4}
+    .evp-doc-ops{display:flex;align-items:center;gap:22px;flex-shrink:0}
+    .evp-doc-op{display:flex;align-items:center;gap:6px;font-size:13px;color:#44546C;
+      cursor:pointer;white-space:nowrap}
+    .evp-doc-op input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0}
+    @media (max-width:900px){ .evp-doc-ops{gap:14px} }
+    .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin:0 0 10px}
 
     /* ===== Modal "Plano Ideal" — edição de coberturas ===== */
     .pi-modal{max-width:1180px}
@@ -16325,7 +16337,58 @@ function evpAbrirAnalise(i) {
 
   evpAnRenderCliente();
   evpAnRenderGrupo();
+  evpAnRenderDocs();
   window.scrollTo({top: 0});
+}
+
+// Documentos exigidos na transmissão. A regra de cada um pode ser mantida como está
+// na apólice ou sobrescrita pelo analista, e a escolha vale por caso.
+var EVP_DOCS_TRANSMISSAO = [
+  'Layout com a massa inicial de vidas',
+  'C\u00f3pia da \u00faltima fatura da cong\u00eanere',
+  'Registro e a c\u00f3pia do CPF do respons\u00e1vel pelo cadastro',
+  'Cart\u00e3o Proposta com o preenchimento da Declara\u00e7\u00e3o Pessoal de Sa\u00fade',
+  'C\u00f3pia da ap\u00f3lice da cong\u00eanere'
+];
+var EVP_DOC_OPCOES = [
+  {v: 'manter', rot: 'Manter regra'},
+  {v: 'obrigatorio', rot: 'Obrigat\u00f3rio'},
+  {v: 'nao', rot: 'N\u00e3o obrigat\u00f3rio'}
+];
+var EVP_DOCS = {};
+
+function evpDocEngrenagem() {
+  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/>' +
+    '<path d="M12 2.6v2.6M12 18.8v2.6M21.4 12h-2.6M5.2 12H2.6M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8M18.6 18.6l-1.8-1.8M7.2 7.2L5.4 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+}
+
+function evpAnRenderDocs() {
+  var c = evpAnCasoAtual;
+  var alvo = document.getElementById('evp-an-docs');
+  if (!c || !alvo) return;
+  if (!EVP_DOCS[c.num]) {
+    EVP_DOCS[c.num] = EVP_DOCS_TRANSMISSAO.map(function () { return 'manter'; });
+  }
+  var escolhas = EVP_DOCS[c.num];
+
+  alvo.innerHTML = EVP_DOCS_TRANSMISSAO.map(function (nome, i) {
+    var ops = EVP_DOC_OPCOES.map(function (o) {
+      return '<label class="evp-doc-op"><input type="radio" name="evp-doc-' + i + '" value="' + o.v + '"' +
+        (escolhas[i] === o.v ? ' checked' : '') +
+        ' onchange="evpAnDocEscolha(' + i + ', this.value)">' + o.rot + '</label>';
+    }).join('');
+    return '<div class="evp-doc-linha">' +
+      '<span class="evp-doc-nome">' + evpDocEngrenagem() + nome + '</span>' +
+      '<span class="evp-doc-ops">' + ops + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function evpAnDocEscolha(i, valor) {
+  var c = evpAnCasoAtual;
+  if (!c || !EVP_DOCS[c.num]) return;
+  EVP_DOCS[c.num][i] = valor;
 }
 
 // Dados cadastrais do segurado. Campo alterado no endosso aparece como
@@ -16418,11 +16481,12 @@ function evpAnRenderGrupo() {
     '<table class="evp-an-tbl evp-an-tbl-cmp">' +
       '<thead>' +
         '<tr class="evp-an-tr-lados">' +
-          '<th rowspan="2" class="evp-an-th-cob">Cobertura</th>' +
+          '<th class="evp-an-th-cob">Cobertura</th>' +
           '<th colspan="3">Apólice vigente (as is)</th>' +
           '<th colspan="3" class="evp-an-sep evp-an-th-nov">Proposta de endosso (to be)</th>' +
         '</tr>' +
         '<tr>' +
+          '<th></th>' +
           '<th>Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
           '<th class="evp-an-sep">Capital Segurado</th><th>Taxa</th><th>Prêmio</th>' +
         '</tr>' +
