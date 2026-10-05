@@ -4608,18 +4608,23 @@ function authLogout(){
                 </div>
               </div>
 
-              <section class="evp-an-card">
-                <h3 class="evp-an-sec">Dados do endosso</h3>
-                <div class="evp-an-dl" id="evp-an-dados"></div>
-              </section>
+              <fieldset class="evp-fs">
+                <legend>Dados do endosso</legend>
+                <div class="evp-cd" id="evp-an-dados"></div>
+              </fieldset>
 
-              <section class="evp-an-card">
-                <h3 class="evp-an-sec">Grupo(s)</h3>
+              <fieldset class="evp-fs">
+                <legend>Dados do cliente</legend>
+                <div class="evp-cd" id="evp-an-cliente"></div>
+                <div id="evp-an-cliente-nota"></div>
+              </fieldset>
+
+              <fieldset class="evp-fs">
+                <legend>Coberturas</legend>
                 <div id="evp-an-grupo"></div>
-              </section>
+              </fieldset>
 
               <div class="evp-an-acoes">
-                <button class="end-btn end-btn-outline" onclick="evpAnNaoMapeado('Ajustes da cotação')">Ajustes da cotação</button>
                 <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
                 <button class="end-btn end-btn-primary" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
               </div>
@@ -5197,20 +5202,21 @@ function authLogout(){
       padding:6px 9px;display:flex;color:#586880}
     .evp-an-print:hover{border-color:#009DDB;color:#009DDB}
 
-    .evp-an-card{background:#fff;border-left:4px solid #E63329;border-radius:2px;
-      box-shadow:0 1px 5px rgba(0,0,0,.13);padding:16px 20px 18px;margin-bottom:20px}
-    .evp-an-sec{font-size:16px;font-weight:700;color:#009DDB;
-      font-family:'UnimedSlab',Georgia,serif;margin-bottom:12px}
-    .evp-an-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px 22px}
-    .evp-an-dl div{display:flex;flex-direction:column;gap:2px;min-width:0}
-    .evp-an-dl span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
-    .evp-an-dl strong{font-size:14px;color:#3C3C3C;font-weight:700;overflow-wrap:anywhere}
+    /* Bloco em fieldset com rótulo na borda e pares "Campo:" + valor — é o
+       layout que o portal corrente já usa; aqui ele é reaproveitado como está. */
+    .evp-fs{border:1px solid #D7DBDF;border-radius:3px;padding:10px 16px 16px;margin:0 0 18px;min-width:0}
+    .evp-fs > legend{font-size:14px;color:#44546C;padding:0 6px}
+    .evp-cd{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 26px}
+    .evp-cd-i{min-width:0;font-size:13.5px;line-height:1.45}
+    .evp-cd-i b{display:block;color:#44546C;font-weight:700}
+    .evp-cd-i > span{color:#3C3C3C;overflow-wrap:anywhere}
+    .evp-cd-premio{margin-bottom:14px}
+    .evp-de{color:#A2AAAD;text-decoration:line-through}
+    .evp-seta{color:#A2AAAD;margin:0 5px}
+    .evp-para{color:#009DDB;font-weight:700}
+    .evp-an-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .evp-an-nenhum{font-size:13px;color:#8A8F96;margin-top:10px}
 
-    .evp-an-grupo-hd{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:14px}
-    .evp-an-gi{display:flex;flex-direction:column;gap:2px}
-    .evp-an-gi span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
-    .evp-an-gi strong{font-size:14px;color:#3C3C3C}
-    .evp-an-editar{margin-left:auto}
     .evp-an-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
     .evp-an-tbl th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;
       color:#44546C;border-bottom:1px solid #D7DBDF;padding:8px 10px;font-weight:700}
@@ -5224,13 +5230,16 @@ function authLogout(){
     /* comparativo lado a lado: um separador e um fundo leve bastam para o olho
        distinguir os dois blocos sem precisar de abas */
     .evp-an-tbl-wrap{overflow-x:auto}
-    .evp-an-tbl-cmp{min-width:860px}
-    .evp-an-tbl-cmp .evp-an-th-cob{vertical-align:bottom}
-    .evp-an-tbl-cmp .evp-an-tr-lados th{text-align:center;padding-bottom:4px}
-    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left}
-    .evp-an-tbl-cmp .evp-an-th-nov{color:#009DDB}
+    .evp-an-tbl-cmp{min-width:860px;border:1px solid #D7DBDF}
+    /* faixa cinza no topo, como nas tabelas do portal corrente */
+    .evp-an-tbl-cmp .evp-an-tr-lados th{background:#8A8F96;color:#fff;text-align:center;
+      border-bottom:none;text-transform:none;letter-spacing:0;font-size:13px;padding:9px 10px}
+    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-th-cob{text-align:left;vertical-align:middle}
+    .evp-an-tbl-cmp thead tr + tr th{background:#E9EBED;color:#44546C;border-bottom:1px solid #D7DBDF;
+      text-transform:none;letter-spacing:0;font-size:12.5px}
+    .evp-an-tbl-cmp tbody tr:nth-child(even){background:#F4F6F7}
     .evp-an-tbl-cmp th.evp-an-sep,.evp-an-tbl-cmp td.evp-an-sep{border-left:2px solid #D7DBDF}
-    .evp-an-tbl-cmp tbody td:nth-child(n+5),.evp-an-tbl-cmp tfoot td:nth-child(n+5){background:#F5FAFD}
+    .evp-an-tbl-cmp .evp-an-tr-lados th.evp-an-sep{border-left-color:#fff}
     .evp-an-tbl-cmp td.evp-an-saiu{color:#C1440E;font-weight:600}
     .evp-an-novo-txt{color:#009DDB}
     .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
@@ -5286,7 +5295,6 @@ function authLogout(){
     @media (max-width:760px){
       .pi-rail{flex-basis:44px}
       .evp-an-doc{margin-left:0;width:100%}
-      .evp-an-editar{margin-left:0}
     }
 
     .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
@@ -15949,6 +15957,7 @@ var EVP_PAINEL_EXEMPLOS = [
    tags:['Motivo','Justificativas','Observação'], badgeE:true, vidas:1,
    corretor:'Lucas Chagas', vigencia:'01/11/2026',
    motivo:'Cliente pediu aumento do capital de Morte após a compra do imóvel.',
+   cadVig:{profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'23,4 (Normal)', vinculo:'CLT'},
    capVig:{morte:300000, ipa:300000}, capNovo:{morte:500000, ipa:300000}},
 
   {num:'307221/2', segurado:'MARCOS VINÍCIUS ALMEIDA', doc:'234.567.890-12', apolice:'AP-211744',
@@ -15957,6 +15966,8 @@ var EVP_PAINEL_EXEMPLOS = [
    tags:['Motivo','Observação'], badgeE:false, vidas:1,
    corretor:'Camila Gomes', vigencia:'01/11/2026',
    motivo:'Inclusão de IFPD solicitada pelo segurado após mudança de profissão.',
+   cadVig:{profissao:'Comerciante', renda:'R$ 4.500,00', imc:'24,1 (Normal)', vinculo:'CLT'},
+   cadNov:{profissao:'Motociclista Profissional (Motoboy/App)', renda:'R$ 4.500,00', imc:'24,1 (Normal)', vinculo:'Autônomo'},
    capVig:{morte:250000, ipa:250000}, capNovo:{morte:250000, ipa:250000, ifpd:250000}},
 
   {num:'302336/4', segurado:'RENATA SOUZA LIMA', doc:'345.678.901-23', apolice:'AP-207903',
@@ -15965,6 +15976,8 @@ var EVP_PAINEL_EXEMPLOS = [
    tags:['Observação'], badgeE:true, vidas:1,
    corretor:'Hugo Tosetto', vigencia:'01/10/2026',
    motivo:'Redução de capital por readequação orçamentária do cliente.',
+   cadVig:{profissao:'Professor(a)', renda:'R$ 11.400,00', imc:'22,9 (Normal)', vinculo:'Servidor Público'},
+   cadNov:{profissao:'Professor(a)', renda:'R$ 6.200,00', imc:'22,9 (Normal)', vinculo:'Servidor Público'},
    capVig:{morte:400000, ipa:400000, dcf:120000}, capNovo:{morte:220000, ipa:220000}},
 
   {num:'318992/1', segurado:'PAULO HENRIQUE ROCHA', doc:'456.789.012-34', apolice:'AP-219087',
@@ -15973,6 +15986,8 @@ var EVP_PAINEL_EXEMPLOS = [
    tags:['Motivo','Justificativas'], badgeE:false, vidas:1,
    corretor:'Lucas Chagas', vigencia:'15/11/2026',
    motivo:'Inclusão de DG Combos; aguardando laudo médico complementar.',
+   cadVig:{profissao:'Comerciante', renda:'R$ 6.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Empresário'},
+   cadNov:{profissao:'Comerciante', renda:'R$ 6.200,00', imc:'31,8 (Obesidade grau I)', vinculo:'Empresário'},
    capVig:{morte:300000, ipa:300000}, capNovo:{morte:300000, ipa:300000, dgcombo:150000}},
 
   {num:'322190/1', segurado:'CAMILA RIBEIRO TEIXEIRA', doc:'567.890.123-45', apolice:'AP-222641',
@@ -15981,6 +15996,8 @@ var EVP_PAINEL_EXEMPLOS = [
    tags:['Observação'], badgeE:false, vidas:1,
    corretor:'Camila Gomes', vigencia:'01/12/2026',
    motivo:'Aumento de capital de Morte e inclusão de IPAM.',
+   cadVig:{profissao:'Analista de Sistemas', renda:'R$ 6.200,00', imc:'25,0 (Sobrepeso)', vinculo:'CLT'},
+   cadNov:{profissao:'Analista de Sistemas', renda:'R$ 11.400,00', imc:'25,0 (Sobrepeso)', vinculo:'Empresário'},
    capVig:{morte:180000, ipa:180000}, capNovo:{morte:350000, ipa:350000, ipam:100000}}
 ];
 
@@ -16047,6 +16064,8 @@ function evpCasoParaCard(c) {
     motivo: c.motivoEndosso || 'Não informado.',
     cobVig: (c.coberturasVig || []).map(function (x) { return Object.assign({}, x); }),
     cobNovo: (c.coberturasNovo || []).map(function (x) { return Object.assign({}, x); }),
+    cadVig: Object.assign({}, c.cadastroVigente || {}),
+    cadNov: Object.assign({}, c.cadastroNovo || {}),
     doFluxo: true,
     caseId: c.id
   };
@@ -16157,11 +16176,39 @@ function evpAbrirAnalise(i) {
     ['Data da solicitação', c.data], ['Vigência desejada', c.vigencia],
     ['Sucursal / ER', c.er], ['Motivo do endosso', c.motivo]
   ].map(function (p) {
-    return '<div><span>' + p[0] + '</span><strong>' + (p[1] || '—') + '</strong></div>';
+    return '<div class="evp-cd-i"><b>' + p[0] + ':</b><span>' + (p[1] || '—') + '</span></div>';
   }).join('');
 
+  evpAnRenderCliente();
   evpAnRenderGrupo();
   window.scrollTo({top: 0});
+}
+
+// Dados cadastrais do segurado. Campo alterado no endosso aparece como
+// "valor antigo -> valor novo"; os demais, em valor único.
+function evpAnRenderCliente() {
+  var c = evpAnCasoAtual;
+  var alvo = document.getElementById('evp-an-cliente');
+  var nota = document.getElementById('evp-an-cliente-nota');
+  if (!c || !alvo) return;
+  var vig = c.cadVig || {};
+  var nov = c.cadNov && Object.keys(c.cadNov).length ? c.cadNov : vig;
+
+  alvo.innerHTML = END_CAD_CAMPOS.map(function (campo) {
+    var de = vig[campo.k] || '';
+    var para = nov[campo.k] || de;
+    var mudou = !!(de && para && de !== para);
+    var valor = mudou
+      ? '<span class="evp-de">' + de + '</span><span class="evp-seta">&rarr;</span><span class="evp-para">' + para + '</span>'
+      : (para || '&mdash;');
+    return '<div class="evp-cd-i"><b>' + campo.rot + ':</b><span>' + valor + '</span></div>';
+  }).join('');
+
+  if (nota) {
+    nota.innerHTML = endCadDiffs(vig, nov).length
+      ? ''
+      : '<p class="evp-an-nenhum">Nenhum dado cadastral foi alterado neste endosso.</p>';
+  }
 }
 
 function evpAnCobsProposto() {
@@ -16218,14 +16265,10 @@ function evpAnRenderGrupo() {
     : (dif > 0 ? '+' : '\u2212') + endFmtMoeda(Math.abs(dif));
 
   alvo.innerHTML =
-    '<div class="evp-an-grupo-hd">' +
-      '<div class="evp-an-gi"><span>Grupo segurável</span><strong>01 &mdash; Titular</strong></div>' +
-      '<div class="evp-an-gi"><span>Plano</span><strong>' + c.produto + ' &mdash; Multiproteção</strong></div>' +
-      '<div class="evp-an-gi"><span>Vidas</span><strong>' + c.vidas + '</strong></div>' +
-      '<div class="evp-an-gi"><span>Prêmio vigente</span><strong>' + endFmtMoeda(totalVig) + ' / mensal</strong></div>' +
-      '<div class="evp-an-gi"><span>Prêmio proposto</span><strong class="evp-an-novo-txt">' + endFmtMoeda(totalNov) + ' / mensal</strong></div>' +
-      '<div class="evp-an-gi"><span>Diferença</span><strong' + (dif !== 0 ? ' class="evp-an-novo-txt"' : '') + '>' + difTxt + (dif !== 0 ? ' / mês' : '') + '</strong></div>' +
-      '<button class="end-btn end-btn-outline evp-an-editar" onclick="evpPlanoAbrir()">Editar Coberturas</button>' +
+    '<div class="evp-cd evp-cd-premio">' +
+      '<div class="evp-cd-i"><b>Prêmio vigente:</b><span>' + endFmtMoeda(totalVig) + ' / mensal</span></div>' +
+      '<div class="evp-cd-i"><b>Prêmio proposto:</b><span class="evp-para">' + endFmtMoeda(totalNov) + ' / mensal</span></div>' +
+      '<div class="evp-cd-i"><b>Diferença:</b><span' + (dif !== 0 ? ' class="evp-para"' : '') + '>' + difTxt + (dif !== 0 ? ' / mês' : '') + '</span></div>' +
     '</div>' +
     '<div class="evp-an-tbl-wrap">' +
     '<table class="evp-an-tbl evp-an-tbl-cmp">' +
@@ -16244,7 +16287,11 @@ function evpAnRenderGrupo() {
       '<tfoot><tr><td>Total</td><td></td><td></td><td>' + endFmtMoeda(totalVig) + '</td>' +
         '<td class="evp-an-sep"></td><td></td><td class="evp-an-novo">' + endFmtMoeda(totalNov) + '</td></tr></tfoot>' +
     '</table></div>' +
-    '<p class="evp-an-nota">À esquerda, a apólice como está hoje; à direita, como fica com o endosso. Em azul, o que muda.</p>';
+    '<p class="evp-an-nota">À esquerda, a apólice como está hoje; à direita, como fica com o endosso. Em azul, o que muda.</p>' +
+    '<div class="evp-an-btns">' +
+      '<button class="end-btn end-btn-primary" onclick="evpPlanoAbrir()">Editar Coberturas</button>' +
+      '<button class="end-btn end-btn-primary" onclick="evpAnNaoMapeado(\'Ajustes da cotação\')">Ajustes da cotação</button>' +
+    '</div>';
 }
 
 function evpAnNaoMapeado(nome) {
