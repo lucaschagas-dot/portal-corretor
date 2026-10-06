@@ -4645,8 +4645,7 @@ function authLogout(){
               </div>
 
               <div class="evp-an-acoes">
-                <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
-                <button class="end-btn end-btn-success" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
+                <button class="end-btn end-btn-success" onclick="evpAnFinalizar()">Finalizar an&aacute;lise</button>
               </div>
             </div>
 
@@ -16240,6 +16239,59 @@ var EVP_PAINEL_EXEMPLOS = [
    capVig:{morte:180000, ipa:180000}, capNovo:{morte:350000, ipa:350000, ipam:100000}}
 ];
 
+// A mesa analisa muito mais do que endosso. Estes casos existem para mostrar a
+// variedade da fila — transferência, seguro novo, renovação, inclusão de vidas e
+// cancelamento — e por isso NÃO abrem a tela de análise de endosso: o fluxo
+// detalhado que o protótipo construiu é o do endosso.
+// premioFixo/taxaFixa existem porque estes casos não têm grid de coberturas de
+// onde calcular; os de endosso continuam calculando a partir das coberturas.
+var EVP_PAINEL_OUTROS = [
+  {num:'329114/1', segurado:'ONDREPSB SERVICO DE GUARDA LTDA', doc:'61.600.839/0001-55',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   data:'10/07/2026', analista:'Olivia Aparecida Goncalves', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
+   tags:['Observação','Drools'], badgeE:false, vidas:3390, taxaFixa:0.3039, premioFixo:30723.88},
+
+  {num:'327333/1', segurado:'TIC TRANSPORTES LTDA', doc:'09.445.502/0001-08',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Seguro novo', status:'analise',
+   data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'151 – ER RIO DE JANEIRO IV – SAMUEL MARTINS',
+   tags:['Observação','Drools'], badgeE:false, vidas:318, taxaFixa:0.7901, premioFixo:7863.63},
+
+  {num:'327665/1', segurado:'SOMBREIROS EMPREENDIMENTOS LTDA', doc:'27.880.114/0001-62',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'140 – ER SALVADOR VI – LUIS PAULO SANTOS',
+   tags:['Observação','Drools'], badgeE:false, vidas:740, taxaFixa:0.5954, premioFixo:16270.22},
+
+  {num:'327660/1', segurado:'CISOL DO BRASIL EXPORTACAO LTDA', doc:'33.042.730/0001-04',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'pendente',
+   data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'132 – ER CAMPINAS VII – ALEXSANDRA DIAS',
+   tags:['Motivo','Justificativas','Observação'], badgeE:false, vidas:268, taxaFixa:0.4998, premioFixo:3518.16},
+
+  {num:'328082/1', segurado:'SEAGEMS SOLUTIONS S A', doc:'12.907.455/0001-31',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   data:'02/10/2026', analista:'Gabriela Cruz Goncalves', er:'31 – ER RIO DE JANEIRO I – ANDRÉ FRANCISCO',
+   tags:['Observação','Drools'], badgeE:false, vidas:1131, taxaFixa:0.4160, premioFixo:284490.55},
+
+  {num:'329207/2', segurado:'LOJAS RIACHUELO S A', doc:'33.200.056/0001-49',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Renovação', status:'analise',
+   data:'28/09/2026', analista:'Danilo Jesus de Souza', er:'112 – ER SÃO PAULO II – MARCIA APARECIDA LIMA',
+   tags:['Observação','Drools'], badgeE:false, vidas:2104, taxaFixa:0.3820, premioFixo:48215.70},
+
+  {num:'330455/1', segurado:'ALPHAMONEY PROMOTORA DE VENDAS LTDA', doc:'20.558.904/0001-77',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Inclusão de vidas', status:'rascunho',
+   data:'03/10/2026', analista:'Maria Veronica Araujo dos Santos Cruz', er:'266 – ER SÃO PAULO XI – KALINE RODRIGUES',
+   tags:['Motivo','Observação'], badgeE:false, vidas:841, taxaFixa:0.2400, premioFixo:27943.36},
+
+  {num:'331020/1', segurado:'COLEGIO NOVO HORIZONTE LTDA', doc:'07.318.620/0001-96',
+   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Cancelamento', status:'pendente',
+   data:'03/10/2026', analista:'Olivia Aparecida Goncalves', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
+   tags:['Justificativas','Observação'], badgeE:false, vidas:126, taxaFixa:0.6310, premioFixo:4982.14},
+
+  {num:'331188/1', segurado:'INDUSTRIA RIO CLARO S A', doc:'48.115.302/0001-20',
+   produto:'Prestamista &ndash; Capital Fixo', assunto:'', tipo:'Seguro novo', status:'aprovado',
+   data:'01/10/2026', analista:'Gabriela Cruz Goncalves', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
+   tags:['Observação'], badgeE:false, vidas:512, taxaFixa:0.5120, premioFixo:12840.00}
+];
+
 var evpAnCasoAtual = null;   // caso aberto na tela de análise
 
 // ---------------------------------------------------------------- helpers
@@ -16318,10 +16370,20 @@ function evpDataBr(iso) {
 function evpPainelCasos() {
   var exemplos = EVP_PAINEL_EXEMPLOS.map(function (e) {
     var o = Object.assign({}, e);
+    o.assunto = 'Endosso';
     if (!o.cobVig) o.cobVig = evpCobDe(e.capVig);
     if (!o.cobNovo) o.cobNovo = evpCobDe(e.capNovo);
     return o;
   });
+  // Os outros assuntos da mesa: sem grid de coberturas, so para compor a fila.
+  var outros = EVP_PAINEL_OUTROS.map(function (e) {
+    var o = Object.assign({}, e);
+    o.cobVig = evpCobDe({});
+    o.cobNovo = evpCobDe({});
+    o.semFluxo = true;
+    return o;
+  });
+  exemplos = exemplos.concat(outros);
   var doFluxo = [];
   if (typeof END_QUEUE !== 'undefined') {
     doFluxo = END_QUEUE.filter(function (c) { return c.cliente && c.cliente.nome; })
@@ -16366,14 +16428,18 @@ function evpRenderPainel() {
   grid.innerHTML = casos.map(function (c, i) {
     var st = EVP_STATUS_INFO[c.status] || EVP_STATUS_INFO.analise;
     var cobs = EVP_PAINEL_EDITADO[c.num] || c.cobNovo;
-    var premio = evpPremioTotal(cobs);
+    var premio = (c.premioFixo != null) ? c.premioFixo : evpPremioTotal(cobs);
     var capital = cobs.reduce(function (s, x) { return s + (x.ativa ? x.capital : 0); }, 0);
-    var taxa = capital ? (premio / capital) * 1000 : 0;
-    return '<button class="evp-pan-card" onclick="evpAbrirAnalise(' + i + ')">' +
+    var taxa = (c.taxaFixa != null) ? c.taxaFixa : (capital ? (premio / capital) * 1000 : 0);
+    // So o endosso tem tela de analise montada neste prototipo.
+    var acao = c.semFluxo
+      ? 'evpAnNaoMapeado(\'Análise de ' + c.tipo + '\')'
+      : 'evpAbrirAnalise(' + i + ')';
+    return '<button class="evp-pan-card" onclick="' + acao + '">' +
       (c.badgeE ? '<span class="evp-pan-card-e">E</span>' : '') +
       '<div class="evp-pan-card-hd"><span class="evp-pan-num">' + c.num + '</span>' +
         '<span class="evp-pan-nome">' + c.segurado + '</span></div>' +
-      '<div class="evp-pan-prod">' + c.produto + ' &ndash; Endosso</div>' +
+      '<div class="evp-pan-prod">' + c.produto + (c.assunto ? ' &ndash; ' + c.assunto : '') + '</div>' +
       '<div class="evp-pan-status"><span class="evp-pan-dot evp-pan-dot-' + st.cor + '"></span>' +
         st.rot + ' <span class="evp-pan-data">' + c.data + '</span></div>' +
       '<div class="evp-pan-pessoa"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
@@ -16803,10 +16869,39 @@ function evpAnDocumento(sel) {
 function evpAnImprimir() {
   apeShowError('A impressão da análise ainda não faz parte deste protótipo.');
 }
-function evpAnDecidir(acao) {
+// O painel so tem quatro situacoes (rascunho / analise / aprovado / pendente), entao
+// "Recusar" e "Questionar" caem os dois em Pendente — o que muda e a mensagem e o
+// registro da decisao escolhida.
+var EVP_DECISAO_INFO = {
+  aceitar:    {status: 'aprovado', msg: 'aceito. No portal real, a autorização segue para implantação no E-vida.'},
+  recusar:    {status: 'pendente', msg: 'recusado e devolvido ao corretor.'},
+  questionar: {status: 'pendente', msg: 'devolvido ao corretor com questionamento.'}
+};
+
+// Botao "Finalizar analise": a decisao e a que o analista marcou no card Analise - 1.
+function evpAnFinalizar() {
   var c = evpAnCasoAtual;
   if (!c) return;
-  c.status = acao === 'autorizar' ? 'aprovado' : 'pendente';
+  var r = EVP_RESPOSTA[c.num];
+  var decisao = r && r.decisao;
+  if (!decisao) {
+    apeShowError('Escolha a decisão da análise &mdash; <strong>Aceitar</strong>, <strong>Recusar</strong> ou <strong>Questionar</strong> &mdash; no card "Análise &ndash; 1" antes de finalizar.');
+    var bloco = document.getElementById('evp-bloco-analise');
+    if (bloco) {
+      bloco.classList.remove('evp-bloco-fechado');
+      bloco.scrollIntoView({block: 'center'});
+    }
+    return;
+  }
+  evpAnDecidir(decisao);
+}
+
+function evpAnDecidir(decisao) {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  var info = EVP_DECISAO_INFO[decisao];
+  if (!info) return;
+  c.status = info.status;
   var ex = EVP_PAINEL_EXEMPLOS.find(function (e) { return e.num === c.num; });
   if (ex) ex.status = c.status;
   // Caso vindo do fluxo: o objeto aberto na analise e uma copia efemera de
@@ -16814,11 +16909,12 @@ function evpAnDecidir(acao) {
   // registro vivo em END_QUEUE, senao o card volta "Em analise" logo em seguida.
   if (c.doFluxo && typeof END_QUEUE !== 'undefined') {
     var fonte = END_QUEUE.find(function (q) { return q.id === c.caseId; });
-    if (fonte) fonte.evpDecisao = c.status;
+    if (fonte) {
+      fonte.evpDecisao = c.status;
+      fonte.evpDecisaoAnalise = decisao;   // qual das tres opcoes o analista marcou
+    }
   }
-  apeShowError(acao === 'autorizar'
-    ? 'Endosso ' + c.num + ' autorizado. No portal real, a autorização segue para implantação no E-vida.'
-    : 'Endosso ' + c.num + ' devolvido como pendente ao corretor.');
+  apeShowError('Endosso ' + c.num + ' ' + info.msg);
   evpAbrirPainel();
 }
 
