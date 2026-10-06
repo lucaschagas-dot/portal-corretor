@@ -4624,10 +4624,15 @@ function authLogout(){
                 <div id="evp-an-grupo"></div>
               </fieldset>
 
-              <fieldset class="evp-fs">
-                <legend>Documentos para transmiss&atilde;o</legend>
-                <div id="evp-an-docs"></div>
-              </fieldset>
+              <div class="evp-fs evp-fs-solto">
+                <div class="evp-bloco" id="evp-bloco-docs">
+                  <div class="evp-bloco-hd" onclick="evpBlocoToggle('evp-bloco-docs')">
+                    <span class="evp-bloco-tit">Documentos para transmiss&atilde;o</span>
+                    <svg class="evp-bloco-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="evp-bloco-corpo" id="evp-an-docs"></div>
+                </div>
+              </div>
 
               <div class="evp-an-acoes">
                 <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
@@ -5324,17 +5329,39 @@ function authLogout(){
     .evp-an-novo-txt{color:#009DDB}
     .evp-an-nota{font-size:12.5px;color:#8A8F96;margin-top:12px}
 
-    /* Documentos para transmissão: nome do documento à esquerda, a regra à direita */
-    .evp-doc-linha{display:flex;align-items:center;justify-content:space-between;gap:16px;
-      flex-wrap:wrap;padding:10px 2px;border-bottom:1px solid #EDEFF1}
+    /* Bloco interno: o card da pagina abriga uma caixa propria, com o titulo em azul
+       na fonte institucional e um chevron que recolhe o conteudo. */
+    .evp-fs-solto{padding:22px 24px}
+    .evp-bloco{border:1px solid #D7DBDF;border-radius:2px;background:#fff}
+    .evp-bloco-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:13px 16px;cursor:pointer;border-bottom:1px solid #E4E6E9;user-select:none}
+    .evp-bloco-tit{font-family:'UnimedSlab',Georgia,serif;font-size:16px;font-weight:700;color:#009DDB}
+    .evp-bloco-chev{color:#8A8F96;transition:transform .18s;flex-shrink:0}
+    .evp-bloco-hd:hover .evp-bloco-chev{color:#009DDB}
+    .evp-bloco-fechado .evp-bloco-corpo{display:none}
+    .evp-bloco-fechado .evp-bloco-hd{border-bottom:none}
+    .evp-bloco-fechado .evp-bloco-chev{transform:rotate(-90deg)}
+
+    /* Documentos para transmissão: nome à esquerda, regra à direita. As tres opcoes
+       ficam numa grade de larguras fixas para alinharem em coluna de uma linha
+       para a outra — com flex cada linha alinhava por conta propria e elas dancavam. */
+    .evp-doc-linha{display:flex;align-items:stretch;border-bottom:1px solid #EDEFF1}
     .evp-doc-linha:last-child{border-bottom:none}
-    .evp-doc-nome{display:flex;align-items:center;gap:9px;font-size:13.5px;color:#3C3C3C;min-width:0}
-    .evp-doc-nome svg{flex-shrink:0;color:#0F84C4}
-    .evp-doc-ops{display:flex;align-items:center;gap:22px;flex-shrink:0}
-    .evp-doc-op{display:flex;align-items:center;gap:6px;font-size:13px;color:#44546C;
+    .evp-doc-linha:hover{background:#FAFBFC}
+    .evp-doc-nome{flex:1;min-width:0;display:flex;align-items:center;gap:10px;
+      font-size:13.5px;color:#3C3C3C;line-height:1.4;padding:11px 16px}
+    .evp-doc-nome svg{flex-shrink:0;color:#3C3C3C}
+    .evp-doc-ops{display:grid;grid-template-columns:122px 118px 148px;align-items:center;
+      flex-shrink:0;padding:11px 16px 11px 18px;border-left:1px solid #EDEFF1}
+    .evp-doc-op{display:flex;align-items:center;gap:7px;font-size:13px;color:#44546C;
       cursor:pointer;white-space:nowrap}
-    .evp-doc-op input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0}
-    @media (max-width:900px){ .evp-doc-ops{gap:14px} }
+    .evp-doc-op input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0;margin:0}
+    @media (max-width:1100px){
+      .evp-doc-linha{flex-direction:column;align-items:stretch}
+      .evp-doc-nome{padding-bottom:0}
+      .evp-doc-ops{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+        border-left:none;padding:8px 16px 12px 42px}
+    }
     .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin:0 0 10px}
 
     /* ===== Modal "Plano Ideal" — edição de coberturas ===== */
@@ -16206,7 +16233,7 @@ function evpCasoParaCard(c) {
     apolice: c.cliente.apolice || '',
     produto: c.cliente.produto || 'Vida Individual',
     tipo: 'Endosso simulado no protótipo',
-    status: c.status === 'implantado_auto' ? 'aprovado' : (mapaStatus[c.boardStatus] || 'analise'),
+    status: c.evpDecisao || (c.status === 'implantado_auto' ? 'aprovado' : (mapaStatus[c.boardStatus] || 'analise')),
     data: (c.dataHora || '').split(' ')[0],
     analista: 'Mesa Técnica — Vida',
     er: 'Protótipo PQA-447 — caso criado nesta sessão',
@@ -16383,6 +16410,12 @@ function evpAnRenderDocs() {
       '<span class="evp-doc-ops">' + ops + '</span>' +
     '</div>';
   }).join('');
+}
+
+// Recolhe/expande um bloco interno pelo chevron do cabecalho.
+function evpBlocoToggle(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('evp-bloco-fechado');
 }
 
 function evpAnDocEscolha(i, valor) {
@@ -16610,6 +16643,13 @@ function evpAnDecidir(acao) {
   c.status = acao === 'autorizar' ? 'aprovado' : 'pendente';
   var ex = EVP_PAINEL_EXEMPLOS.find(function (e) { return e.num === c.num; });
   if (ex) ex.status = c.status;
+  // Caso vindo do fluxo: o objeto aberto na analise e uma copia efemera de
+  // evpCasoParaCard, refeita a cada rebuild do painel. A decisao precisa ir para o
+  // registro vivo em END_QUEUE, senao o card volta "Em analise" logo em seguida.
+  if (c.doFluxo && typeof END_QUEUE !== 'undefined') {
+    var fonte = END_QUEUE.find(function (q) { return q.id === c.caseId; });
+    if (fonte) fonte.evpDecisao = c.status;
+  }
   apeShowError(acao === 'autorizar'
     ? 'Endosso ' + c.num + ' autorizado. No portal real, a autorização segue para implantação no E-vida.'
     : 'Endosso ' + c.num + ' devolvido como pendente ao corretor.');
