@@ -4634,6 +4634,16 @@ function authLogout(){
                 </div>
               </div>
 
+              <div class="evp-fs evp-fs-solto">
+                <div class="evp-bloco" id="evp-bloco-analise">
+                  <div class="evp-bloco-hd" onclick="evpBlocoToggle('evp-bloco-analise')">
+                    <span class="evp-bloco-tit">An&aacute;lise &ndash; 1</span>
+                    <svg class="evp-bloco-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="evp-bloco-corpo evp-bloco-corpo-pad" id="evp-an-analise"></div>
+                </div>
+              </div>
+
               <div class="evp-an-acoes">
                 <button class="end-btn end-btn-outline" onclick="evpAnDecidir('recusar')">Recusar</button>
                 <button class="end-btn end-btn-success" onclick="evpAnDecidir('autorizar')">Autorizar endosso</button>
@@ -5342,6 +5352,49 @@ function authLogout(){
     .evp-bloco-fechado .evp-bloco-hd{border-bottom:none}
     .evp-bloco-fechado .evp-bloco-chev{transform:rotate(-90deg)}
 
+    /* Fieldset interno: usado dentro de um bloco, sem a faixa vermelha do card. */
+    .evp-bloco-corpo-pad{padding:4px 16px 16px}
+    .evp-fs-i{border:1px solid #D7DBDF;border-radius:2px;padding:6px 16px 16px;margin:12px 0 0;min-width:0}
+    .evp-fs-i > legend{font-size:13.5px;color:#3C3C3C;padding:0 6px}
+    .evp-rot{font-size:13px;font-weight:700;color:#3C3C3C;margin:6px 0 8px}
+
+    /* Downloads: botoes azul-escuro empilhados, como no portal corrente */
+    .evp-an-dls{display:flex;flex-direction:column;gap:8px;max-width:280px}
+    .evp-an-dl-btn{display:flex;align-items:center;gap:9px;background:#1456A0;color:#fff;
+      border:none;border-radius:2px;font:inherit;font-size:13px;font-weight:600;
+      padding:9px 14px;cursor:pointer;text-align:left}
+    .evp-an-dl-btn:hover{background:#0f4480}
+    .evp-an-dl-btn svg{flex-shrink:0}
+
+    .evp-an-grupo-box{border:1px solid #D7DBDF;border-radius:2px;padding:14px 16px;margin-top:14px}
+    .evp-an-grupo-box strong{font-size:15px;color:#3C3C3C}
+    .evp-an-grupo-box span{font-size:13.5px;color:#3C3C3C;margin-left:6px}
+
+    /* Resposta da análise */
+    .evp-an-dec{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:14px}
+    .evp-an-dec label{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#3C3C3C;cursor:pointer}
+    .evp-an-dec input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0;margin:0}
+    .evp-an-ck{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#3C3C3C;
+      cursor:pointer;margin:14px 0}
+    .evp-an-ck input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0;margin:0}
+
+    .evp-an-up{display:flex;align-items:center;gap:14px;margin-top:4px}
+    .evp-an-up-ico{width:38px;height:38px;border-radius:50%;background:#1456A0;border:none;
+      color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+    .evp-an-up-ico:hover{background:#0f4480}
+    .evp-an-up-txt{font-size:12.5px;color:#8A8F96;line-height:1.5}
+    .evp-an-up-vazio{font-size:13px;color:#8A8F96;font-style:italic;margin:12px 0 0 52px}
+
+    .evp-an-hist{margin-top:10px}
+    /* o historico nao e tabela de numeros: alinha tudo a esquerda, como no portal
+       corrente, em vez de herdar o alinhamento a direita do comparativo */
+    .evp-an-hist .evp-an-tbl th,.evp-an-hist .evp-an-tbl td{text-transform:none;letter-spacing:0;
+      text-align:left;font-size:12.5px;white-space:nowrap}
+    .evp-an-hist .evp-an-tbl th{color:#3C3C3C}
+    .evp-an-hist-ico{display:inline-flex;gap:10px;color:#44546C}
+    .evp-an-hist-ico button{background:none;border:none;padding:0;cursor:pointer;color:inherit;display:flex}
+    .evp-an-hist-ico button:hover{color:#009DDB}
+
     /* Documentos para transmissão: nome à esquerda, regra à direita. As tres opcoes
        ficam numa grade de larguras fixas para alinharem em coluna de uma linha
        para a outra — com flex cada linha alinhava por conta propria e elas dancavam. */
@@ -5425,6 +5478,11 @@ function authLogout(){
     .aj-f > input:focus ~ span,.aj-f > input:not(:placeholder-shown) ~ span,
     .aj-f > textarea:focus ~ span,.aj-f > textarea:not(:placeholder-shown) ~ span{top:5px;font-size:11px}
     .aj-f:focus-within{border-color:#009DDB}
+    .aj-f > textarea[readonly],.aj-f > input[readonly]{background:#F7F8F9;cursor:default}
+    .aj-f:has(> [readonly]){background:#F7F8F9}
+    /* especificidade acima da regra que da fundo branco ao rotulo flutuado do
+       textarea rolavel — senao sobra uma faixa branca sobre a caixa cinza */
+    .aj-f.aj-f-area:has(> textarea[readonly]) > span{background:#F7F8F9}
     .aj-f-curto{max-width:255px}
     .aj-f-medio{max-width:345px}
     .aj-f-area{margin-top:10px}
@@ -16365,6 +16423,7 @@ function evpAbrirAnalise(i) {
   evpAnRenderCliente();
   evpAnRenderGrupo();
   evpAnRenderDocs();
+  evpAnRenderAnalise();
   window.scrollTo({top: 0});
 }
 
@@ -16410,6 +16469,113 @@ function evpAnRenderDocs() {
       '<span class="evp-doc-ops">' + ops + '</span>' +
     '</div>';
   }).join('');
+}
+
+// ---- Card "Análise – 1": solicitação, histórico do estudo e resposta do analista ----
+var EVP_RESPOSTA = {};
+
+function evpAnRespostaPadrao() {
+  return {decisao: '', retorno: '', prioridade: false, exibirDocs: false};
+}
+
+function evpIcoDownload() {
+  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<path d="M12 3v11m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+}
+
+function evpAnRenderAnalise() {
+  var c = evpAnCasoAtual;
+  var alvo = document.getElementById('evp-an-analise');
+  if (!c || !alvo) return;
+  if (!EVP_RESPOSTA[c.num]) EVP_RESPOSTA[c.num] = evpAnRespostaPadrao();
+  var r = EVP_RESPOSTA[c.num];
+
+  var downloads = ['Relação de proponentes', 'Documentos', 'Cálculo Motor'].map(function (nome) {
+    return '<button class="evp-an-dl-btn" onclick="evpAnNaoMapeado(\'' + nome + '\')">' +
+      evpIcoDownload() + nome + '</button>';
+  }).join('');
+
+  // As observações vêm do motivo que o corretor escreveu na Fase 4 — o analista lê, não edita.
+  var obs = c.motivo || 'Não informado.';
+
+  var solicitacao =
+    '<fieldset class="evp-fs-i">' +
+      '<legend>Solicitação de Análise &ndash; ' + (c.data || '&mdash;') + '</legend>' +
+      '<p class="evp-rot">Downloads</p>' +
+      '<div class="evp-an-dls">' + downloads + '</div>' +
+      '<label class="aj-f aj-f-area" style="margin-top:16px">' +
+        '<textarea id="evp-an-obs" rows="3" placeholder=" " readonly>' + obs + '</textarea>' +
+        '<span>Observações Corretor</span>' +
+      '</label>' +
+      '<div class="evp-an-grupo-box"><strong>Grupo 1</strong><span>(Grupo com massa enviada)</span></div>' +
+    '</fieldset>';
+
+  var icoCopiar = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<rect x="9" y="9" width="11" height="11" rx="1.6" stroke="currentColor" stroke-width="1.8"/>' +
+    '<path d="M15 5.5A1.5 1.5 0 0013.5 4h-8A1.5 1.5 0 004 5.5v8A1.5 1.5 0 005.5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var icoRefazer = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<path d="M20 11a8 8 0 10-2.3 5.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
+    '<path d="M20 4v7h-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  var historico =
+    '<fieldset class="evp-fs-i evp-an-hist">' +
+      '<legend>Histórico do Estudo</legend>' +
+      '<div class="evp-an-tbl-wrap"><table class="evp-an-tbl"><thead><tr>' +
+        '<th></th><th>Cotação/Versão</th><th>Criação</th><th>Alteração</th>' +
+        '<th>Status Estudo</th><th>Solicitação</th><th>Resposta</th><th>Status Alçada</th>' +
+      '</tr></thead><tbody><tr>' +
+        '<td><span class="evp-an-hist-ico">' +
+          '<button onclick="evpAnNaoMapeado(\'Duplicar estudo\')" title="Duplicar estudo">' + icoCopiar + '</button>' +
+          '<button onclick="evpAnNaoMapeado(\'Reabrir estudo\')" title="Reabrir estudo">' + icoRefazer + '</button>' +
+        '</span></td>' +
+        '<td>' + c.num + '</td><td>' + (c.data || '&mdash;') + '</td><td>&mdash;</td>' +
+        '<td>Em andamento</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td>' +
+      '</tr></tbody></table></div>' +
+      '<button class="end-btn end-btn-success" style="margin-top:14px" onclick="evpAnNaoMapeado(\'Criar estudo baseado na cotação\')">Criar estudo baseado na cotação</button>' +
+    '</fieldset>';
+
+  var decisoes = [['aceitar', 'Aceitar'], ['recusar', 'Recusar'], ['questionar', 'Questionar']];
+  var radios = decisoes.map(function (d) {
+    return '<label><input type="radio" name="evp-an-decisao" value="' + d[0] + '"' +
+      (r.decisao === d[0] ? ' checked' : '') +
+      ' onchange="evpAnRespostaCampo(\'decisao\', this.value)">' + d[1] + '</label>';
+  }).join('');
+
+  var resposta =
+    '<fieldset class="evp-fs-i">' +
+      '<legend>Resposta da Análise</legend>' +
+      '<p class="evp-rot">Decisão análise</p>' +
+      '<div class="evp-an-dec">' + radios + '</div>' +
+      '<label class="aj-f aj-f-area" style="margin-top:0">' +
+        '<textarea id="evp-an-retorno" rows="3" placeholder=" " oninput="evpAnRespostaCampo(\'retorno\', this.value)">' + (r.retorno || '') + '</textarea>' +
+        '<span>Retorno Análise</span>' +
+      '</label>' +
+      '<label class="evp-an-ck"><input type="checkbox"' + (r.prioridade ? ' checked' : '') +
+        ' onchange="evpAnRespostaCampo(\'prioridade\', this.checked)"> Prioridade</label>' +
+      '<div class="evp-an-up">' +
+        '<button class="evp-an-up-ico" onclick="evpAnNaoMapeado(\'Anexar arquivo\')" title="Anexar arquivo">' +
+          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<path d="M12 20V9m0 0l-4 4m4-4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<path d="M5 5h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+        '</button>' +
+        '<span class="evp-an-up-txt">Você pode anexar mais de um arquivo.<br>' +
+          'Formatos Compatíveis: txt, pdf, docx, pptx, xlsx, jpeg, jpg, png e bmp.</span>' +
+      '</div>' +
+      '<p class="evp-an-up-vazio">Nenhum arquivo anexado</p>' +
+      '<label class="evp-an-ck"><input type="checkbox"' + (r.exibirDocs ? ' checked' : '') +
+        ' onchange="evpAnRespostaCampo(\'exibirDocs\', this.checked)"> Exibir documento(s) para o Corretor/ER?</label>' +
+      '<button class="end-btn end-btn-primary" onclick="evpAnNaoMapeado(\'Condição de Aceitação\')">Condição de Aceitação</button>' +
+    '</fieldset>';
+
+  alvo.innerHTML = solicitacao + historico + resposta;
+}
+
+function evpAnRespostaCampo(campo, valor) {
+  var c = evpAnCasoAtual;
+  if (!c) return;
+  if (!EVP_RESPOSTA[c.num]) EVP_RESPOSTA[c.num] = evpAnRespostaPadrao();
+  EVP_RESPOSTA[c.num][campo] = valor;
 }
 
 // Recolhe/expande um bloco interno pelo chevron do cabecalho.
