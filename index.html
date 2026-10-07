@@ -17973,6 +17973,14 @@ function endRenderFase3() {
     '<div class="end-alert end-alert-info" style="margin-top:16px">' + endAlertIco('info') +
       '<span>A alteração de prêmio é diluída nas parcelas futuras já em aberto no E-vida (substituição de parcelas), sem cobranças ou devoluções imediatas em boleto avulso.</span></div>' +
     '<div id="end-premio-min-area"></div>' +
+    // A vigencia e decidida junto com o preco: e aqui que o corretor ve o impacto
+    // da data antes de seguir para a assinatura.
+    '<div class="end-sec-title">Vig&ecirc;ncia</div>' +
+    '<p class="end-dps-ask">A partir de quando este endosso passa a valer? <span class="end-dps-req">*</span></p>' +
+    '<div class="end-dps-modo-row">' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="d1" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='d1'?' checked':'') + '> D+1 <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('d1')) + '</span></label>' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="proxmes" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='proxmes'?' checked':'') + '> Pr&oacute;ximo m&ecirc;s de cobertura <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('proxmes')) + '</span></label>' +
+    '</div>' +
     '<div class="end-actions-row end-actions-between">' +
       '<button class="end-btn end-btn-outline" onclick="endGoFase(2)">&lsaquo; Voltar</button>' +
       '<button class="end-btn end-btn-primary" id="end-fase3-avancar" onclick="endGoFase(4)">Avançar para Assinatura (DPS) &rsaquo;</button>' +
@@ -18077,9 +18085,19 @@ function endRenderCompare(containerId, vigList, novoList, premioVig, premioNovo)
       '<div class="end-compare-total"><span>Novo Prêmio</span><span class="end-novo-val">' + endFmtMoeda(premioNovo) + ' /mês</span></div></div></div>';
 }
 
+// Duas condicoes governam o mesmo botao: o premio minimo e a escolha da vigencia.
+// Sem juntar as duas num lugar so, uma apagaria a trava da outra.
+function endAtualizarFase3Botao() {
+  var avancar = document.getElementById('end-fase3-avancar');
+  if (!avancar) return;
+  var mult = {Mensal:1, Bimestral:2, Trimestral:3};
+  var efetivo = END_STATE.premioNovo * mult[END_STATE.periodicidadeNova];
+  var premioOk = END_STATE.premioNovo >= 35 || efetivo >= 35;
+  avancar.disabled = !(premioOk && !!END_STATE.vigenciaOpcao);
+}
+
 function endRenderPremioMinArea() {
   var area = document.getElementById('end-premio-min-area');
-  var avancar = document.getElementById('end-fase3-avancar');
   var mult = {Mensal:1, Bimestral:2, Trimestral:3};
   var efetivo = END_STATE.premioNovo * mult[END_STATE.periodicidadeNova];
   if (END_STATE.premioNovo < 35) {
@@ -18089,11 +18107,10 @@ function endRenderPremioMinArea() {
         ['Mensal','Bimestral','Trimestral'].map(function(p){ return '<option value="' + p + '"' + (p===END_STATE.periodicidadeNova?' selected':'') + '>' + p + '</option>'; }).join('') +
       '</select>' +
       ' — parcela efetiva: <strong id="end-periodicidade-efetivo">' + endFmtMoeda(efetivo) + '</strong></span></div>';
-    avancar.disabled = efetivo < 35;
   } else {
     area.innerHTML = '';
-    avancar.disabled = false;
   }
+  endAtualizarFase3Botao();
 }
 function endOnPeriodicidadeChange(sel) {
   END_STATE.periodicidadeNova = sel.value;
@@ -18140,12 +18157,6 @@ function endRenderFase4() {
       '<div class="vcalc-f"><span class="vcalc-f-lbl">Motivo do endosso <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
         '<textarea id="end-motivo-endosso" rows="3" placeholder="Descreva o motivo da solicita&ccedil;&atilde;o deste endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
       '</div>') +
-    endSecao('end-sec-vigencia', 'Vig&ecirc;ncia',
-      '<p class="end-dps-ask">A partir de quando este endosso passa a valer? <span class="end-dps-req">*</span></p>' +
-      '<div class="end-dps-modo-row">' +
-        '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="d1" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='d1'?' checked':'') + '> D+1 <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('d1')) + '</span></label>' +
-        '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="proxmes" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='proxmes'?' checked':'') + '> Pr&oacute;ximo m&ecirc;s de cobertura <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('proxmes')) + '</span></label>' +
-      '</div>') +
     endSecao('end-sec-dps', 'Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de',
       '<p class="end-dps-ask">Corretor, deseja preencher a Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de ou enviar ao proponente para preenchimento?</p>' +
       '<div class="end-dps-modo-row">' +
@@ -18183,6 +18194,7 @@ function endDataBrISO(iso) {
 function endOnVigenciaChange(radio) {
   END_STATE.vigenciaOpcao = radio.value;
   END_STATE.dataVigencia = endVigenciaISO(radio.value);
+  endAtualizarFase3Botao();
   endAtualizarFase4Botao();
 }
 
