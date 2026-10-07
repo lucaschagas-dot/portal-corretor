@@ -359,6 +359,18 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
     /* ===== Sitemap: mapa de tudo que existe no protótipo ===== */
     .sm-wrap{padding:0 0 60px}
     .sm-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px}
+.uf-barra{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.uf-tit{font-family:'UnimedSlab',Georgia,serif;font-size:22px;font-weight:700;color:var(--navy)}
+.uf-sub{font-size:13px;color:#8a94a3;margin-top:4px}
+.uf-abrir{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:3px;
+  background:#fff;font-size:13px;color:#44546c;padding:9px 16px;cursor:pointer;white-space:nowrap}
+.uf-abrir:hover{border-color:var(--azure);color:var(--azure)}
+.uf-quadro{border:1px solid var(--border);border-radius:4px;overflow:hidden;background:#fff;
+  box-shadow:0px 2px 6px 0px rgba(0,0,0,0.08)}
+.uf-quadro iframe{display:block;width:100%;height:calc(100vh - 300px);min-height:560px;border:none}
+.uf-nota{font-size:13px;color:#8a5a00;background:#fff4e5;border:1px solid #ffd8a8;
+  border-radius:4px;padding:12px 14px;margin-top:12px;line-height:1.55}
+
     .sm-resumo{display:flex;gap:26px;flex-wrap:wrap}
     .sm-num{display:flex;flex-direction:column;gap:1px}
     .sm-num b{font-size:26px;font-weight:700;color:var(--azure);line-height:1;font-variant-numeric:tabular-nums}
@@ -4581,7 +4593,33 @@ function authLogout(){
               </div>
               <p class="evp-pan-legenda">Rascunho &middot; Em análise &middot; Aprovados &middot; Pendentes</p>
 
+              <div class="evp-pan-filtros">
+                <label class="evp-filtro">
+                  <span>Produto</span>
+                  <select id="evp-filtro-produto" onchange="evpFiltroMudou()"></select>
+                </label>
+                <label class="evp-filtro">
+                  <span>Pessoa</span>
+                  <select id="evp-filtro-pessoa" onchange="evpFiltroMudou()">
+                    <option value="">Todas</option>
+                    <option value="PF">PF</option>
+                    <option value="PJ">PJ</option>
+                  </select>
+                </label>
+                <label class="evp-filtro">
+                  <span>Natureza</span>
+                  <select id="evp-filtro-natureza" onchange="evpFiltroMudou()">
+                    <option value="">Endosso e Cota&ccedil;&atilde;o</option>
+                    <option value="endosso">Endosso</option>
+                    <option value="cotacao">Cota&ccedil;&atilde;o</option>
+                  </select>
+                </label>
+                <button class="evp-filtro-limpar" id="evp-filtro-limpar" onclick="evpFiltroLimpar()">Limpar filtros</button>
+                <span class="evp-filtro-cnt" id="evp-filtro-cnt"></span>
+              </div>
+
               <div class="evp-pan-grid" id="evp-pan-grid"></div>
+              <p class="evp-pan-vazio" id="evp-pan-vazio" style="display:none">Nenhum registro para os filtros escolhidos.</p>
 
               <div class="evp-pan-pag">
                 <span>&laquo;</span><span>&lsaquo;</span><b>1</b>
@@ -5261,6 +5299,19 @@ function authLogout(){
     .evp-pan-tag{background:#E9EFF5;color:#44546C;border-radius:11px;padding:2px 11px;font-size:11.5px}
     .evp-pan-er{margin-top:10px;font-size:12.5px;color:#3C3C3C;white-space:nowrap;
       overflow:hidden;text-overflow:ellipsis}
+    .evp-pan-filtros{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+    .evp-filtro{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .evp-filtro > span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
+    .evp-filtro > select{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
+      font-size:13.5px;color:#3C3C3C;padding:7px 10px;min-width:180px;cursor:pointer}
+    .evp-filtro > select:focus{outline:none;border-color:#009DDB}
+    .evp-filtro-limpar{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
+      font-size:13px;color:#44546C;padding:8px 16px;cursor:pointer}
+    .evp-filtro-limpar:hover{border-color:#009DDB;color:#009DDB}
+    .evp-filtro-limpar:disabled{opacity:.45;cursor:default;border-color:#D7DBDF;color:#44546C}
+    .evp-filtro-cnt{font-size:13px;color:#8A8F96;margin-left:auto;align-self:center}
+    .evp-pan-vazio{font-size:14px;color:#8A8F96;text-align:center;padding:36px 10px}
+
     .evp-pan-ft{display:flex;justify-content:space-between;gap:14px;margin-top:9px;
       padding-top:8px;border-top:1px solid #EDEFF1;font-size:12.5px}
     .evp-pan-ft-col{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -5962,6 +6013,21 @@ function authLogout(){
     </div>
 
     <!-- SITEMAP — mapa de tudo que existe no protótipo -->
+    <!-- UserFlow: o mapa de telas e fluxos, servido da pasta user-flow/ ao lado
+         deste arquivo. Nao da para embutir aqui: sao 43 paginas e 766 imagens. -->
+    <div id="page-user-flow" class="page">
+      <div class="uf-barra">
+        <div>
+          <h2 class="uf-tit">User Flow &mdash; Portal do Corretor</h2>
+          <p class="uf-sub">43 fluxos &middot; 252 telas &middot; Ramos Elementares, Previd&ecirc;ncia, Sa&uacute;de, Vida e Odonto</p>
+        </div>
+        <a class="uf-abrir" href="user-flow/index.html" target="_blank" rel="noopener">Abrir em nova aba
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4l-8.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18 14.5V19a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="uf-quadro"><iframe id="uf-frame" title="User Flow do Portal do Corretor" loading="lazy"></iframe></div>
+      <p class="uf-nota" id="uf-nota" style="display:none"></p>
+    </div>
+
     <div id="page-sitemap" class="page">
       <div class="cotador-page">
         <div class="sm-wrap">
@@ -6832,6 +6898,7 @@ const quickAccess = [
   {label:"WhatsApp",route:"/whatsapp",icon:"whatsapp"},
   {label:"Ajuda e Ouvidoria",route:"/ajuda-ouvidoria",icon:"ajuda"},
   {label:"Sitemap",route:"/sitemap",icon:"sitemap"},
+  {label:"UserFlow",route:"/user-flow",icon:"user-flow"},
 ];
 
 const newsData = [
@@ -7041,6 +7108,12 @@ function handleRoute() {
     setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>Simular Proposta</span>');
     stopCarousel();
     initPrevidenciaSimularPage();
+  } else if (path === '/user-flow') {
+    document.getElementById('page-user-flow').classList.add('active');
+    portalName.textContent = 'User Flow';
+    setBc('<a onclick="navigate(\'/\')">Início</a>' + chevSvg + '<span>User Flow</span>');
+    stopCarousel();
+    initUserFlowPage();
   } else if (path === '/sitemap') {
     document.getElementById('page-sitemap').classList.add('active');
     portalName.textContent = 'Sitemap';
@@ -7459,6 +7532,15 @@ function getQAIcon(icon) {
       <path d="M24 18a5 5 0 0 1 10 0c0 3-5 5-5 8" stroke="${c}" stroke-width="${sw}" stroke-linecap="round"/>
       <circle cx="29" cy="32" r="1.5" fill="${c}"/>
     </svg>`;
+    case 'user-flow': return `<svg width="40" height="40" viewBox="0 0 58 44" fill="none">
+      <rect x="5" y="6" width="16" height="12" rx="1.5" stroke="${c}" stroke-width="1.8"/>
+      <rect x="37" y="6" width="16" height="12" rx="1.5" stroke="${c}" stroke-width="1.8"/>
+      <rect x="21" y="26" width="16" height="12" rx="1.5" stroke="${c}" stroke-width="1.8"/>
+      <path d="M21 12 H37" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M33 8.5 L37 12 L33 15.5" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M45 18 V32 H37" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M13 18 V32 H21" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>`;
     case 'sitemap': return `<svg width="40" height="40" viewBox="0 0 58 44" fill="none">
       <rect x="22" y="4" width="14" height="10" rx="1.5" stroke="${c}" stroke-width="1.8"/>
       <rect x="6" y="30" width="14" height="10" rx="1.5" stroke="${c}" stroke-width="1.8"/>
@@ -7468,6 +7550,43 @@ function getQAIcon(icon) {
     </svg>`;
     default: return `<svg width="40" height="40" viewBox="0 0 58 44" fill="none"><circle cx="29" cy="22" r="10" stroke="${c}" stroke-width="1.8"/></svg>`;
   }
+}
+
+// O iframe so recebe o src quando a pagina abre, para o portal nao baixar o
+// User Flow inteiro em toda carga. Se a pasta nao estiver publicada junto, o
+// quadro fica em branco — por isso o aviso depois de alguns segundos.
+function initUserFlowPage() {
+  var fr = document.getElementById('uf-frame');
+  var nota = document.getElementById('uf-nota');
+  if (!fr) return;
+  if (fr.getAttribute('src')) return;
+
+  function avisar() {
+    if (!nota) return;
+    nota.innerHTML = '<strong>O User Flow não foi encontrado.</strong> A pasta <code>user-flow/</code> ' +
+      'precisa estar publicada ao lado deste arquivo, na raiz do repositório.';
+    nota.style.display = '';
+  }
+
+  // Um 404 do GitHub Pages TAMBÉM dispara o load do iframe, com a página de erro
+  // dentro. Por isso não basta esperar o load: é preciso confirmar que o que
+  // entrou é mesmo o User Flow, pelo título do documento.
+  fr.addEventListener('load', function () {
+    var ok = false;
+    try { ok = /User Flow/i.test(fr.contentDocument.title || ''); }
+    catch (e) { ok = true; }   // outra origem: não dá para ler, assume carregado
+    if (ok) { if (nota) nota.style.display = 'none'; }
+    else { avisar(); }
+  });
+  fr.addEventListener('error', avisar);
+  // rede muito lenta ou arquivo inexistente sem resposta
+  setTimeout(function () {
+    var carregou = false;
+    try { carregou = /User Flow/i.test(fr.contentDocument.title || ''); } catch (e) { carregou = true; }
+    if (!carregou) avisar();
+  }, 8000);
+
+  fr.setAttribute('src', 'user-flow/index.html');
 }
 
 // =====================
@@ -16192,7 +16311,7 @@ var EVP_PAINEL_EXEMPLOS = [
   {num:'293804/2', segurado:'ADRIANA CAMPOS MENEZES', doc:'123.456.789-01', apolice:'AP-204518',
    produto:'Vida Individual', tipo:'Aumento de capital', status:'analise', data:'17/09/2026',
    analista:'Fernando Rogerio Pessoa', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
-   tags:['Motivo','Justificativas','Observação'], badgeE:true, vidas:1,
+   tags:['Motivo','Justificativas','Observação'], etiqueta:'E', vidas:1,
    corretor:'Lucas Chagas', vigencia:'01/11/2026',
    motivo:'Cliente pediu aumento do capital de Morte após a compra do imóvel.',
    cadVig:{profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'23,4 (Normal)', vinculo:'CLT'},
@@ -16201,7 +16320,7 @@ var EVP_PAINEL_EXEMPLOS = [
   {num:'307221/2', segurado:'MARCOS VINÍCIUS ALMEIDA', doc:'234.567.890-12', apolice:'AP-211744',
    produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'analise', data:'22/09/2026',
    analista:'Maria Veronica Araujo dos Santos Cruz', er:'40 – ER SÃO PAULO II – DIANE DA ROCHA ABREU',
-   tags:['Motivo','Observação'], badgeE:false, vidas:1,
+   tags:['Motivo','Observação'], etiqueta:'', vidas:1,
    corretor:'Camila Gomes', vigencia:'01/11/2026',
    motivo:'Inclusão de IFPD solicitada pelo segurado após mudança de profissão.',
    cadVig:{profissao:'Comerciante', renda:'R$ 4.500,00', imc:'24,1 (Normal)', vinculo:'CLT'},
@@ -16211,7 +16330,7 @@ var EVP_PAINEL_EXEMPLOS = [
   {num:'302336/4', segurado:'RENATA SOUZA LIMA', doc:'345.678.901-23', apolice:'AP-207903',
    produto:'Vida Individual', tipo:'Redução de capital', status:'aprovado', data:'11/09/2026',
    analista:'Danilo Jesus de Souza', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
-   tags:['Observação'], badgeE:true, vidas:1,
+   tags:['Observação'], etiqueta:'E', vidas:1,
    corretor:'Hugo Tosetto', vigencia:'01/10/2026',
    motivo:'Redução de capital por readequação orçamentária do cliente.',
    cadVig:{profissao:'Professor(a)', renda:'R$ 11.400,00', imc:'22,9 (Normal)', vinculo:'Servidor Público'},
@@ -16221,7 +16340,7 @@ var EVP_PAINEL_EXEMPLOS = [
   {num:'318992/1', segurado:'PAULO HENRIQUE ROCHA', doc:'456.789.012-34', apolice:'AP-219087',
    produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'pendente', data:'24/09/2026',
    analista:'Fernando Rogerio Pessoa', er:'112 – ER SÃO PAULO XVII – APARECIDA SOARES DE CASTRO',
-   tags:['Motivo','Justificativas'], badgeE:false, vidas:1,
+   tags:['Motivo','Justificativas'], etiqueta:'', vidas:1,
    corretor:'Lucas Chagas', vigencia:'15/11/2026',
    motivo:'Inclusão de DG Combos; aguardando laudo médico complementar.',
    cadVig:{profissao:'Comerciante', renda:'R$ 6.200,00', imc:'27,4 (Sobrepeso)', vinculo:'Empresário'},
@@ -16231,7 +16350,7 @@ var EVP_PAINEL_EXEMPLOS = [
   {num:'322190/1', segurado:'CAMILA RIBEIRO TEIXEIRA', doc:'567.890.123-45', apolice:'AP-222641',
    produto:'Vida Individual', tipo:'Aumento de capital', status:'rascunho', data:'26/09/2026',
    analista:'Maria Veronica Araujo dos Santos Cruz', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
-   tags:['Observação'], badgeE:false, vidas:1,
+   tags:['Observação'], etiqueta:'', vidas:1,
    corretor:'Camila Gomes', vigencia:'01/12/2026',
    motivo:'Aumento de capital de Morte e inclusão de IPAM.',
    cadVig:{profissao:'Analista de Sistemas', renda:'R$ 6.200,00', imc:'25,0 (Sobrepeso)', vinculo:'CLT'},
@@ -16249,47 +16368,47 @@ var EVP_PAINEL_OUTROS = [
   {num:'329114/1', segurado:'ONDREPSB SERVICO DE GUARDA LTDA', doc:'61.600.839/0001-55',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'10/07/2026', analista:'Olivia Aparecida Goncalves', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
-   tags:['Observação','Drools'], badgeE:false, vidas:3390, taxaFixa:0.3039, premioFixo:30723.88},
+   tags:['Observação','Drools'], etiqueta:'T', vidas:3390, taxaFixa:0.3039, premioFixo:30723.88},
 
   {num:'327333/1', segurado:'TIC TRANSPORTES LTDA', doc:'09.445.502/0001-08',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Seguro novo', status:'analise',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'151 – ER RIO DE JANEIRO IV – SAMUEL MARTINS',
-   tags:['Observação','Drools'], badgeE:false, vidas:318, taxaFixa:0.7901, premioFixo:7863.63},
+   tags:['Observação','Drools'], etiqueta:'N', vidas:318, taxaFixa:0.7901, premioFixo:7863.63},
 
   {num:'327665/1', segurado:'SOMBREIROS EMPREENDIMENTOS LTDA', doc:'27.880.114/0001-62',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'140 – ER SALVADOR VI – LUIS PAULO SANTOS',
-   tags:['Observação','Drools'], badgeE:false, vidas:740, taxaFixa:0.5954, premioFixo:16270.22},
+   tags:['Observação','Drools'], etiqueta:'T', vidas:740, taxaFixa:0.5954, premioFixo:16270.22},
 
   {num:'327660/1', segurado:'CISOL DO BRASIL EXPORTACAO LTDA', doc:'33.042.730/0001-04',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'pendente',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'132 – ER CAMPINAS VII – ALEXSANDRA DIAS',
-   tags:['Motivo','Justificativas','Observação'], badgeE:false, vidas:268, taxaFixa:0.4998, premioFixo:3518.16},
+   tags:['Motivo','Justificativas','Observação'], etiqueta:'T', vidas:268, taxaFixa:0.4998, premioFixo:3518.16},
 
   {num:'328082/1', segurado:'SEAGEMS SOLUTIONS S A', doc:'12.907.455/0001-31',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'02/10/2026', analista:'Gabriela Cruz Goncalves', er:'31 – ER RIO DE JANEIRO I – ANDRÉ FRANCISCO',
-   tags:['Observação','Drools'], badgeE:false, vidas:1131, taxaFixa:0.4160, premioFixo:284490.55},
+   tags:['Observação','Drools'], etiqueta:'T', vidas:1131, taxaFixa:0.4160, premioFixo:284490.55},
 
   {num:'329207/2', segurado:'LOJAS RIACHUELO S A', doc:'33.200.056/0001-49',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Renovação', status:'analise',
    data:'28/09/2026', analista:'Danilo Jesus de Souza', er:'112 – ER SÃO PAULO II – MARCIA APARECIDA LIMA',
-   tags:['Observação','Drools'], badgeE:false, vidas:2104, taxaFixa:0.3820, premioFixo:48215.70},
+   tags:['Observação','Drools'], etiqueta:'R', vidas:2104, taxaFixa:0.3820, premioFixo:48215.70},
 
   {num:'330455/1', segurado:'ALPHAMONEY PROMOTORA DE VENDAS LTDA', doc:'20.558.904/0001-77',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Inclusão de vidas', status:'rascunho',
    data:'03/10/2026', analista:'Maria Veronica Araujo dos Santos Cruz', er:'266 – ER SÃO PAULO XI – KALINE RODRIGUES',
-   tags:['Motivo','Observação'], badgeE:false, vidas:841, taxaFixa:0.2400, premioFixo:27943.36},
+   tags:['Motivo','Observação'], etiqueta:'', vidas:841, taxaFixa:0.2400, premioFixo:27943.36},
 
   {num:'331020/1', segurado:'COLEGIO NOVO HORIZONTE LTDA', doc:'07.318.620/0001-96',
    produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Cancelamento', status:'pendente',
    data:'03/10/2026', analista:'Olivia Aparecida Goncalves', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
-   tags:['Justificativas','Observação'], badgeE:false, vidas:126, taxaFixa:0.6310, premioFixo:4982.14},
+   tags:['Justificativas','Observação'], etiqueta:'C', vidas:126, taxaFixa:0.6310, premioFixo:4982.14},
 
   {num:'331188/1', segurado:'INDUSTRIA RIO CLARO S A', doc:'48.115.302/0001-20',
    produto:'Prestamista &ndash; Capital Fixo', assunto:'', tipo:'Seguro novo', status:'aprovado',
    data:'01/10/2026', analista:'Gabriela Cruz Goncalves', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
-   tags:['Observação'], badgeE:false, vidas:512, taxaFixa:0.5120, premioFixo:12840.00}
+   tags:['Observação'], etiqueta:'N', vidas:512, taxaFixa:0.5120, premioFixo:12840.00}
 ];
 
 var evpAnCasoAtual = null;   // caso aberto na tela de análise
@@ -16348,7 +16467,7 @@ function evpCasoParaCard(c) {
     analista: 'Mesa Técnica — Vida',
     er: 'Protótipo PQA-447 — caso criado nesta sessão',
     tags: (c.motivos && c.motivos.length) ? ['Motivo', 'Justificativas'] : ['Observação'],
-    badgeE: true,
+    etiqueta:'E',
     vidas: 1,
     corretor: 'Lucas Chagas',
     vigencia: c.dataVigencia ? evpDataBr(c.dataVigencia) : '—',
@@ -16357,6 +16476,8 @@ function evpCasoParaCard(c) {
     cobNovo: (c.coberturasNovo || []).map(function (x) { return Object.assign({}, x); }),
     cadVig: Object.assign({}, c.cadastroVigente || {}),
     cadNov: Object.assign({}, c.cadastroNovo || {}),
+    natureza: 'endosso',
+    pessoa: c.cliente.tipoDoc === 'CNPJ' ? 'PJ' : 'PF',
     doFluxo: true,
     caseId: c.id
   };
@@ -16366,11 +16487,66 @@ function evpDataBr(iso) {
   return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : String(iso || '');
 }
 
+// ---- Filtros do painel ----
+var EVP_FILTRO = {produto: '', pessoa: '', natureza: ''};
+
+// Rotulo de produto usado tanto no card quanto nas opcoes do filtro, para os dois
+// nunca discordarem.
+function evpRotuloProduto(c) {
+  if (c.natureza === 'endosso') return 'VI - Multiproteção';
+  return c.produto;
+}
+
+// A lista que a tela mostra. O render E o clique no card leem DAQUI — se o card
+// abrisse pelo indice da lista completa, filtrar abriria o caso errado.
+function evpPainelVisiveis() {
+  return evpPainelCasos().filter(function (c) {
+    if (EVP_FILTRO.produto && evpRotuloProduto(c) !== EVP_FILTRO.produto) return false;
+    if (EVP_FILTRO.pessoa && c.pessoa !== EVP_FILTRO.pessoa) return false;
+    if (EVP_FILTRO.natureza && c.natureza !== EVP_FILTRO.natureza) return false;
+    return true;
+  });
+}
+
+function evpFiltroMudou() {
+  EVP_FILTRO.produto = (document.getElementById('evp-filtro-produto') || {}).value || '';
+  EVP_FILTRO.pessoa = (document.getElementById('evp-filtro-pessoa') || {}).value || '';
+  EVP_FILTRO.natureza = (document.getElementById('evp-filtro-natureza') || {}).value || '';
+  evpRenderPainel();
+}
+
+function evpFiltroLimpar() {
+  EVP_FILTRO = {produto: '', pessoa: '', natureza: ''};
+  ['produto', 'pessoa', 'natureza'].forEach(function (k) {
+    var el = document.getElementById('evp-filtro-' + k);
+    if (el) el.value = '';
+  });
+  evpRenderPainel();
+}
+
+// As opcoes de Produto saem dos casos que existem, nao de uma lista fixa.
+function evpFiltroMontarProdutos() {
+  var sel = document.getElementById('evp-filtro-produto');
+  if (!sel) return;
+  var vistos = [];
+  evpPainelCasos().forEach(function (c) {
+    var r = evpRotuloProduto(c);
+    if (r && vistos.indexOf(r) === -1) vistos.push(r);
+  });
+  var atual = EVP_FILTRO.produto;
+  sel.innerHTML = '<option value="">Todos</option>' +
+    vistos.map(function (p) { return '<option value="' + p + '">' + p + '</option>'; }).join('');
+  if (atual && vistos.indexOf(atual) >= 0) sel.value = atual;
+  else { sel.value = ''; EVP_FILTRO.produto = ''; }
+}
+
 // Lista completa: os 5 exemplos + os casos criados no fluxo (mais novos primeiro).
 function evpPainelCasos() {
   var exemplos = EVP_PAINEL_EXEMPLOS.map(function (e) {
     var o = Object.assign({}, e);
     o.assunto = 'Endosso';
+    o.natureza = 'endosso';
+    o.pessoa = (o.doc || '').replace(/\D/g, '').length === 14 ? 'PJ' : 'PF';
     if (!o.cobVig) o.cobVig = evpCobDe(e.capVig);
     if (!o.cobNovo) o.cobNovo = evpCobDe(e.capNovo);
     return o;
@@ -16381,6 +16557,8 @@ function evpPainelCasos() {
     o.cobVig = evpCobDe({});
     o.cobNovo = evpCobDe({});
     o.semFluxo = true;
+    o.natureza = 'cotacao';
+    o.pessoa = (o.doc || '').replace(/\D/g, '').length === 14 ? 'PJ' : 'PF';
     return o;
   });
   exemplos = exemplos.concat(outros);
@@ -16413,7 +16591,20 @@ function evpAbrirPainel() {
 }
 
 function evpRenderPainel() {
-  var casos = evpPainelCasos();
+  evpFiltroMontarProdutos();
+  var casos = evpPainelVisiveis();
+  var totalGeral = evpPainelCasos().length;
+  var filtrando = !!(EVP_FILTRO.produto || EVP_FILTRO.pessoa || EVP_FILTRO.natureza);
+
+  var limpar = document.getElementById('evp-filtro-limpar');
+  if (limpar) limpar.disabled = !filtrando;
+  var cnt = document.getElementById('evp-filtro-cnt');
+  if (cnt) cnt.textContent = filtrando
+    ? casos.length + ' de ' + totalGeral + ' registros'
+    : totalGeral + ' registros';
+  var vazio = document.getElementById('evp-pan-vazio');
+  if (vazio) vazio.style.display = casos.length ? 'none' : '';
+
   var cont = {rascunho: 0, analise: 0, aprovado: 0, pendente: 0};
   casos.forEach(function (c) { if (cont[c.status] !== undefined) cont[c.status]++; });
   Object.keys(cont).forEach(function (k) {
@@ -16435,11 +16626,20 @@ function evpRenderPainel() {
     var acao = c.semFluxo
       ? 'evpAnNaoMapeado(\'Análise de ' + c.tipo + '\')'
       : 'evpAbrirAnalise(' + i + ')';
+    // O card de endosso nao tem vidas nem taxa — o que importa ali e o premio.
+    var rodape = (c.natureza === 'endosso')
+      ? '<div class="evp-pan-ft-col"><span class="evp-pan-ft-tipo">Endosso</span></div>' +
+        '<div class="evp-pan-ft-col"><span><b>Prêmio:</b> ' + endFmtMoeda(premio) + '</span></div>'
+      : '<div class="evp-pan-ft-col"><span class="evp-pan-ft-tipo">' + c.tipo + '</span>' +
+          '<span><b>Taxa:</b> ' + evpNum(taxa, 4) + '</span></div>' +
+        '<div class="evp-pan-ft-col"><span><b>Vidas:</b> ' + c.vidas + '</span>' +
+          '<span><b>Prêmio:</b> ' + endFmtMoeda(premio) + '</span></div>';
+
     return '<button class="evp-pan-card" onclick="' + acao + '">' +
-      (c.badgeE ? '<span class="evp-pan-card-e">E</span>' : '') +
+      (c.etiqueta ? '<span class="evp-pan-card-e" title="Origem do registro">' + c.etiqueta + '</span>' : '') +
       '<div class="evp-pan-card-hd"><span class="evp-pan-num">' + c.num + '</span>' +
         '<span class="evp-pan-nome">' + c.segurado + '</span></div>' +
-      '<div class="evp-pan-prod">' + c.produto + (c.assunto ? ' &ndash; ' + c.assunto : '') + '</div>' +
+      '<div class="evp-pan-prod">' + evpRotuloProduto(c) + '</div>' +
       '<div class="evp-pan-status"><span class="evp-pan-dot evp-pan-dot-' + st.cor + '"></span>' +
         st.rot + ' <span class="evp-pan-data">' + c.data + '</span></div>' +
       '<div class="evp-pan-pessoa"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
@@ -16448,19 +16648,14 @@ function evpRenderPainel() {
       '<div class="evp-pan-tags">' + c.tags.map(function (t) {
         return '<span class="evp-pan-tag">' + t + '</span>'; }).join('') + '</div>' +
       '<div class="evp-pan-er" title="' + c.er + '">' + c.er + '</div>' +
-      '<div class="evp-pan-ft">' +
-        '<div class="evp-pan-ft-col"><span class="evp-pan-ft-tipo">' + c.tipo + '</span>' +
-          '<span><b>Taxa:</b> ' + evpNum(taxa, 4) + '</span></div>' +
-        '<div class="evp-pan-ft-col"><span><b>Vidas:</b> ' + c.vidas + '</span>' +
-          '<span><b>Prêmio:</b> ' + endFmtMoeda(premio) + '</span></div>' +
-      '</div></button>';
+      '<div class="evp-pan-ft">' + rodape + '</div></button>';
   }).join('');
 }
 
 // ---------------------------------------------------------------- análise
 
 function evpAbrirAnalise(i) {
-  var casos = evpPainelCasos();
+  var casos = evpPainelVisiveis();
   var c = casos[i];
   if (!c) return;
   evpAnCasoAtual = c;
