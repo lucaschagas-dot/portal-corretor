@@ -5706,6 +5706,9 @@ function authLogout(){
     .end-cadbox-lbl{font-size:11.5px;color:#a2aaad;display:block;margin-bottom:3px}
     .end-cadbox-val{font-size:14px;font-weight:600;color:#44546c}
     .end-analista-readonly{background:#eef1f4}
+    .end-confirma-area{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+    .end-confirma{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#44546c;cursor:pointer}
+    .end-confirma input{width:16px;height:16px;accent-color:var(--azure);cursor:pointer;flex-shrink:0;margin:0}
     .end-cadbox-input{border:none;background:transparent;width:100%;font:inherit;font-size:14px;font-weight:600;color:#44546c;padding:0;outline:none}
     .end-cadbox-edit{display:flex;align-items:baseline;gap:7px}
     .end-cadbox-imc{flex:0 0 38px;width:38px}
@@ -17441,7 +17444,8 @@ function endResetCorretorState() {
     dpsProponenteEnviado:false, dpsProponenteConcluido:false,
     caseId:null, _chaveCaso:'', cleanCase:true, resseguroAprovado:false, _profissaoSel:'analista',
     cadastroVigente:null, cadastroNovo:null,
-    motivoEndosso:'', dataVigencia:'', vigenciaOpcao:'', emailProponente:''
+    motivoEndosso:'', dataVigencia:'', vigenciaOpcao:'', emailProponente:'',
+    cadastroConfirmado:false
   };
   END_STATE.faseMax = 1;
   endCovModalClose();
@@ -17660,6 +17664,7 @@ function endAplicarApoliceSelecionada() {
   };
   END_STATE.cadastroNovo = Object.assign({}, END_STATE.cadastroVigente);
   END_STATE.motivoNaoClean = [];
+  END_STATE.cadastroConfirmado = false;
   END_STATE.dpsTipo = '';
   END_STATE.dpsRespondida = false; END_STATE._dpsRespostas = {};
   END_STATE.dpsModo = 'preencher';
@@ -17742,7 +17747,14 @@ function endRenderFase2() {
     '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
     '<div class="end-actions-row end-actions-between">' +
       '<button class="end-btn end-btn-outline" onclick="endGoFase(1)">&lsaquo; Voltar</button>' +
-      '<button class="end-btn end-btn-primary" id="end-fase2-avancar" onclick="endGoFase(3)">Avançar para Precificação &rsaquo;</button>' +
+      '<div class="end-confirma-area">' +
+        '<label class="end-confirma"><input type="checkbox" id="end-confirma-cadastro"' +
+          (END_STATE.cadastroConfirmado ? ' checked' : '') +
+          ' onchange="endOnConfirmaCadastro(this)"> Confirmo que os dados cadastrais est&atilde;o atualizados</label>' +
+        '<button class="end-btn end-btn-primary" id="end-fase2-avancar" onclick="endGoFase(3)"' +
+          (END_STATE.cadastroConfirmado ? '' : ' disabled') +
+          '>Avan&ccedil;ar para Precifica&ccedil;&atilde;o &rsaquo;</button>' +
+      '</div>' +
     '</div>';
 
   endRenderCovTable();
@@ -17814,6 +17826,14 @@ function endOnVinculoChange(sel) {
 // O enquadramento (clean / não clean) continua sendo calculado em endValidaFase2,
 // mas não é mais anunciado aqui: na simulação o corretor não deve saber se o caso
 // vai para a Mesa Técnica.
+// O avanco so libera depois do corretor confirmar o cadastro. A escolha fica no
+// estado para sobreviver a ida e volta entre as fases.
+function endOnConfirmaCadastro(chk) {
+  END_STATE.cadastroConfirmado = !!chk.checked;
+  var btn = document.getElementById('end-fase2-avancar');
+  if (btn) btn.disabled = !END_STATE.cadastroConfirmado;
+}
+
 function endOnProfissaoChange(sel, silencioso) {
   var novaVal = sel.value;
   var nova = END_PROFISSOES.find(function(p){ return p.v === novaVal; });
@@ -17979,10 +17999,10 @@ function endRenderComparePlano() {
 
   var cells = '';
   cells += '<div class="gv-plan-lbl-col"><span class="gv-plan-title-lbl">' + (cli.produto || 'Vida Individual') + '</span></div>';
-  cells += '<div class="gv-plan-hdr2"><div class="gv-plan-name2">Vigente</div>' +
+  cells += '<div class="gv-plan-hdr2"><div class="gv-plan-name2">Condi&ccedil;&atilde;o vigente</div>' +
     '<div class="gv-plan-price2">' + endFmtMoeda(premioVig) + ' <small>/ mês</small></div>' +
     '<div class="gv-plan-desc2">Capital total ' + endFmtMoeda(totVig) + '</div></div>';
-  cells += '<div class="gv-plan-hdr2 gv-sel-col"><div class="gv-plan-name2">Com Endosso ' + check + '</div>' +
+  cells += '<div class="gv-plan-hdr2 gv-sel-col"><div class="gv-plan-name2">Condi&ccedil;&atilde;o proposta ' + check + '</div>' +
     '<div class="gv-plan-price2">' + endFmtMoeda(premioNovo) + ' <small>/ mês</small></div>' +
     '<div class="gv-plan-desc2">Capital total ' + endFmtMoeda(totNovo) + '</div></div>';
   cells += '<div class="gv-plan-blank"></div><div class="gv-plan-blank"></div><div class="gv-plan-blank gv-sel-col"></div>';
