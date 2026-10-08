@@ -1351,7 +1351,13 @@ var AUTH_ALLOWED = [
   'katiane.lupianhez@segurosunimed.com.br',
   'camila.gomes@segurosunimed.com.br',
   'hugo.tosetto@segurosunimed.com.br',
-  'cristiana.ferronatto.viaflow@segurosunimed.com.br'
+  'cristiana.ferronatto.viaflow@segurosunimed.com.br',
+  'ricardo.fantozzi.pca@segurosunimed.com.br',
+  'david.junior.pca@segurosunimed.com.br',
+  'thiago.ferreira.pca@segurosunimed.com.br',
+  'fernando.cussiol.pca@segurosunimed.com.br',
+  'eduardo.santos.pca@segurosunimed.com.br',
+  'andre.wakano.pca@segurosunimed.com.br'
 ];
 
 var AUTH_KEY = 'portal_corretor_auth_email';
@@ -5182,7 +5188,7 @@ function authLogout(){
     <div class="ape-overlay" id="end-cov-modal-overlay" style="display:none" onclick="endCovModalClose(event)">
       <div class="ape-modal end-cov-modal" style="max-width:960px" onclick="event.stopPropagation()">
         <div class="ape-modal-hdr">
-          <span class="ape-modal-title">Cota&ccedil;&atilde;o &mdash; edi&ccedil;&atilde;o de coberturas</span>
+          <span class="ape-modal-title">Cota&ccedil;&atilde;o &mdash; Edi&ccedil;&atilde;o</span>
           <button class="ape-modal-close" onclick="endCovModalClose()" title="Fechar">&#10005;</button>
         </div>
         <div class="ape-modal-body"><div class="end-card" id="end-fase-2" style="border-left:none;box-shadow:none;padding:0;margin:0"></div></div>
@@ -5478,9 +5484,6 @@ function authLogout(){
     .evp-an-dl-btn:hover{background:#0f4480}
     .evp-an-dl-btn svg{flex-shrink:0}
 
-    .evp-an-grupo-box{border:1px solid #D7DBDF;border-radius:2px;padding:14px 16px;margin-top:14px}
-    .evp-an-grupo-box strong{font-size:15px;color:#3C3C3C}
-    .evp-an-grupo-box span{font-size:13.5px;color:#3C3C3C;margin-left:6px}
 
     /* Resposta da análise */
     .evp-an-dec{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-bottom:14px}
@@ -5707,6 +5710,9 @@ function authLogout(){
     .end-cadbox-input{border:none;background:transparent;width:100%;font:inherit;font-size:14px;font-weight:600;color:#44546c;padding:0;outline:none}
     .end-cadbox-edit{display:flex;align-items:baseline;gap:7px}
     .end-cadbox-imc{flex:0 0 38px;width:38px}
+    .end-cadbox-ap{flex:0 0 42px;width:42px}
+    .end-cadbox-un{font-size:11.5px;color:#a2aaad;margin:0 8px 0 -4px}
+    .end-cadbox-imcres{display:block;font-size:11.5px;color:#8a94a3;margin-top:5px}
     /* sublinhado pontilhado: sem ele os campos de texto passam por rotulo estatico */
     .end-cadbox input.end-cadbox-input{border-bottom:1px dashed #b9c1cc;padding-bottom:1px}
     .end-cadbox input.end-cadbox-input:focus{border-bottom:1px solid var(--azure)}
@@ -5807,6 +5813,18 @@ function authLogout(){
     .end-kpi-num.end-kpi-warn{color:#c97600}
     .end-kpi-num.end-kpi-ok{color:var(--green)}
     .end-kpi-lbl{font-size:11px;color:#8a94a3;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+
+    .end-rodape{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+      background:#0F2A51;border-radius:4px;padding:14px 20px;margin-top:18px}
+    .end-rodape-infos{display:flex;gap:34px;flex-wrap:wrap;min-width:0}
+    .end-rodape-item{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .end-rodape-item span{font-size:10.5px;color:#9FB6D4;text-transform:uppercase;letter-spacing:.4px}
+    .end-rodape-item strong{font-size:13px;color:#fff;font-weight:600;overflow-wrap:anywhere}
+    .end-rodape-premio{display:flex;flex-direction:column;gap:2px;text-align:right;margin-left:auto}
+    .end-rodape-premio span{font-size:10.5px;color:#9FB6D4;text-transform:uppercase;letter-spacing:.4px}
+    .end-rodape-premio strong{font-size:20px;color:#fff;font-variant-numeric:tabular-nums}
+    .end-rodape-premio small{font-size:12px;color:#9FB6D4;font-weight:400}
+    @media (max-width:760px){ .end-rodape-infos{gap:18px} .end-rodape-premio{margin-left:0;text-align:left} }
 
     .end-sec-title{font-size:14px;font-weight:700;color:#1f2a51;margin:24px 0 12px;padding-bottom:7px;border-bottom:1px solid #eef1f4}
     .end-tbl-wrap{overflow-x:auto}
@@ -16179,6 +16197,24 @@ function endImcClasse(v) {
   if (v < 40)   return 'Obesidade grau II';
   return 'Obesidade grau III';
 }
+// O corretor passa a informar altura e peso; o IMC vira consequencia.
+// Para os dados que so trazem o IMC, assume-se 1,75 m e deriva-se o peso, de modo
+// que o campo nunca nasca vazio e o IMC exibido continue batendo.
+function endAlturaPesoDeImc(imc) {
+  var x = endImcValor(imc);
+  var alt = 1.75;
+  return {altura: alt, peso: Math.round(x * alt * alt * 10) / 10};
+}
+function endImcDe(altura, peso) {
+  var a = parseFloat(String(altura).replace(',', '.'));
+  var p = parseFloat(String(peso).replace(',', '.'));
+  if (!a || !p || a <= 0) return 0;
+  if (a > 3) a = a / 100;          // digitou em centimetros
+  return Math.round((p / (a * a)) * 10) / 10;
+}
+function endNum1(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
+function endNum2(v) { return (Math.round(v * 100) / 100).toFixed(2).replace('.', ','); }
+
 function endImcFmt(v) {
   var x = endImcValor(v);
   if (!x) return '—';
@@ -16915,7 +16951,6 @@ function evpAnRenderAnalise() {
         '<textarea id="evp-an-obs" rows="3" placeholder=" " readonly>' + obs + '</textarea>' +
         '<span>Observações Corretor</span>' +
       '</label>' +
-      '<div class="evp-an-grupo-box"><strong>Grupo 1</strong><span>(Grupo com massa enviada)</span></div>' +
     '</fieldset>';
 
   var icoCopiar = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
@@ -17636,6 +17671,8 @@ function endAplicarApoliceSelecionada() {
     profissao: base.profissao,
     renda: base.renda,
     imc: endImcFmt(base.imc),
+    altura: endAlturaPesoDeImc(base.imc).altura,
+    peso: endAlturaPesoDeImc(base.imc).peso,
     vinculo: base.vinculo
   };
   END_STATE.cadastroNovo = Object.assign({}, END_STATE.cadastroVigente);
@@ -17684,7 +17721,8 @@ function endRenderFase2() {
       '</div>';
   }
 
-  var imcNum = endImcValor(cad.imc);
+  var ap = {altura: cad.altura, peso: cad.peso};
+  if (!ap.altura || !ap.peso) ap = endAlturaPesoDeImc(cad.imc);
   var vincOpts = END_VINCULOS.slice();
   // Segurado PJ tem vínculo "Pessoa Jurídica", que não está na lista padrão.
   if (cadVig.vinculo && vincOpts.indexOf(cadVig.vinculo) === -1) vincOpts.unshift(cadVig.vinculo);
@@ -17700,12 +17738,16 @@ function endRenderFase2() {
       '<input type="text" id="end-renda" class="end-cadbox-input" inputmode="decimal" value="' + (cad.renda || '') + '"' +
         ' onblur="endOnRendaBlur(this)" onkeydown="if(event.keyCode===13){this.blur();}">') +
     cadBox('imc',
-      '<span class="end-cadbox-lbl">IMC</span>' +
+      '<span class="end-cadbox-lbl">Altura e peso</span>' +
       '<div class="end-cadbox-edit">' +
-        '<input type="text" id="end-imc" class="end-cadbox-input end-cadbox-imc" inputmode="decimal" value="' + imcNum.toFixed(1).replace('.', ',') + '"' +
-          ' oninput="endOnImcInput(this)" onblur="endOnImcBlur(this)" onkeydown="if(event.keyCode===13){this.blur();}">' +
-        '<span class="end-cadbox-sufixo" id="end-imc-classe">' + endImcClasse(imcNum) + '</span>' +
-      '</div>') +
+        '<input type="text" id="end-altura" class="end-cadbox-input end-cadbox-ap" inputmode="decimal" value="' + endNum2(ap.altura) + '"' +
+          ' oninput="endOnAlturaPeso()" onblur="endOnAlturaPesoBlur()" onkeydown="if(event.keyCode===13){this.blur();}">' +
+        '<span class="end-cadbox-un">m</span>' +
+        '<input type="text" id="end-peso" class="end-cadbox-input end-cadbox-ap" inputmode="decimal" value="' + endNum1(ap.peso) + '"' +
+          ' oninput="endOnAlturaPeso()" onblur="endOnAlturaPesoBlur()" onkeydown="if(event.keyCode===13){this.blur();}">' +
+        '<span class="end-cadbox-un">kg</span>' +
+      '</div>' +
+      '<span class="end-cadbox-imcres" id="end-imc-res">IMC ' + endImcFmt(cad.imc) + '</span>') +
     cadBox('vinculo',
       '<span class="end-cadbox-lbl">Vínculo Empregatício</span>' +
       '<select id="end-vinculo" class="end-cadbox-input" style="cursor:pointer" onchange="endOnVinculoChange(this)">' +
@@ -17721,14 +17763,19 @@ function endRenderFase2() {
     restritoNota +
     '<div class="end-grid4">' + caixasCadastrais + '</div>' +
     '<div class="end-cov-table" id="end-cov-table" style="margin-top:16px"></div>' +
+    '<div class="end-sec-title">Vig&ecirc;ncia</div>' +
+    '<p class="end-dps-ask">A partir de quando este endosso passa a valer? <span class="end-dps-req">*</span></p>' +
+    '<div class="end-dps-modo-row">' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="d1" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='d1'?' checked':'') + '> D+1 <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('d1')) + '</span></label>' +
+      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="proxmes" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='proxmes'?' checked':'') + '> Pr&oacute;ximo m&ecirc;s de cobertura <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('proxmes')) + '</span></label>' +
+    '</div>' +
     '<div class="end-actions-row end-actions-between">' +
-      '<button class="end-btn end-btn-outline" onclick="endGoFase(1)">&lsaquo; Voltar</button>' +
       '<div class="end-confirma-area">' +
         '<label class="end-confirma"><input type="checkbox" id="end-confirma-cadastro"' +
           (END_STATE.cadastroConfirmado ? ' checked' : '') +
           ' onchange="endOnConfirmaCadastro(this)"> Confirmo que os dados cadastrais est&atilde;o atualizados</label>' +
         '<button class="end-btn end-btn-primary" id="end-fase2-avancar" onclick="endGoFase(3)"' +
-          (END_STATE.cadastroConfirmado ? '' : ' disabled') +
+          ((END_STATE.cadastroConfirmado && END_STATE.vigenciaOpcao) ? '' : ' disabled') +
           '>Avan&ccedil;ar para Precifica&ccedil;&atilde;o &rsaquo;</button>' +
       '</div>' +
     '</div>';
@@ -17776,21 +17823,34 @@ function endOnRendaBlur(inp) {
   endAtualizaCadBox('renda');
 }
 
-// A faixa (Normal / Sobrepeso / Obesidade) acompanha a digitação, antes do blur.
-function endOnImcInput(inp) {
-  var x = endImcValor(inp.value);
-  var cl = document.getElementById('end-imc-classe');
-  if (cl) cl.textContent = x ? endImcClasse(x) : '—';
+// O IMC acompanha a digitacao de altura e peso, antes mesmo do blur.
+function endOnAlturaPeso() {
+  var a = document.getElementById('end-altura');
+  var p = document.getElementById('end-peso');
+  var res = document.getElementById('end-imc-res');
+  if (!a || !p) return;
+  var x = endImcDe(a.value, p.value);
+  if (res) res.textContent = x ? 'IMC ' + endImcFmt(x) : 'IMC \u2014';
+  return x;
 }
-function endOnImcBlur(inp) {
-  var x = endImcValor(inp.value);
-  // Campo vazio ou ilegível volta ao vigente; fora da faixa plausível, é limitado.
-  if (!x) x = endImcValor(END_STATE.cadastroVigente.imc);
-  if (x < 10) x = 10;
-  if (x > 60) x = 60;
-  END_STATE.cadastroNovo.imc = endImcFmt(x);
-  inp.value = x.toFixed(1).replace('.', ',');
-  endOnImcInput(inp);
+
+function endOnAlturaPesoBlur() {
+  var a = document.getElementById('end-altura');
+  var p = document.getElementById('end-peso');
+  if (!a || !p) return;
+  var alt = parseFloat(String(a.value).replace(',', '.'));
+  var pes = parseFloat(String(p.value).replace(',', '.'));
+  // valores vazios ou implausiveis voltam ao que a apolice tinha
+  var base = endAlturaPesoDeImc(END_STATE.cadastroVigente.imc);
+  if (alt > 3) alt = alt / 100;                       // digitou em centimetros
+  if (!alt || alt < 1 || alt > 2.5) alt = base.altura;
+  if (!pes || pes < 25 || pes > 300) pes = base.peso;
+  a.value = endNum2(alt);
+  p.value = endNum1(pes);
+  END_STATE.cadastroNovo.altura = alt;
+  END_STATE.cadastroNovo.peso = pes;
+  END_STATE.cadastroNovo.imc = endImcFmt(endImcDe(alt, pes));
+  endOnAlturaPeso();
   endAtualizaCadBox('imc');
 }
 
@@ -17806,8 +17866,13 @@ function endOnVinculoChange(sel) {
 // estado para sobreviver a ida e volta entre as fases.
 function endOnConfirmaCadastro(chk) {
   END_STATE.cadastroConfirmado = !!chk.checked;
+  endAtualizarFase2Botao();
+}
+
+// A vigencia agora e escolhida no modal, entao e aqui que ela trava o avanco.
+function endAtualizarFase2Botao() {
   var btn = document.getElementById('end-fase2-avancar');
-  if (btn) btn.disabled = !END_STATE.cadastroConfirmado;
+  if (btn) btn.disabled = !(END_STATE.cadastroConfirmado && END_STATE.vigenciaOpcao);
 }
 
 function endOnProfissaoChange(sel, silencioso) {
@@ -17949,16 +18014,8 @@ function endRenderFase3() {
     '<div class="end-alert end-alert-info" style="margin-top:16px">' + endAlertIco('info') +
       '<span>A alteração de prêmio é diluída nas parcelas futuras já em aberto no E-vida (substituição de parcelas), sem cobranças ou devoluções imediatas em boleto avulso.</span></div>' +
     '<div id="end-premio-min-area"></div>' +
-    // A vigencia e decidida junto com o preco: e aqui que o corretor ve o impacto
-    // da data antes de seguir para a assinatura.
-    '<div class="end-sec-title">Vig&ecirc;ncia</div>' +
-    '<p class="end-dps-ask">A partir de quando este endosso passa a valer? <span class="end-dps-req">*</span></p>' +
-    '<div class="end-dps-modo-row">' +
-      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="d1" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='d1'?' checked':'') + '> D+1 <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('d1')) + '</span></label>' +
-      '<label class="end-dps-modo-opt"><input type="radio" name="end-vigencia-opcao" value="proxmes" onchange="endOnVigenciaChange(this)"' + (END_STATE.vigenciaOpcao==='proxmes'?' checked':'') + '> Pr&oacute;ximo m&ecirc;s de cobertura <span class="end-vig-data">' + endDataBrISO(endVigenciaISO('proxmes')) + '</span></label>' +
-    '</div>' +
+    endRodapeCotacao() +
     '<div class="end-actions-row end-actions-between">' +
-      '<button class="end-btn end-btn-outline" onclick="endGoFase(2)">&lsaquo; Voltar</button>' +
       '<button class="end-btn end-btn-primary" id="end-fase3-avancar" onclick="endGoFase(4)">Avançar para Assinatura (DPS) &rsaquo;</button>' +
     '</div>';
 
@@ -18019,7 +18076,7 @@ function endRenderComparePlano() {
 
   cells += '<div class="gv-plan-blank"></div>';
   cells += '<div class="gv-btn-cell"></div>';
-  cells += '<div class="gv-btn-cell gv-sel-col"><button class="gv-outras-btn" type="button" onclick="endGoFase(2)">Editar coberturas</button></div>';
+  cells += '<div class="gv-btn-cell gv-sel-col"><button class="gv-outras-btn" type="button" onclick="endGoFase(2)">Editar</button></div>';
 
   alvo.innerHTML =
     '<div class="end-prod-block">' +
@@ -18069,7 +18126,28 @@ function endAtualizarFase3Botao() {
   var mult = {Mensal:1, Bimestral:2, Trimestral:3};
   var efetivo = END_STATE.premioNovo * mult[END_STATE.periodicidadeNova];
   var premioOk = END_STATE.premioNovo >= 35 || efetivo >= 35;
-  avancar.disabled = !(premioOk && !!END_STATE.vigenciaOpcao);
+  avancar.disabled = !premioOk;
+}
+
+// Rodape da cotacao: o premio calculado em destaque e o contexto comercial ao
+// lado, so para leitura — nada aqui e editavel no endosso.
+function endRodapeCotacao() {
+  var c = END_STATE.cliente || {};
+  var itens = [
+    ['Executivo', '20 &ndash; Antonio Jose Carvalho Ramos'],
+    ['Corretor', 'Fina Corretora de Seguros Ltda'],
+    ['Comercializa&ccedil;&atilde;o', 'Direta'],
+    ['Cobran&ccedil;a', END_STATE.periodicidadeNova || 'Mensal']
+  ];
+  return '<div class="end-rodape">' +
+    '<div class="end-rodape-infos">' +
+      itens.map(function (i) {
+        return '<div class="end-rodape-item"><span>' + i[0] + '</span><strong>' + i[1] + '</strong></div>';
+      }).join('') +
+    '</div>' +
+    '<div class="end-rodape-premio"><span>Pr&ecirc;mio calculado</span>' +
+      '<strong>' + endFmtMoeda(END_STATE.premioNovo) + '<small> / m&ecirc;s</small></strong></div>' +
+  '</div>';
 }
 
 function endRenderPremioMinArea() {
@@ -18142,7 +18220,6 @@ function endRenderFase4() {
       '<div id="end-dps-area"></div>' +
       '<div id="end-resseguro-aviso"></div>') +
     '<div class="end-actions-row end-actions-between">' +
-      '<button class="end-btn end-btn-outline" onclick="endGoFase(3)">&lsaquo; Voltar</button>' +
       '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Enviar para análise &rsaquo;</button>' +
     '</div>';
 
@@ -18170,7 +18247,7 @@ function endDataBrISO(iso) {
 function endOnVigenciaChange(radio) {
   END_STATE.vigenciaOpcao = radio.value;
   END_STATE.dataVigencia = endVigenciaISO(radio.value);
-  endAtualizarFase3Botao();
+  endAtualizarFase2Botao();
   endAtualizarFase4Botao();
 }
 
