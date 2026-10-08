@@ -4662,6 +4662,10 @@ function authLogout(){
                     <option value="cotacao">Cota&ccedil;&atilde;o</option>
                   </select>
                 </label>
+                <label class="evp-filtro">
+                  <span>Analista</span>
+                  <select id="evp-filtro-analista" onchange="evpFiltroMudou()"></select>
+                </label>
                 <button class="evp-filtro-limpar" id="evp-filtro-limpar" onclick="evpFiltroLimpar()">Limpar filtros</button>
                 <span class="evp-filtro-cnt" id="evp-filtro-cnt"></span>
               </div>
@@ -4709,16 +4713,6 @@ function authLogout(){
                 <legend>Coberturas</legend>
                 <div id="evp-an-grupo"></div>
               </fieldset>
-
-              <div class="evp-fs evp-fs-solto">
-                <div class="evp-bloco" id="evp-bloco-docs">
-                  <div class="evp-bloco-hd" onclick="evpBlocoToggle('evp-bloco-docs')">
-                    <span class="evp-bloco-tit">Documentos para transmiss&atilde;o</span>
-                    <svg class="evp-bloco-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                  <div class="evp-bloco-corpo" id="evp-an-docs"></div>
-                </div>
-              </div>
 
               <div class="evp-fs evp-fs-solto">
                 <div class="evp-bloco" id="evp-bloco-analise">
@@ -4792,6 +4786,26 @@ function authLogout(){
                             <label class="aj-ck"><input type="checkbox" id="aj-desconto-comercial"> Permitir desconto comercial</label>
                             <label class="aj-ck"><input type="checkbox" id="aj-isencao-iof"> Isen&ccedil;&atilde;o de IOF</label>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pi-sec" id="aj-sec-carregamento">
+                    <div class="pi-rail"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2" fill="currentColor"/><circle cx="12" cy="12" r="2.8" fill="#fff"/><circle cx="6" cy="12" r="1" fill="#fff"/><circle cx="18" cy="12" r="1" fill="#fff"/></svg></div>
+                    <div class="pi-sec-main">
+                      <div class="pi-sec-hd" onclick="evpPlanoToggleSec('aj-sec-carregamento')">
+                        <span>Carregamento</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                      <div class="pi-rows">
+                        <div class="aj-grid4">
+                          <label class="aj-f" title="Ajuste da DA (% por cotação)"><input type="text" id="aj-da" inputmode="decimal" placeholder=" "><span>Ajuste da DA (% por cota&ccedil;&atilde;o)</span></label>
+                          <label class="aj-f" title="Ajuste da Margem de Lucro (% por cotação)"><input type="text" id="aj-margem" inputmode="decimal" placeholder=" "><span>Ajuste da Margem de Lucro (% por cota&ccedil;&atilde;o)</span></label>
+                          <label class="aj-f"><input type="text" id="aj-agenciamento" inputmode="decimal" placeholder=" "><span>Agenciamento</span></label>
+                          <label class="aj-f" title="Diferimento do agenciamento (qtde meses por cotação)"><input type="text" id="aj-diferimento" inputmode="numeric" placeholder=" "><span>Diferimento do agenciamento (qtde meses por cota&ccedil;&atilde;o)</span></label>
+                        </div>
+                        <div class="aj-grid4" style="margin-top:12px">
+                          <label class="aj-f"><input type="text" id="aj-corretagem" inputmode="decimal" placeholder=" "><span>Corretagem</span></label>
+                          <label class="aj-f"><input type="text" id="aj-prolabore" inputmode="decimal" placeholder=" "><span>Pr&oacute;-labore</span></label>
                         </div>
                       </div>
                     </div>
@@ -5349,7 +5363,7 @@ function authLogout(){
       overflow:hidden;text-overflow:ellipsis}
     .evp-pan-filtros{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:0 0 16px}
     .evp-filtro{display:flex;flex-direction:column;gap:4px;min-width:0}
-    .evp-filtro > span{font-size:11.5px;color:#8A8F96;text-transform:uppercase;letter-spacing:.3px}
+    .evp-filtro > span{font-size:11.5px;color:var(--azure);font-weight:700;text-transform:uppercase;letter-spacing:.3px}
     .evp-filtro > select{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
       font-size:13.5px;color:#3C3C3C;padding:7px 10px;min-width:180px;cursor:pointer}
     .evp-filtro > select:focus{outline:none;border-color:#009DDB}
@@ -5493,26 +5507,6 @@ function authLogout(){
     .evp-an-hist-ico button{background:none;border:none;padding:0;cursor:pointer;color:inherit;display:flex}
     .evp-an-hist-ico button:hover{color:#009DDB}
 
-    /* Documentos para transmissão: nome à esquerda, regra à direita. As tres opcoes
-       ficam numa grade de larguras fixas para alinharem em coluna de uma linha
-       para a outra — com flex cada linha alinhava por conta propria e elas dancavam. */
-    .evp-doc-linha{display:flex;align-items:stretch;border-bottom:1px solid #EDEFF1}
-    .evp-doc-linha:last-child{border-bottom:none}
-    .evp-doc-linha:hover{background:#FAFBFC}
-    .evp-doc-nome{flex:1;min-width:0;display:flex;align-items:center;gap:10px;
-      font-size:13.5px;color:#3C3C3C;line-height:1.4;padding:11px 16px}
-    .evp-doc-nome svg{flex-shrink:0;color:#3C3C3C}
-    .evp-doc-ops{display:grid;grid-template-columns:122px 118px 148px;align-items:center;
-      flex-shrink:0;padding:11px 16px 11px 18px;border-left:1px solid #EDEFF1}
-    .evp-doc-op{display:flex;align-items:center;gap:7px;font-size:13px;color:#44546C;
-      cursor:pointer;white-space:nowrap}
-    .evp-doc-op input{width:14px;height:14px;accent-color:#0F84C4;cursor:pointer;flex-shrink:0;margin:0}
-    @media (max-width:1100px){
-      .evp-doc-linha{flex-direction:column;align-items:stretch}
-      .evp-doc-nome{padding-bottom:0}
-      .evp-doc-ops{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-        border-left:none;padding:8px 16px 12px 42px}
-    }
     .evp-an-acoes{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin:0 0 10px}
 
     /* ===== Modal "Plano Ideal" — edição de coberturas ===== */
@@ -5571,8 +5565,9 @@ function authLogout(){
     .aj-f > input,.aj-f > textarea{width:100%;border:none;outline:none;background:transparent;
       font-family:inherit;font-size:14px;font-weight:700;color:#3C3C3C;padding:21px 10px 6px}
     .aj-f > textarea{resize:vertical;min-height:92px;font-weight:400;line-height:1.45}
-    .aj-f > span{position:absolute;left:11px;top:15px;font-size:14px;color:#A2AAAD;
-      pointer-events:none;transition:top .15s,font-size .15s}
+    .aj-f > span{position:absolute;left:11px;right:11px;top:15px;font-size:14px;color:#A2AAAD;
+      pointer-events:none;transition:top .15s,font-size .15s;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .aj-f > input:focus ~ span,.aj-f > input:not(:placeholder-shown) ~ span,
     .aj-f > textarea:focus ~ span,.aj-f > textarea:not(:placeholder-shown) ~ span{top:5px;font-size:11px}
     .aj-f:focus-within{border-color:#009DDB}
@@ -16471,6 +16466,19 @@ function evpAtualizarHomeCards() {
 // Taxa por mil de capital, usada para calcular o prêmio de cada cobertura.
 var EVP_TAXAS = {morte:0.32, ipa:0.12, ipam:0.08, ifpd:0.45, dcm:0.28, dcf:0.31, serit:0.22, dgcombo:0.54};
 
+// Quem analisa os endossos. Os casos criados no fluxo recebem um destes em vez de
+// um rotulo de area — o filtro por Analista so faz sentido com pessoas.
+var EVP_ANALISTAS = [
+  'Fernando Rogerio Pessoa',
+  'Maria Veronica Araujo dos Santos Cruz',
+  'Danilo Jesus de Souza',
+  'Gabriela Cruz Goncalves',
+  'Olivia Aparecida Goncalves',
+  'Rafael Nunes Carvalho',
+  'Beatriz Nogueira Dias',
+  'Thiago Carvalho Mendes'
+];
+
 var EVP_STATUS_INFO = {
   rascunho: {rot:'Rascunho',   cor:'cinza'},
   analise:  {rot:'Em análise', cor:'amarelo'},
@@ -16637,7 +16645,7 @@ function evpCasoParaCard(c) {
     tipo: 'Endosso simulado no protótipo',
     status: c.evpDecisao || (c.status === 'implantado_auto' ? 'aprovado' : (mapaStatus[c.boardStatus] || 'analise')),
     data: (c.dataHora || '').split(' ')[0],
-    analista: 'Mesa Técnica — Vida',
+    analista: EVP_ANALISTAS[c.id % EVP_ANALISTAS.length],
     er: 'Protótipo PQA-447 — caso criado nesta sessão',
     tags: (c.motivos && c.motivos.length) ? ['Motivo', 'Justificativas'] : ['Observação'],
     etiqueta:'E',
@@ -16661,7 +16669,7 @@ function evpDataBr(iso) {
 }
 
 // ---- Filtros do painel ----
-var EVP_FILTRO = {produto: '', pessoa: '', natureza: ''};
+var EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: ''};
 
 // Rotulo de produto usado tanto no card quanto nas opcoes do filtro, para os dois
 // nunca discordarem.
@@ -16677,6 +16685,7 @@ function evpPainelVisiveis() {
     if (EVP_FILTRO.produto && evpRotuloProduto(c) !== EVP_FILTRO.produto) return false;
     if (EVP_FILTRO.pessoa && c.pessoa !== EVP_FILTRO.pessoa) return false;
     if (EVP_FILTRO.natureza && c.natureza !== EVP_FILTRO.natureza) return false;
+    if (EVP_FILTRO.analista && c.analista !== EVP_FILTRO.analista) return false;
     return true;
   });
 }
@@ -16685,32 +16694,41 @@ function evpFiltroMudou() {
   EVP_FILTRO.produto = (document.getElementById('evp-filtro-produto') || {}).value || '';
   EVP_FILTRO.pessoa = (document.getElementById('evp-filtro-pessoa') || {}).value || '';
   EVP_FILTRO.natureza = (document.getElementById('evp-filtro-natureza') || {}).value || '';
+  EVP_FILTRO.analista = (document.getElementById('evp-filtro-analista') || {}).value || '';
   evpRenderPainel();
 }
 
 function evpFiltroLimpar() {
-  EVP_FILTRO = {produto: '', pessoa: '', natureza: ''};
-  ['produto', 'pessoa', 'natureza'].forEach(function (k) {
+  EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: ''};
+  ['produto', 'pessoa', 'natureza', 'analista'].forEach(function (k) {
     var el = document.getElementById('evp-filtro-' + k);
     if (el) el.value = '';
   });
   evpRenderPainel();
 }
 
-// As opcoes de Produto saem dos casos que existem, nao de uma lista fixa.
-function evpFiltroMontarProdutos() {
-  var sel = document.getElementById('evp-filtro-produto');
+// Produto e Analista saem dos casos que existem, nao de listas fixas: assim a
+// opcao escolhida sempre tem registro correspondente.
+function evpFiltroMontarLista(idSel, chaveFiltro, valorDe, rotuloTodos) {
+  var sel = document.getElementById(idSel);
   if (!sel) return;
   var vistos = [];
   evpPainelCasos().forEach(function (c) {
-    var r = evpRotuloProduto(c);
-    if (r && vistos.indexOf(r) === -1) vistos.push(r);
+    var v = valorDe(c);
+    if (v && vistos.indexOf(v) === -1) vistos.push(v);
   });
-  var atual = EVP_FILTRO.produto;
-  sel.innerHTML = '<option value="">Todos</option>' +
+  vistos.sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
+  var atual = EVP_FILTRO[chaveFiltro];
+  sel.innerHTML = '<option value="">' + rotuloTodos + '</option>' +
     vistos.map(function (p) { return '<option value="' + p + '">' + p + '</option>'; }).join('');
   if (atual && vistos.indexOf(atual) >= 0) sel.value = atual;
-  else { sel.value = ''; EVP_FILTRO.produto = ''; }
+  else { sel.value = ''; EVP_FILTRO[chaveFiltro] = ''; }
+}
+
+function evpFiltroMontarProdutos() {
+  evpFiltroMontarLista('evp-filtro-produto', 'produto', evpRotuloProduto, 'Todos');
+  evpFiltroMontarLista('evp-filtro-analista', 'analista',
+    function (c) { return c.analista; }, 'Todos');
 }
 
 // Lista completa: os 5 exemplos + os casos criados no fluxo (mais novos primeiro).
@@ -16767,7 +16785,7 @@ function evpRenderPainel() {
   evpFiltroMontarProdutos();
   var casos = evpPainelVisiveis();
   var totalGeral = evpPainelCasos().length;
-  var filtrando = !!(EVP_FILTRO.produto || EVP_FILTRO.pessoa || EVP_FILTRO.natureza);
+  var filtrando = !!(EVP_FILTRO.produto || EVP_FILTRO.pessoa || EVP_FILTRO.natureza || EVP_FILTRO.analista);
 
   var limpar = document.getElementById('evp-filtro-limpar');
   if (limpar) limpar.disabled = !filtrando;
@@ -16856,53 +16874,8 @@ function evpAbrirAnalise(i) {
 
   evpAnRenderCliente();
   evpAnRenderGrupo();
-  evpAnRenderDocs();
   evpAnRenderAnalise();
   window.scrollTo({top: 0});
-}
-
-// Documentos exigidos na transmissão. A regra de cada um pode ser mantida como está
-// na apólice ou sobrescrita pelo analista, e a escolha vale por caso.
-var EVP_DOCS_TRANSMISSAO = [
-  'Layout com a massa inicial de vidas',
-  'C\u00f3pia da \u00faltima fatura da cong\u00eanere',
-  'Registro e a c\u00f3pia do CPF do respons\u00e1vel pelo cadastro',
-  'Cart\u00e3o Proposta com o preenchimento da Declara\u00e7\u00e3o Pessoal de Sa\u00fade',
-  'C\u00f3pia da ap\u00f3lice da cong\u00eanere'
-];
-var EVP_DOC_OPCOES = [
-  {v: 'manter', rot: 'Manter regra'},
-  {v: 'obrigatorio', rot: 'Obrigat\u00f3rio'},
-  {v: 'nao', rot: 'N\u00e3o obrigat\u00f3rio'}
-];
-var EVP_DOCS = {};
-
-function evpDocEngrenagem() {
-  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-    '<circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/>' +
-    '<path d="M12 2.6v2.6M12 18.8v2.6M21.4 12h-2.6M5.2 12H2.6M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8M18.6 18.6l-1.8-1.8M7.2 7.2L5.4 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-}
-
-function evpAnRenderDocs() {
-  var c = evpAnCasoAtual;
-  var alvo = document.getElementById('evp-an-docs');
-  if (!c || !alvo) return;
-  if (!EVP_DOCS[c.num]) {
-    EVP_DOCS[c.num] = EVP_DOCS_TRANSMISSAO.map(function () { return 'manter'; });
-  }
-  var escolhas = EVP_DOCS[c.num];
-
-  alvo.innerHTML = EVP_DOCS_TRANSMISSAO.map(function (nome, i) {
-    var ops = EVP_DOC_OPCOES.map(function (o) {
-      return '<label class="evp-doc-op"><input type="radio" name="evp-doc-' + i + '" value="' + o.v + '"' +
-        (escolhas[i] === o.v ? ' checked' : '') +
-        ' onchange="evpAnDocEscolha(' + i + ', this.value)">' + o.rot + '</label>';
-    }).join('');
-    return '<div class="evp-doc-linha">' +
-      '<span class="evp-doc-nome">' + evpDocEngrenagem() + nome + '</span>' +
-      '<span class="evp-doc-ops">' + ops + '</span>' +
-    '</div>';
-  }).join('');
 }
 
 // ---- Card "Análise – 1": solicitação, histórico do estudo e resposta do analista ----
@@ -16925,7 +16898,7 @@ function evpAnRenderAnalise() {
   if (!EVP_RESPOSTA[c.num]) EVP_RESPOSTA[c.num] = evpAnRespostaPadrao();
   var r = EVP_RESPOSTA[c.num];
 
-  var downloads = ['Relação de proponentes', 'Documentos', 'Cálculo Motor'].map(function (nome) {
+  var downloads = ['Cálculo Motor'].map(function (nome) {
     return '<button class="evp-an-dl-btn" onclick="evpAnNaoMapeado(\'' + nome + '\')">' +
       evpIcoDownload() + nome + '</button>';
   }).join('');
@@ -17018,11 +16991,6 @@ function evpBlocoToggle(id) {
   if (el) el.classList.toggle('evp-bloco-fechado');
 }
 
-function evpAnDocEscolha(i, valor) {
-  var c = evpAnCasoAtual;
-  if (!c || !EVP_DOCS[c.num]) return;
-  EVP_DOCS[c.num][i] = valor;
-}
 
 // Dados cadastrais do segurado. Campo alterado no endosso aparece como
 // "valor antigo -> valor novo"; os demais, em valor único.
@@ -17115,8 +17083,8 @@ function evpAnRenderGrupo() {
       '<thead>' +
         '<tr class="evp-an-tr-lados">' +
           '<th class="evp-an-th-cob">Cobertura</th>' +
-          '<th colspan="3">Apólice vigente (as is)</th>' +
-          '<th colspan="3" class="evp-an-sep evp-an-th-nov">Proposta de endosso (to be)</th>' +
+          '<th colspan="3">Condição vigente</th>' +
+          '<th colspan="3" class="evp-an-sep evp-an-th-nov">Condição proposta</th>' +
         '</tr>' +
         '<tr>' +
           '<th></th>' +
@@ -17144,6 +17112,8 @@ var EVP_AJUSTES = {};
 function evpAjustePadrao() {
   return {
     linear: '', impostos: '', descontoComercial: false, isencaoIof: false,
+    da: '5,00', margem: '1,00', agenciamento: '100', diferimento: '18',
+    corretagem: '35', prolabore: '',
     vigencia: '12', excedente: false,
     devolucao: '', ibnr: '12,50', oa: '20,00', pis: '4,65',
     gatilho: false, docCotacao: false, docProposta: false, titulo: '', descricao: '',
@@ -17155,6 +17125,12 @@ function evpAjustePadrao() {
 var EVP_AJUSTE_CAMPOS = [
   ['aj-linear', 'linear', 'texto'],
   ['aj-impostos', 'impostos', 'texto'],
+  ['aj-da', 'da', 'texto'],
+  ['aj-margem', 'margem', 'texto'],
+  ['aj-agenciamento', 'agenciamento', 'texto'],
+  ['aj-diferimento', 'diferimento', 'texto'],
+  ['aj-corretagem', 'corretagem', 'texto'],
+  ['aj-prolabore', 'prolabore', 'texto'],
   ['aj-desconto-comercial', 'descontoComercial', 'check'],
   ['aj-isencao-iof', 'isencaoIof', 'check'],
   ['aj-vigencia', 'vigencia', 'texto'],
@@ -17188,7 +17164,7 @@ function evpAjusteAbrir() {
   evpAjusteToggleGrupo(document.getElementById('aj-gatilho'), 'aj-grupo-gatilho');
 
   // As duas seções sempre abrem expandidas, mesmo que tenham sido recolhidas antes.
-  ['aj-sec-basicos', 'aj-sec-cond'].forEach(function (id) {
+  ['aj-sec-basicos', 'aj-sec-carregamento', 'aj-sec-cond'].forEach(function (id) {
     var sec = document.getElementById(id);
     if (sec) sec.classList.remove('pi-sec-fechada');
   });
