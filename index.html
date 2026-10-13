@@ -5704,7 +5704,9 @@ function authLogout(){
     .end-cadbox-lbl{font-size:11.5px;color:#a2aaad;display:block;margin-bottom:3px}
     .end-cadbox-val{font-size:14px;font-weight:600;color:#44546c}
     .end-analista-readonly{background:#eef1f4}
-    .end-confirma-area{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+    .end-confirma-area{display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex:1 1 auto;justify-content:space-between}
+    /* Quando o conteudo quebra em duas linhas, o botao continua alinhado a direita. */
+    @media (max-width:560px){ .end-confirma-area{justify-content:flex-end} }
     .end-confirma{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#44546c;cursor:pointer}
     .end-confirma input{width:16px;height:16px;accent-color:var(--azure);cursor:pointer;flex-shrink:0;margin:0}
     .end-cadbox-input{border:none;background:transparent;width:100%;font:inherit;font-size:14px;font-weight:600;color:#44546c;padding:0;outline:none}
@@ -5814,17 +5816,54 @@ function authLogout(){
     .end-kpi-num.end-kpi-ok{color:var(--green)}
     .end-kpi-lbl{font-size:11px;color:#8a94a3;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
 
-    .end-rodape{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
-      background:#0F2A51;border-radius:4px;padding:14px 20px;margin-top:18px}
-    .end-rodape-infos{display:flex;gap:34px;flex-wrap:wrap;min-width:0}
-    .end-rodape-item{display:flex;flex-direction:column;gap:2px;min-width:0}
-    .end-rodape-item span{font-size:10.5px;color:#9FB6D4;text-transform:uppercase;letter-spacing:.4px}
-    .end-rodape-item strong{font-size:13px;color:#fff;font-weight:600;overflow-wrap:anywhere}
-    .end-rodape-premio{display:flex;flex-direction:column;gap:2px;text-align:right;margin-left:auto}
-    .end-rodape-premio span{font-size:10.5px;color:#9FB6D4;text-transform:uppercase;letter-spacing:.4px}
-    .end-rodape-premio strong{font-size:20px;color:#fff;font-variant-numeric:tabular-nums}
-    .end-rodape-premio small{font-size:12px;color:#9FB6D4;font-weight:400}
-    @media (max-width:760px){ .end-rodape-infos{gap:18px} .end-rodape-premio{margin-left:0;text-align:left} }
+    /* Barra comercial fixa: a mesma do portal de cotacao, presa ao rodape da
+       janela durante todo o fluxo do endosso. Contexto comercial a esquerda,
+       premio total no bloco azul a direita. */
+    .end-bar{position:fixed;left:0;right:0;bottom:0;z-index:9500;background:#1F2A51;display:none}
+    body.end-bar-on .end-bar{display:block}
+    .end-bar-aba{position:absolute;top:-24px;left:50%;margin-left:-40px;width:80px;height:24px;
+      background:#1F2A51;border:none;border-radius:6px 6px 0 0;color:#fff;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;padding:0}
+    .end-bar-aba svg{transition:transform .18s}
+    body.end-bar-min .end-bar-aba svg{transform:rotate(180deg)}
+    .end-bar-in{display:flex;align-items:stretch}
+    body.end-bar-min .end-bar-in{display:none}
+    .end-bar-cols{flex:1 1 auto;min-width:0;display:flex;gap:28px;padding:13px 22px}
+    .end-bar-col{display:flex;flex-direction:column;min-width:0}
+    .end-bar-col-nome{flex:1 1 200px}
+    .end-bar-lbl{font-size:12.5px;font-weight:700;color:#fff;padding-bottom:7px;white-space:nowrap;
+      border-bottom:1px solid rgba(255,255,255,.45)}
+    .end-bar-val{display:flex;align-items:center;gap:10px;margin-top:9px;font-size:12.5px;color:#fff;min-width:0}
+    .end-bar-val b{font-weight:400;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .end-bar-val svg{flex:0 0 auto;margin-left:auto}
+    .end-bar-campos{display:flex;gap:12px;margin-top:9px}
+    .end-bar-f{position:relative;background:#fff;border-radius:6px;padding:6px 32px 7px 12px;min-width:112px}
+    .end-bar-f span{display:block;font-size:10.5px;color:#6a7382;line-height:1.4}
+    .end-bar-f strong{display:block;font-size:14px;color:#1F2A51;font-weight:700;line-height:1.3}
+    .end-bar-f::after{content:'';position:absolute;right:12px;top:50%;margin-top:-2px;
+      border:5px solid transparent;border-top-color:#9aa3ad}
+    .end-bar-premio{flex:0 0 auto;background:var(--azure);color:#fff;padding:13px 22px;min-width:158px;
+      display:flex;flex-direction:column;justify-content:center;text-align:right}
+    .end-bar-premio span{font-size:12.5px;font-weight:700;padding-bottom:7px;
+      border-bottom:1px solid rgba(255,255,255,.55)}
+    .end-bar-premio strong{font-size:20px;margin-top:9px;font-variant-numeric:tabular-nums}
+    /* o conteudo, os modais e o botao Sair sobem para nao ficar nada debaixo da barra */
+    body.end-bar-on .ape-overlay,
+    body.end-bar-on .confd-overlay{padding-bottom:138px}
+    body.end-bar-on .ape-modal{max-height:calc(90vh - 118px)}
+    body.end-bar-on.end-bar-min .ape-overlay,
+    body.end-bar-on.end-bar-min .confd-overlay{padding-bottom:54px}
+    body.end-bar-on.end-bar-min .ape-modal{max-height:calc(90vh - 34px)}
+    body.end-bar-on #evp-view-endosso{padding-bottom:118px}
+    body.end-bar-on.end-bar-min #evp-view-endosso{padding-bottom:34px}
+    body.end-bar-on #auth-logout{bottom:120px}
+    body.end-bar-on.end-bar-min #auth-logout{bottom:36px}
+    @media (max-width:980px){
+      .end-bar-cols{gap:16px;overflow-x:auto}
+      .end-bar-col-nome{flex:0 0 170px}
+      .end-bar-premio{min-width:0;padding:13px 14px}
+      .end-bar-premio strong{font-size:17px}
+    }
 
     .end-sec-title{font-size:14px;font-weight:700;color:#1f2a51;margin:24px 0 12px;padding-bottom:7px;border-bottom:1px solid #eef1f4}
     .end-tbl-wrap{overflow-x:auto}
@@ -7215,6 +7254,7 @@ function handleRoute() {
   }
 
   closeAllSegments();
+  if (typeof endSyncRodape === 'function') endSyncRodape();
 }
 
 window.addEventListener('hashchange', handleRoute);
@@ -16436,6 +16476,7 @@ function evpAbrirEndosso(preservar) {
   endSetProfile('corretor');
   if (preservar !== true) endResetCorretorState();
   endUpdateCartaBanner();
+  endSyncRodape();
   window.scrollTo({top: 0});
 }
 
@@ -16461,6 +16502,7 @@ function evpVoltarHome() {
   evpAjusteFechar();
   evpAnCasoAtual = null;   // a home do modulo nao tem caso aberto
   evpAtualizarHomeCards();
+  endSyncRodape();
   window.scrollTo({top: 0});
 }
 
@@ -16525,7 +16567,7 @@ var EVP_STATUS_INFO = {
 // Casos fixos do painel. capVig/capNovo trazem o capital de cada cobertura
 // antes e depois do endosso; as demais coberturas ficam desligadas.
 var EVP_PAINEL_EXEMPLOS = [
-  {num:'293804/2', segurado:'ADRIANA CAMPOS MENEZES', doc:'123.456.789-01', apolice:'AP-204518',
+  {proposta:'712488', num:'293804/2', segurado:'ADRIANA CAMPOS MENEZES', doc:'123.456.789-01', apolice:'AP-204518',
    produto:'Vida Individual', tipo:'Aumento de capital', status:'analise', data:'17/09/2026',
    analista:'Fernando Rogerio Pessoa', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
    tags:['Motivo','Justificativas','Observação'], etiqueta:'E', vidas:1,
@@ -16534,7 +16576,7 @@ var EVP_PAINEL_EXEMPLOS = [
    cadVig:{profissao:'Analista de Sistemas', renda:'R$ 8.500,00', imc:'23,4 (Normal)', vinculo:'CLT'},
    capVig:{morte:300000, ipa:300000}, capNovo:{morte:500000, ipa:300000}},
 
-  {num:'307221/2', segurado:'MARCOS VINÍCIUS ALMEIDA', doc:'234.567.890-12', apolice:'AP-211744',
+  {proposta:'714903', num:'307221/2', segurado:'MARCOS VINÍCIUS ALMEIDA', doc:'234.567.890-12', apolice:'AP-211744',
    produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'analise', data:'22/09/2026',
    analista:'Maria Veronica Araujo dos Santos Cruz', er:'40 – ER SÃO PAULO II – DIANE DA ROCHA ABREU',
    tags:['Motivo','Observação'], etiqueta:'', vidas:1,
@@ -16544,7 +16586,7 @@ var EVP_PAINEL_EXEMPLOS = [
    cadNov:{profissao:'Motociclista Profissional (Motoboy/App)', renda:'R$ 4.500,00', imc:'24,1 (Normal)', vinculo:'Autônomo'},
    capVig:{morte:250000, ipa:250000}, capNovo:{morte:250000, ipa:250000, ifpd:250000}},
 
-  {num:'302336/4', segurado:'RENATA SOUZA LIMA', doc:'345.678.901-23', apolice:'AP-207903',
+  {proposta:'713077', num:'302336/4', segurado:'RENATA SOUZA LIMA', doc:'345.678.901-23', apolice:'AP-207903',
    produto:'Vida Individual', tipo:'Redução de capital', status:'aprovado', data:'11/09/2026',
    analista:'Danilo Jesus de Souza', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
    tags:['Observação'], etiqueta:'E', vidas:1,
@@ -16554,7 +16596,7 @@ var EVP_PAINEL_EXEMPLOS = [
    cadNov:{profissao:'Professor(a)', renda:'R$ 6.200,00', imc:'22,9 (Normal)', vinculo:'Servidor Público'},
    capVig:{morte:400000, ipa:400000, dcf:120000}, capNovo:{morte:220000, ipa:220000}},
 
-  {num:'318992/1', segurado:'PAULO HENRIQUE ROCHA', doc:'456.789.012-34', apolice:'AP-219087',
+  {proposta:'716214', num:'318992/1', segurado:'PAULO HENRIQUE ROCHA', doc:'456.789.012-34', apolice:'AP-219087',
    produto:'Vida Individual', tipo:'Inclusão de cobertura', status:'pendente', data:'24/09/2026',
    analista:'Fernando Rogerio Pessoa', er:'112 – ER SÃO PAULO XVII – APARECIDA SOARES DE CASTRO',
    tags:['Motivo','Justificativas'], etiqueta:'', vidas:1,
@@ -16564,7 +16606,7 @@ var EVP_PAINEL_EXEMPLOS = [
    cadNov:{profissao:'Comerciante', renda:'R$ 6.200,00', imc:'31,8 (Obesidade grau I)', vinculo:'Empresário'},
    capVig:{morte:300000, ipa:300000}, capNovo:{morte:300000, ipa:300000, dgcombo:150000}},
 
-  {num:'322190/1', segurado:'CAMILA RIBEIRO TEIXEIRA', doc:'567.890.123-45', apolice:'AP-222641',
+  {proposta:'716850', num:'322190/1', segurado:'CAMILA RIBEIRO TEIXEIRA', doc:'567.890.123-45', apolice:'AP-222641',
    produto:'Vida Individual', tipo:'Aumento de capital', status:'rascunho', data:'26/09/2026',
    analista:'Maria Veronica Araujo dos Santos Cruz', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
    tags:['Observação'], etiqueta:'', vidas:1,
@@ -16583,47 +16625,47 @@ var EVP_PAINEL_EXEMPLOS = [
 // onde calcular; os de endosso continuam calculando a partir das coberturas.
 var EVP_PAINEL_OUTROS = [
   {num:'329114/1', segurado:'ONDREPSB SERVICO DE GUARDA LTDA', doc:'61.600.839/0001-55',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'10/07/2026', analista:'Olivia Aparecida Goncalves', er:'46 – ER FLORIANÓPOLIS IV – AMANDA MARQUEZ FUENTES',
    tags:['Observação','Drools'], etiqueta:'T', vidas:3390, taxaFixa:0.3039, premioFixo:30723.88},
 
   {num:'327333/1', segurado:'TIC TRANSPORTES LTDA', doc:'09.445.502/0001-08',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Seguro novo', status:'analise',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Seguro novo', status:'analise',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'151 – ER RIO DE JANEIRO IV – SAMUEL MARTINS',
    tags:['Observação','Drools'], etiqueta:'N', vidas:318, taxaFixa:0.7901, premioFixo:7863.63},
 
   {num:'327665/1', segurado:'SOMBREIROS EMPREENDIMENTOS LTDA', doc:'27.880.114/0001-62',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'140 – ER SALVADOR VI – LUIS PAULO SANTOS',
    tags:['Observação','Drools'], etiqueta:'T', vidas:740, taxaFixa:0.5954, premioFixo:16270.22},
 
   {num:'327660/1', segurado:'CISOL DO BRASIL EXPORTACAO LTDA', doc:'33.042.730/0001-04',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'pendente',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Transferência', status:'pendente',
    data:'02/10/2026', analista:'Fernando Rogerio Pessoa', er:'132 – ER CAMPINAS VII – ALEXSANDRA DIAS',
    tags:['Motivo','Justificativas','Observação'], etiqueta:'T', vidas:268, taxaFixa:0.4998, premioFixo:3518.16},
 
   {num:'328082/1', segurado:'SEAGEMS SOLUTIONS S A', doc:'12.907.455/0001-31',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Transferência', status:'analise',
    data:'02/10/2026', analista:'Gabriela Cruz Goncalves', er:'31 – ER RIO DE JANEIRO I – ANDRÉ FRANCISCO',
    tags:['Observação','Drools'], etiqueta:'T', vidas:1131, taxaFixa:0.4160, premioFixo:284490.55},
 
   {num:'329207/2', segurado:'LOJAS RIACHUELO S A', doc:'33.200.056/0001-49',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Renovação', status:'analise',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Renovação', status:'analise',
    data:'28/09/2026', analista:'Danilo Jesus de Souza', er:'112 – ER SÃO PAULO II – MARCIA APARECIDA LIMA',
    tags:['Observação','Drools'], etiqueta:'R', vidas:2104, taxaFixa:0.3820, premioFixo:48215.70},
 
   {num:'330455/1', segurado:'ALPHAMONEY PROMOTORA DE VENDAS LTDA', doc:'20.558.904/0001-77',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Inclusão de vidas', status:'rascunho',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Inclusão de vidas', status:'rascunho',
    data:'03/10/2026', analista:'Maria Veronica Araujo dos Santos Cruz', er:'266 – ER SÃO PAULO XI – KALINE RODRIGUES',
    tags:['Motivo','Observação'], etiqueta:'', vidas:841, taxaFixa:0.2400, premioFixo:27943.36},
 
   {num:'331020/1', segurado:'COLEGIO NOVO HORIZONTE LTDA', doc:'07.318.620/0001-96',
-   produto:'Vida Coletivo &ndash; Multiproteção', assunto:'', tipo:'Cancelamento', status:'pendente',
+   produto:'Vida Coletivo – Multiproteção', assunto:'', tipo:'Cancelamento', status:'pendente',
    data:'03/10/2026', analista:'Olivia Aparecida Goncalves', er:'26 – ER CURITIBA I – SELE PEREIRA DE SOUSA',
    tags:['Justificativas','Observação'], etiqueta:'C', vidas:126, taxaFixa:0.6310, premioFixo:4982.14},
 
   {num:'331188/1', segurado:'INDUSTRIA RIO CLARO S A', doc:'48.115.302/0001-20',
-   produto:'Prestamista &ndash; Capital Fixo', assunto:'', tipo:'Seguro novo', status:'aprovado',
+   produto:'Prestamista – Capital Fixo', assunto:'', tipo:'Seguro novo', status:'aprovado',
    data:'01/10/2026', analista:'Gabriela Cruz Goncalves', er:'155 – ER BELO HORIZONTE VI – SARAH FONTANA',
    tags:['Observação'], etiqueta:'N', vidas:512, taxaFixa:0.5120, premioFixo:12840.00}
 ];
@@ -16674,6 +16716,7 @@ function evpCasoParaCard(c) {
   var mapaStatus = {aguardando_assinatura: 'rascunho', assinado: 'analise', analise_tecnica: 'analise'};
   return {
     num: String(330000 + c.id) + '/1',
+    proposta: String(712000 + c.id),
     segurado: (c.cliente.nome || '').toUpperCase(),
     doc: c.cliente.cpf || c.cliente.doc || '',
     apolice: c.cliente.apolice || '',
@@ -16814,6 +16857,7 @@ function evpAbrirPainel() {
   evpAjusteFechar();
   evpAnCasoAtual = null;   // o painel lista casos; nenhum esta aberto
   evpRenderPainel();
+  endSyncRodape();
   window.scrollTo({top: 0});
 }
 
@@ -16897,20 +16941,19 @@ function evpAbrirAnalise(i) {
   document.getElementById('evp-an-num').textContent = c.num;
   document.getElementById('evp-an-doc-sel').value = '';
 
-  var st = EVP_STATUS_INFO[c.status] || EVP_STATUS_INFO.analise;
   document.getElementById('evp-an-dados').innerHTML = [
     ['Segurado', c.segurado], ['CPF/CNPJ', c.doc], ['Apólice', c.apolice],
-    ['Produto', c.produto], ['Tipo de endosso', c.tipo], ['Situação', st.rot],
-    ['Corretor', c.corretor], ['Analista', c.analista],
+    ['Proposta', c.proposta], ['Produto', c.produto], ['Analista', c.analista],
     ['Data da solicitação', c.data], ['Vigência desejada', c.vigencia],
-    ['Sucursal / ER', c.er], ['Motivo do endosso', c.motivo]
+    ['Motivo do endosso', c.motivo]
   ].map(function (p) {
-    return '<div class="evp-cd-i"><b>' + p[0] + ':</b><span>' + (p[1] || '—') + '</span></div>';
+    return '<div class="evp-cd-i"><b>' + p[0] + ':</b><span>' + ufEsc(p[1] || '—') + '</span></div>';
   }).join('');
 
   evpAnRenderCliente();
   evpAnRenderGrupo();
   evpAnRenderAnalise();
+  endSyncRodape();
   window.scrollTo({top: 0});
 }
 
@@ -16948,7 +16991,7 @@ function evpAnRenderAnalise() {
       '<p class="evp-rot">Downloads</p>' +
       '<div class="evp-an-dls">' + downloads + '</div>' +
       '<label class="aj-f aj-f-area" style="margin-top:16px">' +
-        '<textarea id="evp-an-obs" rows="3" placeholder=" " readonly>' + obs + '</textarea>' +
+        '<textarea id="evp-an-obs" rows="3" placeholder=" " readonly>' + ufEsc(obs) + '</textarea>' +
         '<span>Observações Corretor</span>' +
       '</label>' +
     '</fieldset>';
@@ -17460,6 +17503,7 @@ function endResetCorretorState() {
   };
   END_STATE.faseMax = 1;
   endCovModalClose();
+  endSyncRodape();
   for (var i=1;i<=5;i++) { if (i===2) continue; var e = document.getElementById('end-fase-'+i); if (e) e.style.display = (i===1)?'block':'none'; }
   endRenderFase1();
 }
@@ -17476,6 +17520,12 @@ function endAbrirCovModal() {
 function endCovModalClose(evt) {
   if (evt && evt.target !== document.getElementById('end-cov-modal-overlay')) return;
   document.getElementById('end-cov-modal-overlay').style.display = 'none';
+  // Fechar a edicao sem passar por "Avancar" deixaria a Precificacao ja aberta
+  // com o premio anterior — dois valores diferentes na mesma tela, e o valor
+  // velho seguindo para a mesa. Se ela esta em cena, refaz com os capitais atuais.
+  var f3 = document.getElementById('end-fase-3');
+  if (f3 && f3.style.display !== 'none' && (END_STATE.coberturas || []).length) endRenderFase3();
+  endSyncRodape();
 }
 
 function endGoFase(n) {
@@ -17483,6 +17533,7 @@ function endGoFase(n) {
     endRenderFase2();
     END_STATE.fase = 2;
     endAbrirCovModal();
+    endSyncRodape();
     return;
   } else if (n === 3) {
     if (!endValidaFase2()) return;
@@ -17517,6 +17568,7 @@ function endGoFase(n) {
     // fluxo: substituem a tela em vez de continuar a expansão da Precificação.
     for (var j=1;j<=5;j++) { if (j===2) continue; var ej = document.getElementById('end-fase-'+j); if (ej) ej.style.display = (j===n) ? 'block' : 'none'; }
   }
+  endSyncRodape();
   var alvo = document.getElementById('end-fase-'+n);
   if (alvo) alvo.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -17946,6 +17998,7 @@ function endOnCoberturaToggle(chk) {
   }
   endRecalcIpa();
   endRenderCovTable();
+  endSyncRodape();
 }
 
 function endOnCapitalInput(inp) {
@@ -17962,6 +18015,7 @@ function endOnCapitalInput(inp) {
     errEl.style.display = 'none';
   }
   if (cod === 'morte') endRecalcIpa();
+  endSyncRodape();
 }
 function endOnCapitalBlur(inp) {
   var cod = inp.dataset.cod;
@@ -17971,6 +18025,7 @@ function endOnCapitalBlur(inp) {
   if (END_STATE.modoRestrito && c.capital > vig.capital) c.capital = vig.capital;
   inp.value = endFmtMoeda(c.capital);
   if (cod === 'morte') endRecalcIpa();
+  endSyncRodape();
 }
 function endRecalcIpa() {
   var morte = END_STATE.coberturas.find(function(x){ return x.cod === 'morte'; });
@@ -18014,8 +18069,7 @@ function endRenderFase3() {
     '<div class="end-alert end-alert-info" style="margin-top:16px">' + endAlertIco('info') +
       '<span>A alteração de prêmio é diluída nas parcelas futuras já em aberto no E-vida (substituição de parcelas), sem cobranças ou devoluções imediatas em boleto avulso.</span></div>' +
     '<div id="end-premio-min-area"></div>' +
-    endRodapeCotacao() +
-    '<div class="end-actions-row end-actions-between">' +
+    '<div class="end-actions-row">' +
       '<button class="end-btn end-btn-primary" id="end-fase3-avancar" onclick="endGoFase(4)">Avançar para Assinatura (DPS) &rsaquo;</button>' +
     '</div>';
 
@@ -18129,25 +18183,87 @@ function endAtualizarFase3Botao() {
   avancar.disabled = !premioOk;
 }
 
-// Rodape da cotacao: o premio calculado em destaque e o contexto comercial ao
-// lado, so para leitura — nada aqui e editavel no endosso.
-function endRodapeCotacao() {
-  var c = END_STATE.cliente || {};
-  var itens = [
-    ['Executivo', '20 &ndash; Antonio Jose Carvalho Ramos'],
-    ['Corretor', 'Fina Corretora de Seguros Ltda'],
-    ['Comercializa&ccedil;&atilde;o', 'Direta'],
-    ['Cobran&ccedil;a', END_STATE.periodicidadeNova || 'Mensal']
-  ];
-  return '<div class="end-rodape">' +
-    '<div class="end-rodape-infos">' +
-      itens.map(function (i) {
-        return '<div class="end-rodape-item"><span>' + i[0] + '</span><strong>' + i[1] + '</strong></div>';
-      }).join('') +
-    '</div>' +
-    '<div class="end-rodape-premio"><span>Pr&ecirc;mio calculado</span>' +
-      '<strong>' + endFmtMoeda(END_STATE.premioNovo) + '<small> / m&ecirc;s</small></strong></div>' +
-  '</div>';
+// ---- Barra comercial fixa do endosso ----
+// Reproduz a barra do portal de cotacao: executivo, corretor, condicoes de
+// comercializacao, cobranca e o premio total no bloco azul. Tudo aqui e
+// informativo — no endosso quem define comissao e desconto e a mesa, nao o
+// corretor; por isso os campos aparecem como leitura.
+var END_BAR_EXEC = '23 &ndash; ANTONIO JOS&Eacute; CARVALHO RAMOS';
+var END_BAR_CORRETOR = 'FIKA CORRETORA DE SEGUROS LTDA';
+var END_BAR_CORRETAGEM = '20';
+var END_BAR_DESCONTO = '0';
+
+function endBarIcoPessoa() {
+  return '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<circle cx="9.5" cy="8" r="3.5" fill="currentColor"/>' +
+    '<path d="M3.4 19.2c0-3.2 2.8-5.2 6.1-5.2 1.2 0 2.3.25 3.2.72" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>' +
+    '<path d="M18.2 14.2v5.6M15.4 17h5.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>';
+}
+
+// O premio da barra acompanha o grid de coberturas: na Fase 1 ainda e zero e, a
+// partir da edicao, reage a cada capital digitado, como no portal real. Ele sai
+// na periodicidade que a propria barra mostra em "Cobranca" — do contrario a
+// barra diria "Trimestral" ao lado de um valor mensal, brigando com a parcela
+// efetiva que a Precificacao exibe.
+function endBarPremio() {
+  var cobs = END_STATE.coberturas || [];
+  if (!cobs.length) return 0;
+  var mult = {Mensal: 1, Bimestral: 2, Trimestral: 3};
+  return endCalcPremio(cobs) * (mult[END_STATE.periodicidadeNova] || 1);
+}
+
+function endBarHTML() {
+  var chev = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function colNome(rot, val) {
+    return '<div class="end-bar-col end-bar-col-nome">' +
+      '<span class="end-bar-lbl">' + rot + '</span>' +
+      '<div class="end-bar-val"><b title="' + val + '">' + val + '</b>' + endBarIcoPessoa() + '</div>' +
+    '</div>';
+  }
+  function campo(rot, val) {
+    return '<div class="end-bar-f"><span>' + rot + '</span><strong>' + val + '</strong></div>';
+  }
+  return '<button class="end-bar-aba" onclick="endBarToggle()" aria-label="Recolher ou expandir a barra">' + chev + '</button>' +
+    '<div class="end-bar-in">' +
+      '<div class="end-bar-cols">' +
+        colNome('Executivo:', END_BAR_EXEC) +
+        colNome('Corretor:', END_BAR_CORRETOR) +
+        '<div class="end-bar-col">' +
+          '<span class="end-bar-lbl">Comercializa&ccedil;&atilde;o:</span>' +
+          '<div class="end-bar-campos">' +
+            campo('Corretagem*', END_BAR_CORRETAGEM) +
+            campo('Desconto*', END_BAR_DESCONTO) +
+          '</div>' +
+        '</div>' +
+        '<div class="end-bar-col">' +
+          '<span class="end-bar-lbl">Cobran&ccedil;a:</span>' +
+          '<div class="end-bar-val"><b>' + (END_STATE.periodicidadeNova || 'Mensal') + '</b></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="end-bar-premio"><span>Pr&ecirc;mio Total:</span>' +
+        '<strong>' + endFmtMoeda(endBarPremio()) + '</strong></div>' +
+    '</div>';
+}
+
+function endBarToggle() { document.body.classList.toggle('end-bar-min'); }
+
+// A barra vale enquanto o fluxo do endosso estiver na tela: sai junto com ele,
+// seja ao voltar para a home do modulo, abrir o painel ou trocar de pagina.
+function endSyncRodape() {
+  var bar = document.getElementById('end-bar');
+  var view = document.getElementById('evp-view-endosso');
+  var ligada = !!(bar && view && view.offsetParent !== null);
+  document.body.classList.toggle('end-bar-on', ligada);
+  if (ligada) { bar.innerHTML = endBarHTML(); return; }
+  // Os overlays sao irmaos das views: esconder o fluxo nao os tira da tela. Sem
+  // isto, sair da rota com o modal aberto deixa ele por cima do portal inteiro.
+  // Escondidos direto (e nao pelas funcoes *Close) para nao voltar aqui em loop.
+  ['end-cov-modal-overlay', 'end-carta-modal-overlay', 'end-recusa-modal-overlay',
+   'end-assinatura-modal-overlay', 'end-resseguro-modal-overlay'].forEach(function (id) {
+    var o = document.getElementById(id);
+    if (o) o.style.display = 'none';
+  });
 }
 
 function endRenderPremioMinArea() {
@@ -18169,6 +18285,7 @@ function endRenderPremioMinArea() {
 function endOnPeriodicidadeChange(sel) {
   END_STATE.periodicidadeNova = sel.value;
   endRenderPremioMinArea();
+  endSyncRodape();
 }
 function endValidaFase3() { return true; }
 
@@ -18219,7 +18336,7 @@ function endRenderFase4() {
       '</div>' +
       '<div id="end-dps-area"></div>' +
       '<div id="end-resseguro-aviso"></div>') +
-    '<div class="end-actions-row end-actions-between">' +
+    '<div class="end-actions-row">' +
       '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Enviar para análise &rsaquo;</button>' +
     '</div>';
 
@@ -18982,5 +19099,10 @@ function padmVoltarHome() {
 
 function padmSair() { navigate('/'); }
 </script>
+<!-- Barra comercial do fluxo de endosso: preenchida e ligada/desligada por
+     endSyncRodape(). Fica no fim do body (e position:fixed) para nao entrar na
+     frente do cabecalho na ordem de tabulacao. -->
+<div class="end-bar" id="end-bar"></div>
+
 </body>
 </html>
