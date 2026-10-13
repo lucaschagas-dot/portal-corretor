@@ -5645,6 +5645,9 @@ function authLogout(){
     .end-prod-link:hover{color:var(--azure)}
     .end-cond-link{display:inline-block;margin-top:12px;font-size:12px;color:var(--azure);
       text-decoration:underline;font-style:italic;cursor:pointer}
+    /* Link das condicoes a esquerda, "Editar" a direita, fora do grid. */
+    .end-prod-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .end-editar-btn{width:auto;padding:9px 30px;margin:12px 0 0 auto}
 
     .end-apo-lista{display:flex;flex-direction:column;gap:10px;margin-top:10px}
     .end-apo-item{display:flex;align-items:flex-start;gap:14px;border:1.5px solid #d0d5dd;border-radius:5px;
@@ -17588,7 +17591,6 @@ function endRenderFase1() {
         '</div></div>' +
       '</div>' +
       '<div class="filter-actions">' +
-        '<button class="btn-vol" onclick="evpVoltarHome()">Voltar</button>' +
         '<button class="btn-limpar" onclick="endLimparFiltros()">Limpar Filtros</button>' +
         '<button class="btn-bus" id="end-consultar-btn" onclick="endConsultar()">Buscar</button>' +
       '</div>' +
@@ -17644,12 +17646,6 @@ function endAbrirApolice(i) {
   endFase1Avancar();
 }
 
-var END_SIT_TAG = {
-  'Aguardando assinatura': 'stag stag-a',
-  'Assinado': 'stag stag-c',
-  'Análise Técnica': 'stag stag-e'
-};
-
 function endRenderFase1Resultado() {
   var base = END_STATE._clienteBase;
   var res = document.getElementById('end-fase1-resultado');
@@ -17665,12 +17661,11 @@ function endRenderFase1Resultado() {
         '<td style="min-width:130px"><span class="td-link" data-apo="' + i + '" onclick="endAbrirApolice(' + i + ')">' + ap.apolice + '</span></td>' +
         '<td style="min-width:150px">' + ap.produto + '</td>' +
         '<td style="min-width:130px">' + ap.inicio + '</td>' +
-        '<td style="min-width:170px"><span class="' + (END_SIT_TAG[ap.situacao] || 'stag') + '">' + ap.situacao + '</span></td>' +
         '<td style="min-width:130px">' + endFmtMoeda(ap.premioVigente) + '</td>' +
       '</tr>';
   });
   if (!linhas) {
-    linhas = '<tr><td colspan="8" style="text-align:center;padding:48px;color:#8a94a3">Nenhuma ap&oacute;lice encontrada para os filtros selecionados.</td></tr>';
+    linhas = '<tr><td colspan="7" style="text-align:center;padding:48px;color:#8a94a3">Nenhuma ap&oacute;lice encontrada para os filtros selecionados.</td></tr>';
   }
 
   res.innerHTML =
@@ -17681,7 +17676,6 @@ function endRenderFase1Resultado() {
       '<th><span class="th-t">Ap&oacute;lice</span></th>' +
       '<th><span class="th-t">Produto</span></th>' +
       '<th><span class="th-t">In&iacute;cio de vig&ecirc;ncia</span></th>' +
-      '<th><span class="th-t">Situa&ccedil;&atilde;o</span></th>' +
       '<th><span class="th-t">Pr&ecirc;mio vigente</span></th>' +
     '</tr></thead><tbody>' + linhas + '</tbody></table></div></div>';
 }
@@ -18128,9 +18122,6 @@ function endRenderComparePlano() {
   cells += '<div class="gv-check-cell end-cmp-val end-cmp-tot' + altT + '">' + endFmtMoeda(premioVig) + '</div>';
   cells += '<div class="gv-check-cell end-cmp-val end-cmp-tot gv-sel-col' + altT + '"><span class="end-cmp-novo">' + endFmtMoeda(premioNovo) + '</span></div>';
 
-  cells += '<div class="gv-plan-blank"></div>';
-  cells += '<div class="gv-btn-cell"></div>';
-  cells += '<div class="gv-btn-cell gv-sel-col"><button class="gv-outras-btn" type="button" onclick="endGoFase(2)">Editar</button></div>';
 
   alvo.innerHTML =
     '<div class="end-prod-block">' +
@@ -18149,7 +18140,10 @@ function endRenderComparePlano() {
         '</div>' +
         '<div class="ape-plan-body"><div class="gv-plan-grid end-cmp-grid">' + cells + '</div></div>' +
       '</div>' +
-      '<span class="end-cond-link" onclick="apeShowError(\'Condições gerais não fazem parte deste protótipo.\')">Clique aqui para acessar as condições gerais do produto</span>' +
+      '<div class="end-prod-foot">' +
+        '<span class="end-cond-link" onclick="apeShowError(\'Condições gerais não fazem parte deste protótipo.\')">Clique aqui para acessar as condições gerais do produto</span>' +
+        '<button class="gv-outras-btn end-editar-btn" type="button" onclick="endGoFase(2)">Editar</button>' +
+      '</div>' +
     '</div>';
 }
 
@@ -18336,7 +18330,8 @@ function endRenderFase4() {
       '</div>' +
       '<div id="end-dps-area"></div>' +
       '<div id="end-resseguro-aviso"></div>') +
-    '<div class="end-actions-row">' +
+    '<div class="end-actions-row end-actions-between">' +
+      '<button class="end-btn end-btn-outline" onclick="endGoFase(3)">&lsaquo; Voltar</button>' +
       '<button class="end-btn end-btn-success" id="end-fase4-avancar" onclick="endGoFase(5)" disabled>Enviar para análise &rsaquo;</button>' +
     '</div>';
 
