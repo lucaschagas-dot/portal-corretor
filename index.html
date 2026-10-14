@@ -5772,6 +5772,20 @@ function authLogout(){
     .end-dps-modo-row{display:flex;gap:26px;margin-bottom:14px}
     .end-dps-modo-opt{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#44546c;cursor:pointer}
     .end-dps-modo-opt input{cursor:pointer}
+
+    /* Tipo de endosso (inclusao / exclusao): a esquerda dos botoes da busca. O grupo
+       cresce e empurra os botoes para a direita; quando falta largura, quebra para
+       uma linha propria acima deles. */
+    .filter-actions.end-filter-actions{flex-wrap:wrap;gap:12px 16px}
+    .end-tipo{display:flex;align-items:center;flex-wrap:wrap;gap:8px 24px;flex:1 1 300px;min-width:0}
+    .end-filter-btns{display:flex;flex:0 1 auto;min-width:0;margin-left:auto}
+    @media (max-width:640px){
+      .end-filter-btns{flex:1 1 100%}
+      .end-filter-btns .btn-limpar,.end-filter-btns .btn-bus{flex:1 1 0;width:auto;min-width:0}
+    }
+    .end-tipo-lbl{font-size:13.5px;font-weight:700;color:#44546c}
+    .end-tipo-opt{display:flex;align-items:center;gap:8px;font-size:14px;color:#2b3a52;cursor:pointer}
+    .end-tipo-opt input{width:17px;height:17px;margin:0;cursor:pointer;accent-color:var(--azure)}
     .end-vig-data{font-size:12px;color:#8a94a3;font-variant-numeric:tabular-nums}
     .end-dps-desc{font-size:12.5px;color:#8a94a3;margin-bottom:16px;line-height:1.5}
 
@@ -5781,6 +5795,8 @@ function authLogout(){
     .end-dps-q-radios-row{display:flex;align-items:center;gap:22px}
     .end-dps-q-radios-row label{display:flex;align-items:center;gap:6px;font-size:13px;color:#44546c;cursor:pointer}
     .end-dps-req{margin-left:auto;color:#c1440e;font-size:14px;line-height:1}
+    .end-obs-cont{margin-top:6px;text-align:right;font-size:12px;color:#8a94a3;font-variant-numeric:tabular-nums}
+    .end-obs-cont.end-obs-cont-max{color:#c0392b;font-weight:600}
 
     .end-btn{padding:10px 22px;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
     .end-btn-primary{background:var(--azure);color:#fff}
@@ -16724,7 +16740,7 @@ function evpCasoParaCard(c) {
     doc: c.cliente.cpf || c.cliente.doc || '',
     apolice: c.cliente.apolice || '',
     produto: c.cliente.produto || 'Vida Individual',
-    tipo: 'Endosso simulado no protótipo',
+    tipo: c.tipoEndosso === 'exclusao' ? 'Exclusão' : 'Inclusão',
     status: c.evpDecisao || (c.status === 'implantado_auto' ? 'aprovado' : (mapaStatus[c.boardStatus] || 'analise')),
     data: (c.dataHora || '').split(' ')[0],
     analista: EVP_ANALISTAS[c.id % EVP_ANALISTAS.length],
@@ -17494,7 +17510,7 @@ function endIrParaMesaTecnica() { endIrPortalAdmin(true); }
 function endResetCorretorState() {
   var profileKeep = END_STATE.profile;
   END_STATE = {
-    profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[],
+    profile: profileKeep, fase: 1, cliente:null, coberturasVig:[], coberturas:[], tipoEndosso:'inclusao',
     modoRestrito:false, motivoNaoClean:[], motivosFinal:[],
     premioNovo:0, periodicidadeNova:'Mensal', dpsTipo:'',
     dpsRespondida:false, _dpsRespostas:{}, dpsModo:'preencher',
@@ -17580,6 +17596,7 @@ function endGoFase(n) {
 function endRenderFase1() {
   var el = document.getElementById('end-fase-1');
   if (!el) return;
+  var tipo = END_STATE.tipoEndosso || 'inclusao';
   el.innerHTML =
     '<h2 class="section-title">Central de Endosso</h2><hr class="section-divider">' +
     '<div class="filter-card">' +
@@ -17590,9 +17607,16 @@ function endRenderFase1() {
           '<span class="f-lupa" onclick="endConsultar()" title="Buscar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="#586880" stroke-width="1.8"/><line x1="16" y1="16" x2="20.5" y2="20.5" stroke="#586880" stroke-width="1.8" stroke-linecap="round"/></svg></span>' +
         '</div></div>' +
       '</div>' +
-      '<div class="filter-actions">' +
-        '<button class="btn-limpar" onclick="endLimparFiltros()">Limpar Filtros</button>' +
-        '<button class="btn-bus" id="end-consultar-btn" onclick="endConsultar()">Buscar</button>' +
+      '<div class="filter-actions end-filter-actions">' +
+        '<div class="end-tipo" role="radiogroup" aria-labelledby="end-tipo-lbl">' +
+          '<span class="end-tipo-lbl" id="end-tipo-lbl">Tipo de endosso:</span>' +
+          '<label class="end-tipo-opt"><input type="radio" name="end-tipo-endosso" value="inclusao" onchange="endOnTipoEndosso(this)"' + (tipo === 'inclusao' ? ' checked' : '') + '> Inclus&atilde;o</label>' +
+          '<label class="end-tipo-opt"><input type="radio" name="end-tipo-endosso" value="exclusao" onchange="endOnTipoEndosso(this)"' + (tipo === 'exclusao' ? ' checked' : '') + '> Exclus&atilde;o</label>' +
+        '</div>' +
+        '<div class="end-filter-btns">' +
+          '<button class="btn-limpar" onclick="endLimparFiltros()">Limpar Filtros</button>' +
+          '<button class="btn-bus" id="end-consultar-btn" onclick="endConsultar()">Buscar</button>' +
+        '</div>' +
       '</div>' +
     '</div>' +
     '<div id="end-fase1-msg" style="display:none"></div>' +
@@ -17600,8 +17624,18 @@ function endRenderFase1() {
     '<div id="end-fase1-resultado">' + '<div class="empty-prompt" id="end-empty-prompt"><svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true"><path d="M20 8h20l10 10v40a4 4 0 01-4 4H20a4 4 0 01-4-4V12a4 4 0 014-4z" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/><path d="M40 8v10h10" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/><line x1="24" y1="30" x2="42" y2="30" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="38" x2="42" y2="38" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="46" x2="34" y2="46" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="52" r="11" fill="#fff" stroke="#009DDB" stroke-width="2.5"/><line x1="58" y1="60" x2="65" y2="67" stroke="#009DDB" stroke-width="3" stroke-linecap="round"/></svg><div class="empty-prompt-text">Utilize os par&acirc;metros de busca para<br>visualizar os endossos encontrados.</div></div>' + '</div>';
 }
 
+// A escolha entre inclusao e exclusao e so um registro por enquanto: acompanha o
+// caso ate a Mesa Tecnica, mas nao restringe o que o corretor edita na Fase 2.
+function endOnTipoEndosso(radio) {
+  END_STATE.tipoEndosso = radio.value;
+}
+
 function endLimparFiltros() {
   var b = document.getElementById('end-busca'); if (b) b.value = '';
+  // "Limpar" devolve o formulario ao inicio, e o inicio e Inclusao.
+  END_STATE.tipoEndosso = 'inclusao';
+  var rInc = document.querySelector('input[name="end-tipo-endosso"][value="inclusao"]');
+  if (rInc) rInc.checked = true;
   document.getElementById('end-fase1-msg').style.display = 'none';
   END_STATE._clienteBase = null; END_STATE._apoliceSel = null;
   document.getElementById('end-fase1-resultado').innerHTML = '<div class="empty-prompt" id="end-empty-prompt"><svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true"><path d="M20 8h20l10 10v40a4 4 0 01-4 4H20a4 4 0 01-4-4V12a4 4 0 014-4z" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/><path d="M40 8v10h10" stroke="#009DDB" stroke-width="2.5" stroke-linejoin="round"/><line x1="24" y1="30" x2="42" y2="30" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="38" x2="42" y2="38" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="46" x2="34" y2="46" stroke="#009DDB" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="52" r="11" fill="#fff" stroke="#009DDB" stroke-width="2.5"/><line x1="58" y1="60" x2="65" y2="67" stroke="#009DDB" stroke-width="3" stroke-linecap="round"/></svg><div class="empty-prompt-text">Utilize os par&acirc;metros de busca para<br>visualizar os endossos encontrados.</div></div>';
@@ -18318,10 +18352,11 @@ function endRenderFase4() {
   endGarantirCaso();
 
   el.innerHTML =
-    endSecao('end-sec-motivo', 'Motivo do endosso',
-      '<div class="vcalc-f"><span class="vcalc-f-lbl">Motivo do endosso <span class="end-dps-req" style="margin-left:2px">*</span></span>' +
-        '<textarea id="end-motivo-endosso" rows="3" placeholder="Descreva o motivo da solicita&ccedil;&atilde;o deste endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
-      '</div>') +
+    endSecao('end-sec-motivo', 'Observa&ccedil;&otilde;es Gerais',
+      '<div class="vcalc-f"><span class="vcalc-f-lbl">Observa&ccedil;&otilde;es Gerais</span>' +
+        '<textarea id="end-motivo-endosso" rows="3" maxlength="' + END_OBS_MAX + '" aria-describedby="end-obs-cont" placeholder="Registre observa&ccedil;&otilde;es gerais sobre este endosso" oninput="endOnDadosEndossoInput()">' + (END_STATE.motivoEndosso || '') + '</textarea>' +
+      '</div>' +
+      endObsContadorHtml()) +
     endSecao('end-sec-dps', 'Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de',
       '<p class="end-dps-ask">Corretor, deseja preencher a Declara&ccedil;&atilde;o Pessoal de Sa&uacute;de ou enviar ao proponente para preenchimento?</p>' +
       '<div class="end-dps-modo-row">' +
@@ -18363,13 +18398,39 @@ function endOnVigenciaChange(radio) {
   endAtualizarFase4Botao();
 }
 
+// Observacoes Gerais: opcional, ate 250 caracteres. O maxlength do campo barra a
+// digitacao e a colagem; o corte em endOnDadosEndossoInput cobre quem preenche por codigo.
+var END_OBS_MAX = 250;
+
+function endObsTexto(restam) {
+  if (restam <= 0) return 'Limite de ' + END_OBS_MAX + ' caracteres atingido';
+  return restam === 1 ? 'Resta 1 caractere' : 'Restam ' + restam + ' caracteres';
+}
+function endObsContadorHtml() {
+  var restam = END_OBS_MAX - (END_STATE.motivoEndosso || '').length;
+  return '<div class="end-obs-cont' + (restam <= 0 ? ' end-obs-cont-max' : '') + '" id="end-obs-cont">' + endObsTexto(restam) + '</div>';
+}
+
 function endOnDadosEndossoInput() {
   var m = document.getElementById('end-motivo-endosso');
+  if (m && m.value.length > END_OBS_MAX) {
+    var v = m.value.slice(0, END_OBS_MAX);
+    var ult = v.charCodeAt(v.length - 1);
+    if (ult >= 0xD800 && ult <= 0xDBFF) v = v.slice(0, -1);   // nao deixa um emoji cortado ao meio
+    m.value = v;
+  }
   END_STATE.motivoEndosso = m ? m.value.trim() : '';
+  var cont = document.getElementById('end-obs-cont');
+  if (cont && m) {
+    var restam = END_OBS_MAX - m.value.length;
+    cont.textContent = endObsTexto(restam);
+    cont.classList.toggle('end-obs-cont-max', restam <= 0);
+  }
   endAtualizarFase4Botao();
 }
+// So a vigencia trava o envio: as observacoes sao livres.
 function endDadosEndossoOk() {
-  return !!(END_STATE.motivoEndosso && END_STATE.dataVigencia);
+  return !!END_STATE.dataVigencia;
 }
 
 // Cada bloco da etapa de DPS é um card com cabeçalho clicável que recolhe o corpo.
@@ -18653,6 +18714,7 @@ function endCriarCaso(status) {
   caso.motivos = motivos;
   caso.dpsTipo = END_STATE.dpsTipo;
   caso.motivoEndosso = END_STATE.motivoEndosso;
+  caso.tipoEndosso = END_STATE.tipoEndosso || 'inclusao';
   caso.dataVigencia = END_STATE.dataVigencia;
   caso.periodicidade = END_STATE.periodicidadeNova;
   return caso;
