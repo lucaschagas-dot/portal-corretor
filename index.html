@@ -5278,7 +5278,7 @@ function authLogout(){
 
     .evp-menu{position:absolute;left:0;top:0;width:calc(371px * var(--evp-esc));background:#fff;display:none;
       flex-direction:column;border-right:1px solid #DBDBDB;
-      box-shadow:0 4px 10px rgba(0,0,0,.18);z-index:40}
+      box-shadow:0 4px 10px rgba(0,0,0,.18);z-index:9600}   /* acima da barra azul do endosso (9500) */
     .evp-rail:hover + .evp-menu,.evp-menu:hover{display:flex}
     .evp-menu-item{position:relative;display:flex;align-items:center;
       gap:calc(16px * var(--evp-esc));
@@ -5290,6 +5290,8 @@ function authLogout(){
     .evp-menu-lbl{flex:1;font-size:calc(20px * var(--evp-esc));color:#000}
     .evp-menu-item.evp-menu-ativo{background:#E9EAEC}
     .evp-menu-item.evp-menu-ativo .evp-menu-lbl{color:#009DDB;font-weight:700}
+    /* grupo recolhido: o destaque do item ativo sobe para o pai (aberto, fica no filho) */
+    .evp-menu-pai.evp-menu-ativo-filho[aria-expanded="false"] .evp-menu-lbl{color:#009DDB;font-weight:700}
     /* Submenu de Vida: o Endosso entra recuado, com a faixa lateral da cor do grupo
        (vermelho) e um fundo levemente diferente para ler como filho de Vida. */
     .evp-submenu{background:#F7F8FA}
@@ -5723,7 +5725,6 @@ function authLogout(){
     .end-cadbox-imc{flex:0 0 38px;width:38px}
     .end-cadbox-ap{flex:0 0 42px;width:42px}
     .end-cadbox-un{font-size:11.5px;color:#a2aaad;margin:0 8px 0 -4px}
-    .end-cadbox-imcres{display:block;font-size:11.5px;color:#8a94a3;margin-top:5px}
     /* sublinhado pontilhado: sem ele os campos de texto passam por rotulo estatico */
     .end-cadbox input.end-cadbox-input{border-bottom:1px dashed #b9c1cc;padding-bottom:1px}
     .end-cadbox input.end-cadbox-input:focus{border-bottom:1px solid var(--azure)}
@@ -5747,8 +5748,6 @@ function authLogout(){
     .end-cov-row.end-cov-off{opacity:.55}
     .end-cov-check{width:17px;height:17px;cursor:pointer;accent-color:var(--azure)}
     .end-cov-lbl{font-size:13.5px;color:#44546c;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .end-cov-tag{font-size:10px;font-weight:700;color:#c1440e;background:#ffe8db;border-radius:10px;padding:2px 8px;letter-spacing:.2px}
-    .end-cov-tag-req{font-size:10px;font-weight:700;color:#586880;background:#eef1f4;border-radius:10px;padding:2px 8px}
     .end-cov-capital{border:1px solid #d0d5dd;border-radius:3px;padding:7px 9px;font-size:13px;font-weight:600;color:#44546c;width:100%;font-family:inherit}
     .end-cov-capital:disabled{background:#f4f6f8;color:#a2aaad}
     .end-cov-pct{font-size:11px;color:#8a94a3;margin-top:3px}
@@ -16486,7 +16485,11 @@ function evpInit() {
 
 function evpMarcarMenu(ativo) {
   document.querySelectorAll('.evp-menu-item').forEach(function(b) {
-    b.classList.toggle('evp-menu-ativo', ativo && b.textContent.trim() === ativo);
+    b.classList.toggle('evp-menu-ativo', !!ativo && b.textContent.trim() === ativo);
+  });
+  document.querySelectorAll('.evp-menu-pai').forEach(function(p) {
+    var sub = document.getElementById(p.getAttribute('aria-controls'));
+    p.classList.toggle('evp-menu-ativo-filho', !!(sub && sub.querySelector('.evp-menu-ativo')));
   });
 }
 
@@ -16498,7 +16501,6 @@ function evpAbrirEndosso(preservar) {
   home.style.display = 'none';
   view.style.display = '';
   evpMarcarMenu('Endosso');
-  evpToggleSub('vida', true);   // o item ativo mora dentro de Vida: deixa o grupo aberto
   endSetProfile('corretor');
   if (preservar !== true) endResetCorretorState();
   endUpdateCartaBanner();
@@ -17502,6 +17504,11 @@ function evpToggleSub(id, abrir) {
   var sub = document.getElementById('evp-sub-' + id);
   var pai = document.querySelector('.evp-menu-pai[aria-controls="evp-sub-' + id + '"]');
   if (!sub || !pai) return;
+  if (abrir === undefined) {
+    var agora = Date.now();
+    if (agora - (evpToggleSub._t || 0) < 400) return;   // duplo clique: ignora o segundo
+    evpToggleSub._t = agora;
+  }
   var vaiAbrir = (abrir === undefined) ? sub.hidden : !!abrir;
   sub.hidden = !vaiAbrir;
   pai.setAttribute('aria-expanded', vaiAbrir ? 'true' : 'false');
@@ -17813,10 +17820,11 @@ function endRenderFase2() {
   // Cada caixa ganha borda azul e a legenda "Vigente: ..." quando o valor difere
   // do que está na apólice — o mesmo vocabulário já usado no grid de coberturas.
   function cadBox(campo, interno) {
-    var alterado = !!(cad[campo] && cadVig[campo] && cad[campo] !== cadVig[campo]);
+    var vv = endCadResumo(campo, cadVig), nv = endCadResumo(campo, cad);
+    var alterado = !!(vv && nv && vv !== nv);
     return '<div class="end-cadbox' + (alterado ? ' end-cadbox-alt' : '') + '" id="end-cadbox-' + campo + '">' +
       interno +
-      (alterado ? '<span class="end-cadbox-vig">Vigente: ' + cadVig[campo] + '</span>' : '') +
+      (alterado ? '<span class="end-cadbox-vig">Vigente: ' + vv + '</span>' : '') +
       '</div>';
   }
 
@@ -17845,8 +17853,7 @@ function endRenderFase2() {
         '<input type="text" id="end-peso" class="end-cadbox-input end-cadbox-ap" inputmode="decimal" value="' + endNum1(ap.peso) + '"' +
           ' oninput="endOnAlturaPeso()" onblur="endOnAlturaPesoBlur()" onkeydown="if(event.keyCode===13){this.blur();}">' +
         '<span class="end-cadbox-un">kg</span>' +
-      '</div>' +
-      '<span class="end-cadbox-imcres" id="end-imc-res">IMC ' + endImcFmt(cad.imc) + '</span>') +
+      '</div>') +
     cadBox('vinculo',
       '<span class="end-cadbox-lbl">Vínculo Empregatício</span>' +
       '<select id="end-vinculo" class="end-cadbox-input" style="cursor:pointer" onchange="endOnVinculoChange(this)">' +
@@ -17885,11 +17892,18 @@ function endRenderFase2() {
 
 // Liga/desliga a borda e a legenda "Vigente: ..." de uma caixa sem redesenhar a
 // Fase 2 inteira — um re-render aqui tiraria o foco do campo em edição.
+// Texto comparavel de um campo cadastral. A caixa "imc" na verdade e a de altura e peso:
+// compara e legenda altura/peso — o IMC nao e mostrado ali.
+function endCadResumo(campo, snap) {
+  if (!snap) return '';
+  if (campo === 'imc') return (snap.altura && snap.peso) ? endNum2(snap.altura) + ' m / ' + endNum1(snap.peso) + ' kg' : '';
+  return snap[campo];
+}
 function endAtualizaCadBox(campo) {
   var box = document.getElementById('end-cadbox-' + campo);
   if (!box) return;
-  var vig = (END_STATE.cadastroVigente || {})[campo];
-  var nov = (END_STATE.cadastroNovo || {})[campo];
+  var vig = endCadResumo(campo, END_STATE.cadastroVigente);
+  var nov = endCadResumo(campo, END_STATE.cadastroNovo);
   var alterado = !!(vig && nov && vig !== nov);
   box.classList.toggle('end-cadbox-alt', alterado);
   var leg = box.querySelector('.end-cadbox-vig');
@@ -17922,15 +17936,13 @@ function endOnRendaBlur(inp) {
   endAtualizaCadBox('renda');
 }
 
-// O IMC acompanha a digitacao de altura e peso, antes mesmo do blur.
+// O IMC nao aparece mais na tela de edicao: ele so e calculado a partir de altura e
+// peso, para o antes/depois da Precificacao e para a analise.
 function endOnAlturaPeso() {
   var a = document.getElementById('end-altura');
   var p = document.getElementById('end-peso');
-  var res = document.getElementById('end-imc-res');
   if (!a || !p) return;
-  var x = endImcDe(a.value, p.value);
-  if (res) res.textContent = x ? 'IMC ' + endImcFmt(x) : 'IMC \u2014';
-  return x;
+  return endImcDe(a.value, p.value);
 }
 
 function endOnAlturaPesoBlur() {
@@ -17993,8 +18005,6 @@ function endRenderCovTable() {
     var off = !c.ativa ? ' end-cov-off' : '';
     var checkboxDisabled = c.obrigatoria ? ' disabled' : '';
     if (END_STATE.modoRestrito && !c.ativa) checkboxDisabled = ' disabled';
-    var tag = c.altoRisco ? '<span class="end-cov-tag">alto risco</span>' : '';
-    var tagReq = (c.requer && c.requer.length) ? '<span class="end-cov-tag-req">requer ' + c.requer.map(function(r){ return r.toUpperCase(); }).join(', ') + '</span>' : '';
 
     var capitalField;
     if (c.cod === 'ipa') {
@@ -18006,7 +18016,7 @@ function endRenderCovTable() {
 
     html += '<div class="end-cov-row' + alt + off + '">' +
       '<input type="checkbox" class="end-cov-check" data-cod="' + c.cod + '"' + (c.ativa?' checked':'') + checkboxDisabled + ' onchange="endOnCoberturaToggle(this)">' +
-      '<div><span class="end-cov-lbl">' + c.label + ' ' + tag + ' ' + tagReq + '</span>' +
+      '<div><span class="end-cov-lbl">' + c.label + '</span>' +
         '<div class="end-cov-err" id="end-cov-err-' + c.cod + '" style="display:none"></div>' +
       '</div>' +
       '<div>' + capitalField + '</div>' +
