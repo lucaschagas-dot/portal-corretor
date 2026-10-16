@@ -4589,7 +4589,7 @@ function authLogout(){
           <nav class="evp-menu" id="evp-menu">
                         <button class="evp-menu-item evp-menu-pai evp-c-red" data-mi="0" aria-expanded="false" aria-controls="evp-sub-vida" onclick="evpToggleSub('vida')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M12 20.5S3.5 15 3.5 9.4A4.4 4.4 0 0112 7a4.4 4.4 0 018.5 2.4c0 5.6-8.5 11.1-8.5 11.1z" fill="#58595B"/></svg><span class="evp-menu-lbl">Vida</span><span class="evp-plus">+</span></button>
             <div class="evp-submenu" id="evp-sub-vida" hidden>
-              <button class="evp-menu-item evp-menu-sub evp-c-azure" onclick="evpAbrirEndosso()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg><span class="evp-menu-lbl">Endosso</span></button>
+              <button class="evp-menu-item evp-menu-sub evp-c-azure" onclick="evpVoltarHome()"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M5 3.4h8.2L19 9.1v6.1h-2V10h-4.6V5.4H7v13.2h5.4v2H5V3.4z" fill="#58595B"/><path d="M20.3 13.6l1.6 1.6-5.6 5.6-2.2.6.6-2.2 5.6-5.6z" fill="#009DDB"/></svg><span class="evp-menu-lbl">Endosso</span></button>
             </div>
             <button class="evp-menu-item evp-c-red" data-mi="1" onclick="evpModuloNaoMapeado('Prestamista')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M12 3l9 4.5V9H3V7.5L12 3z" fill="#58595B"/><rect x="5" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="10.9" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="16.8" y="10.5" width="2.2" height="7" fill="#58595B"/><rect x="3" y="18.6" width="18" height="2.2" fill="#58595B"/></svg><span class="evp-menu-lbl">Prestamista</span><span class="evp-plus">+</span></button>
             <button class="evp-menu-item evp-c-lime" data-mi="2" onclick="evpModuloNaoMapeado('Residencial')"><svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M12 3.4L2.8 11h2.6v9.4h5.2v-5.6h2.8v5.6h5.2V11h2.6L12 3.4z" fill="#58595B"/></svg><span class="evp-menu-lbl">Residencial</span><span class="evp-plus">+</span></button>
@@ -4607,24 +4607,20 @@ function authLogout(){
           <div class="evp-main">
 
             <div id="evp-view-home">
-              <div class="evp-cards">
-          <section class="evp-card evp-card-azure">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Aguardando assinatura</h3><span class="evp-card-cnt" id="evp-cnt-aguardando_assinatura">0</span></div>
-            <p class="evp-card-desc">Endossos em que o cliente ainda não assinou a Declaração Pessoal de Saúde.</p>
-            <div class="evp-card-body" id="evp-list-aguardando_assinatura"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
-          </section>
-          <section class="evp-card evp-card-navy">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Assinado</h3><span class="evp-card-cnt" id="evp-cnt-assinado">0</span></div>
-            <p class="evp-card-desc">Cliente assinou a DPS, mas o corretor ainda não enviou o endosso para análise.</p>
-            <div class="evp-card-body" id="evp-list-assinado"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
-          </section>
-          <section class="evp-card evp-card-navy">
-            <div class="evp-card-hd"><h3 class="evp-card-tit">Análise Técnica</h3><span class="evp-card-cnt" id="evp-cnt-analise_tecnica">0</span></div>
-            <p class="evp-card-desc">Cliente assinou e o endosso já foi enviado para análise.</p>
-            <div class="evp-card-body" id="evp-list-analise_tecnica"><div class="evp-card-empty">Não foram encontrados resultados.</div></div>
-          </section>
+              <div class="evp-ls-top">
+                <div>
+                  <h2 class="evp-ls-tit">Endossos</h2>
+                  <p class="evp-ls-sub">Gerencie os endossos das apólices vigentes</p>
+                </div>
+                <button type="button" class="evp-ls-novo" onclick="evpAbrirEndosso()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4.5v15M4.5 12h15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Novo Endosso</button>
               </div>
-              <p class="evp-hint">Protótipo em validação — abra <strong>Vida &rsaquo; Endosso</strong> no menu lateral para iniciar o fluxo.</p>
+              <div class="evp-ls-chips" role="group" aria-label="Status dos endossos">
+                <button type="button" class="evp-ls-chip evp-ls-chip-on" data-col="aguardando_assinatura" aria-pressed="true" onclick="evpListaAba('aguardando_assinatura')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="12.5" height="15.5" rx="1.6"/><path d="M7 8h5.5M7 11.5h3.5"/><path d="M13 20.5l.9-3.4 6.4-6.4a1.7 1.7 0 012.4 2.4l-6.4 6.4z"/></svg><span class="evp-ls-chip-rot">Aguardando assinatura</span><span class="evp-ls-n" id="evp-cnt-aguardando_assinatura">0</span></button>
+                <button type="button" class="evp-ls-chip" data-col="assinado" aria-pressed="false" onclick="evpListaAba('assinado')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7.8 12.4l2.9 2.9 5.6-5.8"/></svg><span class="evp-ls-chip-rot">Assinado</span><span class="evp-ls-n" id="evp-cnt-assinado">0</span></button>
+                <button type="button" class="evp-ls-chip" data-col="analise_tecnica" aria-pressed="false" onclick="evpListaAba('analise_tecnica')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.8" y="12.5" width="3.6" height="7.7" rx=".8"/><rect x="10.2" y="3.8" width="3.6" height="16.4" rx=".8"/><rect x="16.6" y="9" width="3.6" height="11.2" rx=".8"/></svg><span class="evp-ls-chip-rot">Análise técnica</span><span class="evp-ls-n" id="evp-cnt-analise_tecnica">0</span></button>
+              </div>
+              <div class="evp-pan-grid evp-ls-grid" id="evp-ls-grid"></div>
+              <p class="evp-ls-vazio" id="evp-ls-vazio">Não foram encontrados resultados.</p>
             </div>
 
             <!-- ===== Painel de Análise de Endosso ===== -->
@@ -5278,7 +5274,9 @@ function authLogout(){
 
     .evp-menu{position:absolute;left:0;top:0;width:calc(371px * var(--evp-esc));background:#fff;display:none;
       flex-direction:column;border-right:1px solid #DBDBDB;
-      box-shadow:0 4px 10px rgba(0,0,0,.18);z-index:9600}   /* acima da barra azul do endosso (9500) */
+      box-shadow:0 4px 10px rgba(0,0,0,.18);z-index:9600;   /* acima da barra azul do endosso (9500) */
+      max-height:calc(100vh - 93px);overflow-y:auto}        /* nunca mais alto que a janela: rola por dentro */
+    .evp-menu > .evp-menu-item,.evp-menu > .evp-submenu{flex-shrink:0}
     .evp-rail:hover + .evp-menu,.evp-menu:hover{display:flex}
     .evp-menu-item{position:relative;display:flex;align-items:center;
       gap:calc(16px * var(--evp-esc));
@@ -5300,37 +5298,43 @@ function authLogout(){
 
     .evp-main{flex:1;min-width:0;padding:22px 26px 60px}
 
-    .evp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
-    .evp-card{background:#fff;border-left:5px solid #1F3864;border-radius:3px;
-      box-shadow:0 1px 6px rgba(0,0,0,.12);padding:14px 16px 12px}
-    .evp-card-azure{border-left-color:#009DDB}
-    .evp-card-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-    .evp-card-tit{font-family:'UnimedSlab',Georgia,serif;font-size:19px;font-weight:700;color:#009DDB}
-    .evp-card-cnt{font-size:14px;color:#3C3C3C}
+    /* ===== Listagem "Endossos" (home do modulo) ===== */
+    .evp-shell.evp-lista-on{background:linear-gradient(180deg,#F1F7FD 0%,#F3F8FD 55%,#FFFFFF 100%)}
+    .evp-ls-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .evp-ls-tit{margin:0;font:700 32px/1.1 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;color:#0A0A3A;letter-spacing:-.3px}
+    .evp-ls-sub{margin:8px 0 0 4px;font-size:15px;font-style:italic;color:#7F7F7F}
+    .evp-ls-novo{display:inline-flex;align-items:center;gap:12px;height:46px;padding:0 28px;border:none;border-radius:8px;
+      background:#0060FC;color:#fff;font:500 16px/1 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;cursor:pointer;
+      box-shadow:0 6px 16px rgba(0,96,252,.28);transition:background .12s,box-shadow .12s}
+    .evp-ls-novo:hover{background:#0050D6;box-shadow:0 8px 20px rgba(0,96,252,.34)}
+    .evp-ls-chips{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 22px}
+    .evp-ls-chip{display:inline-flex;align-items:center;gap:12px;height:46px;padding:0 22px;border:1px solid #DCE4F0;border-radius:8px;
+      background:#fff;color:#0A0A3A;font:700 15px/1 'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;cursor:pointer;
+      transition:background .12s,border-color .12s}
+    .evp-ls-chip svg{flex-shrink:0;color:#1B7F99}
+    .evp-ls-chip:hover{border-color:#9DB6E4}
+    .evp-ls-n{min-width:32px;padding:5px 9px;border-radius:14px;background:#E4ECFA;color:#0A0A3A;font-size:13.5px;font-weight:700;
+      text-align:center;font-variant-numeric:tabular-nums}
+    .evp-ls-chip.evp-ls-chip-on{background:#0063FD;border-color:#0063FD;color:#fff;font-weight:500}
+    .evp-ls-chip.evp-ls-chip-on svg{color:#fff}
+    .evp-ls-chip.evp-ls-chip-on .evp-ls-n{background:rgba(255,255,255,.28);color:#fff}
+    /* seletor duplo: .evp-pan-grid (Painel) e declarada mais abaixo com a mesma especificidade */
+    .evp-pan-grid.evp-ls-grid{grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}   /* em tela estreita o card ocupa a largura toda */
+    .evp-ls-vazio{font-size:14px;color:#8A8F96;text-align:center;padding:40px 10px;margin:0}
+    @media (max-width:560px){ .evp-ls-tit{font-size:26px} .evp-ls-novo{width:100%;justify-content:center}
+      .evp-ls-chip{flex:1 1 100%} }
+
     .evp-card-chips{display:flex;align-items:center;gap:12px;margin:12px 0 14px}
     .evp-chip{width:44px;height:44px;border-radius:50%;background:#B4B8BC;color:#fff;
       display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
     .evp-cardicos{margin-left:auto;display:flex;gap:10px}
     .evp-cardico{width:44px;height:44px;border-radius:50%;background:#B4B8BC;
       display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .evp-card-empty{background:#B4B8BC;color:#fff;border-radius:3px;text-align:center;
-      padding:18px 10px;font-size:15px}
     .evp-card-ft{display:flex;align-items:center;justify-content:center;gap:26px;
       margin-top:12px;font-size:13.5px;color:#6B7076}
     .evp-pag{display:flex;align-items:center;gap:14px;color:#8A8F96;font-size:15px}
     .evp-pag i{font-style:normal}
 
-    .evp-card-desc{font-size:12.5px;color:#8A8F96;margin:6px 0 14px;line-height:1.4}
-    .evp-card-body{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto}
-    .evp-case-item{border:1px solid #E4E6E9;border-radius:4px;padding:10px 12px;cursor:pointer;
-      background:#fff;transition:border-color .12s,background .12s}
-    .evp-case-item:hover{border-color:var(--azure,#009DDB);background:#fafdff}
-    .evp-case-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-      font-size:12px;color:#8A8F96}
-    .evp-case-id{font-weight:700;color:#8A8F96}
-    .evp-case-nome{font-size:14.5px;font-weight:700;color:#009DDB;margin-top:2px}
-    .evp-case-sub{font-size:12.5px;color:#586880;margin-top:2px}
-    .evp-case-premio{font-size:12.5px;color:#44546c;margin-top:4px}
 
     /* ===== Painel de Análise de Endosso (réplica do Painel de Análises Vida) ===== */
     .evp-pan-top{display:flex;align-items:flex-start;gap:26px;flex-wrap:wrap;margin-bottom:8px}
@@ -5636,8 +5640,6 @@ function authLogout(){
       .evp-an-doc{margin-left:0;width:100%}
     }
 
-    .evp-hint{margin-top:26px;font-size:13px;color:#8A8F96}
-    .evp-hint strong{color:#009DDB}
 
     /* comparativo Vigente x Com Endosso, no layout dos planos do Global Vida */
     .end-cmp-grid{grid-template-columns:230px 1fr 1fr}
@@ -15323,8 +15325,8 @@ function smFluxoEndosso() {
           '<div class="sm-no">' + smMini() + '<span class="sm-lbl">Mesa Técnica</span></div></div>' +
       '</div>' +
     '</div>' +
-    '<div class="sm-nota"><i></i><span>Todo endosso encerrado volta para o board de 3 colunas ' +
-      '(Aguardando assinatura · Assinado · Análise Técnica) e entra no Painel de Análise Endosso, ' +
+    '<div class="sm-nota"><i></i><span>Todo endosso encerrado volta para a listagem Endossos, na aba Análise técnica ' +
+      '(abas: Aguardando assinatura · Assinado · Análise técnica), e entra no Painel de Análise Endosso, ' +
       'onde dá para comparar a apólice vigente com a proposta e editar as coberturas.</span></div>' +
     '</div>';
 }
@@ -16082,7 +16084,7 @@ ocBuild();
   </div>
 </div>
 
-<div id="ape-error-popup" style="display:none;position:fixed;inset:0;z-index:9500;align-items:center;justify-content:center;background:rgba(0,0,0,0.4)" onclick="this.style.display='none'">
+<div id="ape-error-popup" style="display:none;position:fixed;inset:0;z-index:9700;align-items:center;justify-content:center;background:rgba(0,0,0,0.4)" onclick="this.style.display='none'">
   <div style="background:#fff;border-radius:4px;padding:24px 28px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);text-align:center" onclick="event.stopPropagation()">
     <p id="ape-error-msg" style="font-size:14px;color:#44546c;margin-bottom:18px;line-height:1.5"></p>
     <button onclick="document.getElementById('ape-error-popup').style.display='none'" style="padding:8px 24px;background:var(--azure);color:#fff;border:none;border-radius:3px;font-size:14px;cursor:pointer;font-weight:600">OK</button>
@@ -16522,7 +16524,7 @@ function evpVoltarHome() {
   evpEsconder(['evp-view-painel', 'evp-view-analise']);
   home.style.display = '';
   view.style.display = 'none';
-  evpMarcarMenu(null);
+  evpMarcarMenu('Endosso');
   endCovModalClose();
   evpPlanoFechar();
   // O overlay e irmao das views, nao filho delas: esconder a view nao o tira da
@@ -16534,31 +16536,78 @@ function evpVoltarHome() {
   window.scrollTo({top: 0});
 }
 
-// ---- Home do módulo Endosso: 3 colunas com os casos de END_QUEUE por status ----
+// ---- Home do módulo Endosso: listagem "Endossos", com abas por status, dos casos de END_QUEUE ----
 var EVP_BOARD_COLS = ['aguardando_assinatura', 'assinado', 'analise_tecnica'];
+
+// Aba selecionada da listagem "Endossos". Comeca na primeira, como no layout; ao concluir
+// um endosso o fluxo troca para "analise_tecnica", onde o caso novo aparece.
+var EVP_LISTA_COL = 'aguardando_assinatura';
+
+function evpListaAba(col) {
+  if (EVP_BOARD_COLS.indexOf(col) < 0) return;
+  EVP_LISTA_COL = col;
+  evpAtualizarHomeCards();
+}
+
+// Decisoes que o Portal Admin (Mesa Tecnica) grava em caso.status, na linguagem do corretor.
+var EVP_LISTA_MESA = {
+  aprovado_ajuste: {rot: 'Contraproposta enviada',  cor: 'amarelo'},
+  recusa_parcial:  {rot: 'Recusa parcial',          cor: 'vermelho'},
+  recusado:        {rot: 'Recusado',                cor: 'vermelho'},
+  devolvido:       {rot: 'Devolvido para correção', cor: 'vermelho'},
+  implantado:      {rot: 'Implantado',              cor: 'verde'}
+};
+
+// Status mostrado no card. Nas duas primeiras abas vale o estagio do corretor. Na "Analise
+// tecnica" vale o andamento real do caso: a decisao do Painel de Analise (evpDecisao, que
+// tem precedencia), a da Mesa Tecnica no Portal Admin (caso.status) ou "Em analise".
+function evpListaStatus(col, card, caso) {
+  if (col === 'aguardando_assinatura') return {rot: 'Aguardando assinatura', cor: 'cinza'};
+  if (col === 'assinado') return {rot: 'Assinado', cor: 'verde'};
+  if (caso && !caso.evpDecisao && EVP_LISTA_MESA[caso.status]) return EVP_LISTA_MESA[caso.status];
+  return EVP_STATUS_INFO[card.status] || EVP_STATUS_INFO.analise;
+}
+
 function evpAtualizarHomeCards() {
   if (typeof END_QUEUE === 'undefined') return;
   EVP_BOARD_COLS.forEach(function(col) {
-    var listEl = document.getElementById('evp-list-' + col);
     var cntEl = document.getElementById('evp-cnt-' + col);
-    if (!listEl) return;
-    var casos = END_QUEUE.filter(function(c) { return c.boardStatus === col; });
-    if (cntEl) cntEl.textContent = casos.length;
-    if (!casos.length) {
-      listEl.innerHTML = '<div class="evp-card-empty">Não foram encontrados resultados.</div>';
-      return;
-    }
-    listEl.innerHTML = casos.slice().reverse().map(function(c) {
-      var handler = col === 'analise_tecnica' ? 'endIrParaMesaTecnica()' :
-        'apeShowError(\'Retomar um caso específico a partir deste painel não faz parte deste protótipo.\')';
-      return '<div class="evp-case-item" onclick="' + handler + '">' +
-        '<div class="evp-case-top"><span class="evp-case-id">#' + c.id + '</span><span>' + c.dataHora + '</span></div>' +
-        '<div class="evp-case-nome">' + c.cliente.nome + '</div>' +
-        '<div class="evp-case-sub">' + (c.cliente.produto || 'Vida Individual') + ' &middot; Apólice ' + c.cliente.apolice + '</div>' +
-        '<div class="evp-case-premio">Novo prêmio: ' + endFmtMoeda(c.premioNovo) + '/' + (c.periodicidade || 'Mensal').toLowerCase() + '</div>' +
-      '</div>';
-    }).join('');
+    if (cntEl) cntEl.textContent = END_QUEUE.filter(function(c) { return c.boardStatus === col; }).length;
   });
+  document.querySelectorAll('.evp-ls-chip').forEach(function(b) {
+    var on = b.getAttribute('data-col') === EVP_LISTA_COL;
+    b.classList.toggle('evp-ls-chip-on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  var grid = document.getElementById('evp-ls-grid');
+  if (!grid) return;
+  var col = EVP_LISTA_COL;
+  var casos = END_QUEUE.filter(function(c) { return c.boardStatus === col; });
+  var vazio = document.getElementById('evp-ls-vazio');
+  if (vazio) vazio.style.display = casos.length ? 'none' : '';
+  // Mesmo card do Painel de Analise, sem analista nem etiquetas. A linha do ER vira a da
+  // apolice: o fluxo do corretor nao captura o escritorio regional.
+  grid.innerHTML = casos.slice().reverse().map(function(c) {
+    var k = evpCasoParaCard(c);
+    var st = evpListaStatus(col, k, c);
+    var data = (c.dataHora || '').split(' ')[0];
+    // mesmo premio que a Mesa mostra: o da contraproposta/cotacao clonada, quando existe
+    var premio = (c.premioNovoClonado != null) ? c.premioNovoClonado
+               : (c._premioAjustado != null ? c._premioAjustado : c.premioNovo);
+    var acao = col === 'analise_tecnica' ? 'endIrParaMesaTecnica()' :
+      'apeShowError(\'Retomar um caso específico a partir deste painel não faz parte deste protótipo.\')';
+    return '<button type="button" class="evp-pan-card" onclick="' + acao + '">' +
+      '<span class="evp-pan-card-e" title="Endosso">E</span>' +
+      '<div class="evp-pan-card-hd"><span class="evp-pan-num">' + ufEsc(k.num) + '</span>' +
+        '<span class="evp-pan-nome">' + ufEsc(k.segurado) + '</span></div>' +
+      '<div class="evp-pan-prod">' + evpRotuloProduto(k) + '</div>' +
+      '<div class="evp-pan-status"><span class="evp-pan-dot evp-pan-dot-' + st.cor + '"></span>' + st.rot +
+        ' <span class="evp-pan-data">' + data + '</span></div>' +
+      '<div class="evp-pan-er">Apólice ' + ufEsc(c.cliente.apolice) + '</div>' +
+      '<div class="evp-pan-ft"><div class="evp-pan-ft-col"><span>' + data + '</span></div>' +
+        '<div class="evp-pan-ft-col"><span><b>Prêmio:</b> ' + endFmtMoeda(premio) + '</span></div></div>' +
+    '</button>';
+  }).join('');
 }
 
 // =====================================================================
@@ -17590,8 +17639,9 @@ function endGoFase(n) {
     if (!endValidaFase4()) { apeShowError('Conclua a Declaração Pessoal de Saúde antes de enviar para análise.'); return; }
     endRenderFase5();
     END_STATE.fase = n;
-    // Endosso enviado para análise: o fluxo terminou, o corretor cai no painel do
-    // módulo, com o caso já listado na coluna "Análise Técnica".
+    // Endosso enviado para análise: o fluxo terminou e o corretor volta para a listagem
+    // "Endossos", ja na aba "Análise técnica", onde o caso novo aparece.
+    EVP_LISTA_COL = 'analise_tecnica';
     evpVoltarHome();
     return;
   } else if (n === 1) {
@@ -18032,6 +18082,7 @@ function endOnCoberturaToggle(chk) {
   if (!c) return;
   if (c.obrigatoria) { chk.checked = true; return; }
   if (chk.checked && END_STATE.modoRestrito) { chk.checked = false; return; }
+  var erroIpam = false;
 
   c.ativa = chk.checked;
   if (!c.ativa) {
@@ -18049,12 +18100,17 @@ function endOnCoberturaToggle(chk) {
     var ipa = END_STATE.coberturas.find(function(x){ return x.cod === 'ipa'; });
     if (!ipa || !ipa.ativa) {
       c.ativa = false; c.capital = 0;
-      var errEl0 = document.getElementById('end-cov-err-ipam');
-      if (errEl0) { errEl0.textContent = 'IPAM exige que a cobertura IPA esteja contratada.'; errEl0.style.display = 'block'; }
+      erroIpam = true;
     }
   }
   endRecalcIpa();
   endRenderCovTable();
+  // A mensagem entra DEPOIS do re-render: antes era escrita num elemento que o innerHTML
+  // recriava logo em seguida, e o checkbox voltava sozinho sem nenhuma explicacao.
+  if (erroIpam) {
+    var errEl0 = document.getElementById('end-cov-err-ipam');
+    if (errEl0) { errEl0.textContent = 'IPAM exige que a cobertura IPA esteja contratada.'; errEl0.style.display = 'block'; }
+  }
   endSyncRodape();
 }
 
@@ -18312,6 +18368,8 @@ function endSyncRodape() {
   var view = document.getElementById('evp-view-endosso');
   var ligada = !!(bar && view && view.offsetParent !== null);
   document.body.classList.toggle('end-bar-on', ligada);
+  var shell = document.querySelector('.evp-shell'), home = document.getElementById('evp-view-home');
+  if (shell && home) shell.classList.toggle('evp-lista-on', home.offsetParent !== null);
   if (ligada) { bar.innerHTML = endBarHTML(); return; }
   // Os overlays sao irmaos das views: esconder o fluxo nao os tira da tela. Sem
   // isto, sair da rota com o modal aberto deixa ele por cima do portal inteiro.
@@ -18629,9 +18687,12 @@ function endAtualizarFase4Botao() {
     }
   }
   if (btn) btn.disabled = !(END_STATE.dpsRespondida && endDadosEndossoOk() && (!precisaResseguro || END_STATE.resseguroAprovado));
-  if (END_STATE.dpsRespondida) {
-    var caso = END_QUEUE.find(function(c) { return c.id === END_STATE.caseId; });
-    if (caso && caso.boardStatus === 'aguardando_assinatura') { caso.boardStatus = 'assinado'; evpAtualizarHomeCards(); }
+  // O estagio acompanha a DPS nos dois sentidos: assinar leva a "Assinado"; se ela voltar a
+  // ser exigida (trocou o modo, ou editou as coberturas), o caso volta a "Aguardando".
+  var caso = END_QUEUE.find(function(c) { return c.id === END_STATE.caseId; });
+  if (caso && (caso.boardStatus === 'aguardando_assinatura' || caso.boardStatus === 'assinado')) {
+    var alvo = END_STATE.dpsRespondida ? 'assinado' : 'aguardando_assinatura';
+    if (caso.boardStatus !== alvo) { caso.boardStatus = alvo; evpAtualizarHomeCards(); }
   }
 }
 function endValidaFase4() {
@@ -18701,6 +18762,14 @@ function endGarantirCaso() {
       // mudanca estampado logo acima.
       existente.cadastroVigente = Object.assign({}, END_STATE.cadastroVigente || {});
       existente.cadastroNovo = Object.assign({}, END_STATE.cadastroNovo || {});
+      // Premio, tipo de DPS e periodicidade tambem mudam ao voltar a Fase 2; a listagem
+      // mostraria o valor da primeira entrada na Fase 4. So enquanto o caso e rascunho:
+      // um caso ja enviado nao deve ser reescrito.
+      if (existente.boardStatus === 'aguardando_assinatura' || existente.boardStatus === 'assinado') {
+        existente.premioNovo = END_STATE.premioNovo;
+        existente.dpsTipo = END_STATE.dpsTipo;
+        existente.periodicidade = END_STATE.periodicidadeNova;
+      }
       return existente;
     }
   }
