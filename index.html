@@ -4668,6 +4668,14 @@ function authLogout(){
                   <span>Analista</span>
                   <select id="evp-filtro-analista" onchange="evpFiltroMudou()"></select>
                 </label>
+                <label class="evp-filtro">
+                  <span>N&uacute;mero de Proposta</span>
+                  <input type="text" id="evp-filtro-proposta" inputmode="numeric" autocomplete="off" placeholder="Ex.: 712488" oninput="evpFiltroMudou()">
+                </label>
+                <label class="evp-filtro">
+                  <span>C&oacute;digo do Endosso</span>
+                  <input type="text" id="evp-filtro-codigo" autocomplete="off" placeholder="Ex.: 293804/2" oninput="evpFiltroMudou()">
+                </label>
                 <button class="evp-filtro-limpar" id="evp-filtro-limpar" onclick="evpFiltroLimpar()">Limpar filtros</button>
                 <span class="evp-filtro-cnt" id="evp-filtro-cnt"></span>
               </div>
@@ -5377,6 +5385,10 @@ function authLogout(){
     .evp-filtro > select{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
       font-size:13.5px;color:#3C3C3C;padding:7px 10px;min-width:180px;cursor:pointer}
     .evp-filtro > select:focus{outline:none;border-color:#009DDB}
+    .evp-filtro > input{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
+      font-size:13.5px;color:#3C3C3C;padding:7px 10px;width:180px;height:35px;box-sizing:border-box}   /* 35px = altura dos selects ao lado */
+    .evp-filtro > input::placeholder{color:#B4B8BC}
+    .evp-filtro > input:focus{outline:none;border-color:#009DDB}
     .evp-filtro-limpar{border:1px solid #D7DBDF;border-radius:2px;background:#fff;font:inherit;
       font-size:13px;color:#44546C;padding:8px 16px;cursor:pointer}
     .evp-filtro-limpar:hover{border-color:#009DDB;color:#009DDB}
@@ -16830,7 +16842,7 @@ function evpDataBr(iso) {
 }
 
 // ---- Filtros do painel ----
-var EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: ''};
+var EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: '', proposta: '', codigo: ''};
 
 // Rotulo de produto usado tanto no card quanto nas opcoes do filtro, para os dois
 // nunca discordarem.
@@ -16847,6 +16859,9 @@ function evpPainelVisiveis() {
     if (EVP_FILTRO.pessoa && c.pessoa !== EVP_FILTRO.pessoa) return false;
     if (EVP_FILTRO.natureza && c.natureza !== EVP_FILTRO.natureza) return false;
     if (EVP_FILTRO.analista && c.analista !== EVP_FILTRO.analista) return false;
+    // proposta e codigo: contem o trecho digitado (sem diferenciar maiusculas)
+    if (EVP_FILTRO.proposta && String(c.proposta || '').indexOf(EVP_FILTRO.proposta) === -1) return false;
+    if (EVP_FILTRO.codigo && String(c.num || '').toLowerCase().indexOf(EVP_FILTRO.codigo.toLowerCase()) === -1) return false;
     return true;
   });
 }
@@ -16856,12 +16871,14 @@ function evpFiltroMudou() {
   EVP_FILTRO.pessoa = (document.getElementById('evp-filtro-pessoa') || {}).value || '';
   EVP_FILTRO.natureza = (document.getElementById('evp-filtro-natureza') || {}).value || '';
   EVP_FILTRO.analista = (document.getElementById('evp-filtro-analista') || {}).value || '';
+  EVP_FILTRO.proposta = ((document.getElementById('evp-filtro-proposta') || {}).value || '').trim();
+  EVP_FILTRO.codigo = ((document.getElementById('evp-filtro-codigo') || {}).value || '').trim();
   evpRenderPainel();
 }
 
 function evpFiltroLimpar() {
-  EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: ''};
-  ['produto', 'pessoa', 'natureza', 'analista'].forEach(function (k) {
+  EVP_FILTRO = {produto: '', pessoa: '', natureza: '', analista: '', proposta: '', codigo: ''};
+  ['produto', 'pessoa', 'natureza', 'analista', 'proposta', 'codigo'].forEach(function (k) {
     var el = document.getElementById('evp-filtro-' + k);
     if (el) el.value = '';
   });
@@ -16947,7 +16964,7 @@ function evpRenderPainel() {
   evpFiltroMontarProdutos();
   var casos = evpPainelVisiveis();
   var totalGeral = evpPainelCasos().length;
-  var filtrando = !!(EVP_FILTRO.produto || EVP_FILTRO.pessoa || EVP_FILTRO.natureza || EVP_FILTRO.analista);
+  var filtrando = !!(EVP_FILTRO.produto || EVP_FILTRO.pessoa || EVP_FILTRO.natureza || EVP_FILTRO.analista || EVP_FILTRO.proposta || EVP_FILTRO.codigo);
 
   var limpar = document.getElementById('evp-filtro-limpar');
   if (limpar) limpar.disabled = !filtrando;
